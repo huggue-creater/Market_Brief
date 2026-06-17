@@ -1,0 +1,52 @@
+name: Market Brief
+
+on:
+  # 06:20 KST (UTC+9) = 21:20 UTC 전날
+  # Mon KST = Sun UTC(0), Tue=Mon(1), Wed=Tue(2), Thu=Wed(3), Fri=Thu(4)
+  # Sat KST = Fri UTC(5) → 실행되지만 bot.py 공휴일/주말 체크로 스킵
+  schedule:
+    - cron: "20 21 * * 0-4"
+
+  # 수동 트리거 (테스트용)
+  workflow_dispatch:
+
+jobs:
+  brief:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run bot (collect + send Telegram + generate search JSON)
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
+          DATA_GO_KR_KEY:     ${{ secrets.DATA_GO_KR_KEY }}
+        run: python bot.py
+
+      - name: Inject search data into index.html
+        run: python inject_data.py
+
+      - name: Commit & push updated state
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Stage only known state files (never accidentally stage secrets etc.)
+          git add apt_state.json building_cache.json search_data.json index.html last_run.txt 2>/dev/null || true
+          git diff --cached --quiet || \
+            git commit -m "chore: market brief $(date -u +'%Y-%m-%d')" && \
+            git push

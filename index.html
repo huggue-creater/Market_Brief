@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>아파트 실거래 검색</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:       #f0f2f5;
+      --card:     #ffffff;
+      --border:   #e4e7eb;
+      --accent:   #2563eb;
+      --accent2:  #1d4ed8;
+      --text:     #111827;
+      --sub:      #6b7280;
+      --red:      #dc2626;
+      --green:    #16a34a;
+      --gold:     #d97706;
+      --radius:   10px;
+    }
+    body { font-family: 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+           background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ── Header ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--card); border-bottom: 1px solid var(--border);
+      padding: 12px 20px; display: flex; align-items: center; gap: 10px;
+    }
+    header h1 { font-size: 18px; font-weight: 700; }
+    #updatedAt { margin-left: auto; font-size: 12px; color: var(--sub); white-space: nowrap; }
+
+    /* ── Controls ── */
+    .controls {
+      background: var(--card); border-bottom: 1px solid var(--border);
+      padding: 12px 20px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+    }
+
+    /* city tabs */
+    .city-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+    .city-tab {
+      padding: 6px 14px; border: 1px solid var(--border); border-radius: 20px;
+      cursor: pointer; font-size: 14px; background: transparent; color: var(--sub);
+      transition: all .15s;
+    }
+    .city-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .city-tab:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
+
+    /* dong dropdown */
+    .dropdown-wrap { position: relative; }
+    .dropdown-btn {
+      padding: 7px 14px; border: 1px solid var(--border); border-radius: var(--radius);
+      background: var(--card); cursor: pointer; font-size: 14px;
+      display: flex; align-items: center; gap: 6px; min-width: 160px; color: var(--text);
+    }
+    .dropdown-btn .arrow { margin-left: auto; transition: transform .15s; }
+    .dropdown-btn.open .arrow { transform: rotate(180deg); }
+    .dropdown-menu {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0;
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      box-shadow: 0 4px 20px rgba(0,0,0,.13); z-index: 60; min-width: 180px; padding: 6px 0;
+    }
+    .dropdown-menu.open { display: block; }
+    .dong-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 16px; cursor: pointer; font-size: 14px; user-select: none;
+    }
+    .dong-item:hover { background: #f0f4ff; }
+    .dong-item input[type=checkbox] { accent-color: var(--accent); width: 15px; height: 15px; }
+
+    /* search */
+    .search-input {
+      flex: 1; min-width: 160px; max-width: 260px;
+      padding: 7px 14px; border: 1px solid var(--border); border-radius: var(--radius);
+      font-size: 14px; outline: none; font-family: inherit;
+    }
+    .search-input:focus { border-color: var(--accent); }
+
+    /* ── Summary bar ── */
+    .summary {
+      padding: 8px 20px; font-size: 13px; color: var(--sub);
+    }
+
+    /* ── Trade list ── */
+    .trade-list { padding: 12px 20px; display: flex; flex-direction: column; gap: 10px; }
+
+    .trade-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 14px 16px;
+      cursor: pointer; transition: box-shadow .15s, border-color .15s;
+    }
+    .trade-card:hover { box-shadow: 0 3px 16px rgba(0,0,0,.09); border-color: #c7d2fe; }
+
+    .apt-name { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+    .apt-meta { font-size: 12px; color: var(--sub); margin-bottom: 10px; }
+
+    .trade-rows { display: flex; flex-direction: column; gap: 0; }
+    .trade-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 5px 0; border-top: 1px solid #f0f2f5; font-size: 14px;
+    }
+    .trade-row:first-child { border-top: none; }
+    .col-date  { width: 86px; font-size: 12px; color: var(--sub); flex-shrink: 0; }
+    .col-area  { width: 60px; font-size: 12px; flex-shrink: 0; }
+    .col-floor { width: 36px; font-size: 12px; color: var(--sub); flex-shrink: 0; }
+    .col-price { font-weight: 700; margin-left: auto; white-space: nowrap; }
+    .badge-wrap { display: flex; gap: 4px; flex-shrink: 0; }
+
+    .badge {
+      font-size: 11px; padding: 2px 6px; border-radius: 4px;
+      font-weight: 700; white-space: nowrap;
+    }
+    .b-cancel   { background: #fee2e2; color: var(--red); }
+    .b-direct   { background: #dbeafe; color: #1d4ed8; }
+    .b-new-high { background: #fef3c7; color: var(--gold); }
+
+    .more-label {
+      text-align: center; font-size: 12px; color: var(--accent);
+      padding-top: 8px; border-top: 1px dashed var(--border); margin-top: 4px;
+    }
+
+    /* ── Empty / loading states ── */
+    .empty { padding: 60px 20px; text-align: center; color: var(--sub); font-size: 15px; }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,.48); align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--card); border-radius: 16px;
+      width: min(720px, 96vw); max-height: 88vh; overflow-y: auto;
+      padding: 24px; position: relative; box-shadow: 0 8px 40px rgba(0,0,0,.2);
+    }
+    .modal-close {
+      position: absolute; top: 14px; right: 14px;
+      background: #f3f4f6; border: none; border-radius: 50%;
+      width: 32px; height: 32px; cursor: pointer; font-size: 17px; color: var(--text);
+    }
+    .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 4px; padding-right: 40px; }
+    .modal-sub   { font-size: 13px; color: var(--sub); margin-bottom: 18px; }
+
+    .area-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .area-tab {
+      padding: 5px 13px; border: 1px solid var(--border);
+      border-radius: 16px; font-size: 13px; cursor: pointer;
+      background: transparent; font-family: inherit;
+    }
+    .area-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    .chart-section { margin-bottom: 20px; }
+    .chart-title { font-size: 13px; color: var(--sub); margin-bottom: 6px; }
+    .chart-wrap  { height: 200px; position: relative; }
+
+    .detail-table {
+      width: 100%; border-collapse: collapse; font-size: 13px;
+    }
+    .detail-table th {
+      text-align: left; padding: 7px 8px; background: #f8fafc;
+      font-weight: 600; border-bottom: 2px solid var(--border); white-space: nowrap;
+    }
+    .detail-table td {
+      padding: 8px 8px; border-bottom: 1px solid #f0f2f5; vertical-align: middle;
+    }
+    .detail-table tr:last-child td { border-bottom: none; }
+    .cancelled-row { opacity: .45; }
+    .cancelled-row .col-price-td { text-decoration: line-through; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .controls { gap: 8px; }
+      .search-input { max-width: 100%; }
+      .col-area, .col-floor { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🏠 아파트 실거래</h1>
+  <span id="updatedAt"></span>
+</header>
+
+<div class="controls">
+  <div class="city-tabs" id="cityTabs"></div>
+  <div class="dropdown-wrap">
+    <button class="dropdown-btn" id="dongBtn">
+      <span id="dongLabel">동 선택</span>
+      <span class="arrow">▾</span>
+    </button>
+    <div class="dropdown-menu" id="dongMenu"></div>
+  </div>
+  <input class="search-input" id="searchInput" placeholder="단지명 검색..." autocomplete="off" />
+</div>
+
+<div class="summary" id="summary"></div>
+<div class="trade-list" id="tradeList"></div>
+
+<!-- Detail modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modalClose" title="닫기">✕</button>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-sub"   id="modalSub"></div>
+    <div class="area-tabs"   id="areaTabs"></div>
+    <div class="chart-section">
+      <div class="chart-title" id="chartTitle"></div>
+      <div class="chart-wrap"><canvas id="priceChart"></canvas></div>
+    </div>
+    <table class="detail-table">
+      <thead>
+        <tr>
+          <th>날짜</th><th>전용(㎡)</th><th>층</th>
+          <th>거래가</th><th>유형</th><th>비고</th>
+        </tr>
+      </thead>
+      <tbody id="detailBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+// ── Data (injected by inject_data.py) ──────────────────────────────────────
+// %%SEARCH_DATA_START%%
+const SEARCH_DATA = null;
+// %%SEARCH_DATA_END%%
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Helpers
+// ══════════════════════════════════════════════════════════════════════════════
+
+const CITIES = ["하남", "용인", "인천", "시흥"];
+
+function fmtKrw(amount) {
+  const v = parseInt(String(amount).replace(/,/g, ""));
+  if (isNaN(v)) return String(amount);
+  const eok = Math.floor(v / 10000);
+  const man = v % 10000;
+  if (eok && man) return `${eok}억 ${man.toLocaleString()}만`;
+  if (eok) return `${eok}억`;
+  return `${v.toLocaleString()}만`;
+}
+
+function priceNum(s) {
+  return parseInt(String(s).replace(/,/g, "")) || 0;
+}
+
+function fmtDate(y, m, d) {
+  return `${y}.${String(m).padStart(2,'0')}.${String(d).padStart(2,'0')}`;
+}
+
+function tradeDateNum(t) {
+  return parseInt(`${t.dealYear}${String(t.dealMonth).padStart(2,'0')}${String(t.dealDay).padStart(2,'0')}`);
+}
+
+function isCancelled(t) { return t.cdealType === 'Y'; }
+function isDirect(t)    { return (t.dealingGbn || '').includes('직'); }
+
+function sortByDateDesc(a, b) { return tradeDateNum(b) - tradeDateNum(a); }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// State
+// ══════════════════════════════════════════════════════════════════════════════
+
+let ALL_TRADES = [];
+let CITY_DONGS = {};   // city → sorted array of dong names
+
+const state = {
+  city:         "하남",
+  selectedDongs: new Set(["전체"]),
+  search:        "",
+};
+
+let chartInstance = null;
+let modalApt      = null;
+let modalArea     = null;
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Bootstrap
+// ══════════════════════════════════════════════════════════════════════════════
+
+function init() {
+  if (!SEARCH_DATA || !Array.isArray(SEARCH_DATA.trades)) {
+    document.getElementById('tradeList').innerHTML =
+      '<p class="empty">데이터를 아직 불러오지 못했습니다.<br>GitHub Actions 첫 실행 후 갱신됩니다.</p>';
+    return;
+  }
+
+  ALL_TRADES = SEARCH_DATA.trades;
+  document.getElementById('updatedAt').textContent = `갱신: ${SEARCH_DATA.generated_at || ''}`;
+
+  // Build city → dong map
+  CITY_DONGS = {};
+  for (const t of ALL_TRADES) {
+    const city = t._city || '';
+    const dong = t._dong || t.umdNm || '';
+    if (!CITY_DONGS[city]) CITY_DONGS[city] = new Set();
+    CITY_DONGS[city].add(dong);
+  }
+  for (const c in CITY_DONGS) {
+    CITY_DONGS[c] = [...CITY_DONGS[c]].sort();
+  }
+
+  // Default city: first available
+  if (!CITY_DONGS[state.city]) {
+    state.city = Object.keys(CITY_DONGS)[0] || "하남";
+  }
+
+  renderCityTabs();
+  renderDongMenu();
+  renderTrades();
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// City tabs
+// ══════════════════════════════════════════════════════════════════════════════
+
+function renderCityTabs() {
+  const el = document.getElementById('cityTabs');
+  el.innerHTML = '';
+  for (const city of CITIES) {
+    if (!CITY_DONGS[city]) continue;
+    const btn = document.createElement('button');
+    btn.className = 'city-tab' + (city === state.city ? ' active' : '');
+    btn.textContent = city;
+    btn.onclick = () => {
+      state.city = city;
+      state.selectedDongs = new Set(['전체']);
+      renderCityTabs();
+      renderDongMenu();
+      renderTrades();
+    };
+    el.appendChild(btn);
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Dong dropdown
+// ══════════════════════════════════════════════════════════════════════════════
+
+function getDongLabelText() {
+  const sel = state.selectedDongs;
+  if (sel.has('전체') || sel.size === 0) return '전체 동';
+  const arr = [...sel];
+  return arr.length === 1 ? arr[0] : `${arr[0]} 외 ${arr.length - 1}곳`;
+}
+
+function renderDongMenu() {
+  const menu = document.getElementById('dongMenu');
+  const label = document.getElementById('dongLabel');
+  label.textContent = getDongLabelText();
+  menu.innerHTML = '';
+
+  const dongs = ['전체', ...(CITY_DONGS[state.city] || [])];
+  for (const dong of dongs) {
+    const li = document.createElement('label');
+    li.className = 'dong-item';
+
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = dong === '전체'
+      ? (state.selectedDongs.has('전체') || state.selectedDongs.size === 0)
+      : (!state.selectedDongs.has('전체') && state.selectedDongs.has(dong));
+
+    cb.onchange = () => {
+      if (dong === '전체') {
+        state.selectedDongs = cb.checked ? new Set(['전체']) : new Set();
+      } else {
+        state.selectedDongs.delete('전체');
+        cb.checked ? state.selectedDongs.add(dong) : state.selectedDongs.delete(dong);
+        if (state.selectedDongs.size === 0) state.selectedDongs.add('전체');
+      }
+      renderDongMenu();
+      renderTrades();
+    };
+
+    li.appendChild(cb);
+    li.append(dong);
+    menu.appendChild(li);
+  }
+}
+
+const dongBtn  = document.getElementById('dongBtn');
+const dongMenu = document.getElementById('dongMenu');
+
+dongBtn.onclick = (e) => {
+  e.stopPropagation();
+  dongMenu.classList.toggle('open');
+  dongBtn.classList.toggle('open');
+};
+document.addEventListener('click', () => {
+  dongMenu.classList.remove('open');
+  dongBtn.classList.remove('open');
+});
+dongMenu.addEventListener('click', (e) => e.stopPropagation());
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Search
+// ══════════════════════════════════════════════════════════════════════════════
+
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  state.search = e.target.value.trim();
+  renderTrades();
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Filter
+// ══════════════════════════════════════════════════════════════════════════════
+
+function filterTrades() {
+  const q = state.search.toLowerCase();
+  return ALL_TRADES.filter(t => {
+    if ((t._city || '') !== state.city) return false;
+    if (!state.selectedDongs.has('전체')) {
+      const dong = t._dong || t.umdNm || '';
+      if (!state.selectedDongs.has(dong)) return false;
+    }
+    if (q && !(t.aptNm || '').toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Render trade list (grouped by apartment)
+// ══════════════════════════════════════════════════════════════════════════════
+
+function renderTrades() {
+  const filtered = filterTrades();
+  document.getElementById('summary').textContent =
+    `${filtered.length.toLocaleString()}건의 거래`;
+
+  const list = document.getElementById('tradeList');
+  if (!filtered.length) {
+    list.innerHTML = '<p class="empty">조건에 맞는 거래가 없습니다.</p>';
+    return;
+  }
+
+  // Group by apt + dong
+  const groups = new Map();
+  for (const t of filtered) {
+    const key = `${t.aptNm}||${t._dong || t.umdNm}`;
+    if (!groups.has(key)) {
+      groups.set(key, {
+        apt:    t.aptNm,
+        dong:   t._dong || t.umdNm,
+        city:   t._city,
+        trades: [],
+      });
+    }
+    groups.get(key).trades.push(t);
+  }
+
+  // Sort groups by most recent non-cancelled trade
+  const sorted = [...groups.values()].sort((a, b) => {
+    const la = a.trades.filter(t => !isCancelled(t)).sort(sortByDateDesc)[0];
+    const lb = b.trades.filter(t => !isCancelled(t)).sort(sortByDateDesc)[0];
+    if (!la) return 1; if (!lb) return -1;
+    return tradeDateNum(lb) - tradeDateNum(la);
+  });
+
+  list.innerHTML = '';
+  for (const grp of sorted) {
+    list.appendChild(buildCard(grp));
+  }
+}
+
+function buildCard(grp) {
+  // Compute per-area max price (non-cancelled)
+  const areaMax = {};
+  for (const t of grp.trades) {
+    if (isCancelled(t)) continue;
+    const p = priceNum(t.dealAmount);
+    if (!areaMax[t.excluUseAr] || p > areaMax[t.excluUseAr]) areaMax[t.excluUseAr] = p;
+  }
+
+  const card = document.createElement('div');
+  card.className = 'trade-card';
+
+  // Header
+  const h = document.createElement('div');
+  h.className = 'apt-name';
+  h.textContent = grp.apt;
+  card.appendChild(h);
+
+  const meta = document.createElement('div');
+  meta.className = 'apt-meta';
+  const sample = grp.trades.find(t => t.buildYear);
+  const parts  = [`${grp.city} ${grp.dong}`];
+  if (sample?.buildYear) parts.push(`${sample.buildYear}년`);
+  if (sample?._vlRat)    parts.push(`용적률 ${sample._vlRat}%`);
+  if (sample?._bcRat)    parts.push(`건폐율 ${sample._bcRat}%`);
+  meta.textContent = parts.join(' · ');
+  card.appendChild(meta);
+
+  // Rows (newest 5)
+  const rows = document.createElement('div');
+  rows.className = 'trade-rows';
+  const shown = [...grp.trades].sort(sortByDateDesc).slice(0, 5);
+  for (const t of shown) {
+    rows.appendChild(buildRow(t, areaMax));
+  }
+  card.appendChild(rows);
+
+  if (grp.trades.length > 5) {
+    const more = document.createElement('div');
+    more.className = 'more-label';
+    more.textContent = `+ ${grp.trades.length - 5}건 더보기`;
+    card.appendChild(more);
+  }
+
+  card.onclick = () => openModal(grp);
+  return card;
+}
+
+function buildRow(t, areaMax) {
+  const row = document.createElement('div');
+  row.className = 'trade-row';
+
+  const date = document.createElement('span');
+  date.className = 'col-date';
+  date.textContent = fmtDate(t.dealYear, t.dealMonth, t.dealDay);
+
+  const area = document.createElement('span');
+  area.className = 'col-area';
+  area.textContent = `${parseFloat(t.excluUseAr).toFixed(1)}㎡`;
+
+  const floor = document.createElement('span');
+  floor.className = 'col-floor';
+  floor.textContent = `${t.floor}층`;
+
+  const price = document.createElement('span');
+  price.className = 'col-price';
+  price.textContent = fmtKrw(t.dealAmount);
+
+  row.append(date, area, floor, price);
+
+  // Badges
+  const bw = document.createElement('div');
+  bw.className = 'badge-wrap';
+  if (isCancelled(t)) {
+    bw.appendChild(makeBadge('취소', 'b-cancel'));
+  } else {
+    const p = priceNum(t.dealAmount);
+    if (p > 0 && p >= (areaMax[t.excluUseAr] || 0)) {
+      bw.appendChild(makeBadge('신고가', 'b-new-high'));
+    }
+    if (isDirect(t)) bw.appendChild(makeBadge('직거래', 'b-direct'));
+  }
+  if (bw.children.length) row.appendChild(bw);
+
+  return row;
+}
+
+function makeBadge(text, cls) {
+  const b = document.createElement('span');
+  b.className = `badge ${cls}`;
+  b.textContent = text;
+  return b;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Modal
+// ══════════════════════════════════════════════════════════════════════════════
+
+document.getElementById('modalClose').onclick    = closeModal;
+document.getElementById('modalOverlay').onclick  = (e) => {
+  if (e.target.id === 'modalOverlay') closeModal();
+};
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+}
+
+function openModal(grp) {
+  modalApt = grp;
+
+  // Available areas, sorted ascending
+  const areas = [...new Set(grp.trades.map(t => t.excluUseAr))]
+    .sort((a, b) => parseFloat(a) - parseFloat(b));
+  modalArea = areas[0];
+
+  document.getElementById('modalTitle').textContent = grp.apt;
+  const sample = grp.trades.find(t => t.buildYear);
+  const parts  = [`${grp.city} ${grp.dong}`];
+  if (sample?.buildYear) parts.push(`${sample.buildYear}년`);
+  if (sample?._vlRat)    parts.push(`용적률 ${sample._vlRat}%`);
+  if (sample?._bcRat)    parts.push(`건폐율 ${sample._bcRat}%`);
+  document.getElementById('modalSub').textContent = parts.join(' · ');
+
+  renderAreaTabs(areas);
+  renderChart();
+  renderDetailTable();
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById('modal').scrollTop = 0;
+}
+
+function renderAreaTabs(areas) {
+  const el = document.getElementById('areaTabs');
+  el.innerHTML = '';
+  for (const area of areas) {
+    const btn = document.createElement('button');
+    btn.className = 'area-tab' + (area === modalArea ? ' active' : '');
+    btn.textContent = `${parseFloat(area).toFixed(1)}㎡`;
+    btn.onclick = () => {
+      modalArea = area;
+      renderAreaTabs(areas);
+      renderChart();
+      renderDetailTable();
+    };
+    el.appendChild(btn);
+  }
+}
+
+function renderChart() {
+  if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+
+  const ts = (modalApt.trades || [])
+    .filter(t => t.excluUseAr === modalArea && !isCancelled(t))
+    .sort((a, b) => tradeDateNum(a) - tradeDateNum(b));
+
+  document.getElementById('chartTitle').textContent =
+    `${parseFloat(modalArea).toFixed(1)}㎡ 거래 추이`;
+
+  if (!ts.length) return;
+
+  const labels = ts.map(t => fmtDate(t.dealYear, t.dealMonth, t.dealDay));
+  const prices = ts.map(t => +(priceNum(t.dealAmount) / 10000).toFixed(4));
+
+  const ctx = document.getElementById('priceChart').getContext('2d');
+  chartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: '거래가(억)',
+        data: prices,
+        borderColor:     '#2563eb',
+        backgroundColor: 'rgba(37,99,235,.1)',
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        tension: 0.35,
+        fill: true,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => `${ctx.parsed.y.toFixed(2)}억원`,
+          },
+        },
+      },
+      scales: {
+        y: {
+          ticks: { callback: v => `${(+v).toFixed(1)}억` },
+        },
+        x: {
+          ticks: { maxTicksLimit: 8, maxRotation: 30 },
+        },
+      },
+    },
+  });
+}
+
+function renderDetailTable() {
+  const rows = (modalApt.trades || [])
+    .filter(t => t.excluUseAr === modalArea)
+    .sort(sortByDateDesc);
+
+  const maxP = Math.max(
+    ...rows.filter(t => !isCancelled(t)).map(t => priceNum(t.dealAmount)), 0
+  );
+
+  const tbody = document.getElementById('detailBody');
+  tbody.innerHTML = '';
+
+  for (const t of rows) {
+    const tr = document.createElement('tr');
+    if (isCancelled(t)) tr.className = 'cancelled-row';
+
+    const p = priceNum(t.dealAmount);
+    const badges = [];
+    if (isCancelled(t)) {
+      badges.push('<span class="badge b-cancel">취소</span>');
+    } else {
+      if (p > 0 && p >= maxP) badges.push('<span class="badge b-new-high">신고가</span>');
+      if (isDirect(t))        badges.push('<span class="badge b-direct">직거래</span>');
+    }
+
+    tr.innerHTML = `
+      <td>${fmtDate(t.dealYear, t.dealMonth, t.dealDay)}</td>
+      <td>${parseFloat(t.excluUseAr).toFixed(1)}</td>
+      <td>${t.floor}층</td>
+      <td class="col-price-td"><b>${fmtKrw(t.dealAmount)}</b></td>
+      <td>${t.dealingGbn || ''}</td>
+      <td>${badges.join(' ')}</td>
+    `;
+    tbody.appendChild(tr);
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Start
+// ══════════════════════════════════════════════════════════════════════════════
+init();
+</script>
+</body>
+</html>
