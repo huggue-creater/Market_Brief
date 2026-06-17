@@ -555,28 +555,63 @@ def update_building_cache() -> dict:
 def generate_search_json(ym_list: list):
     log.info("=== 검색 JSON 생성 ===")
     building_cache = update_building_cache()
-    all_trades     = []
+    all_deals: list = []
+    meta_map:  dict = {}  # aptNm → {buildYear, vlRat, bcRat}
 
     for region in REGIONS:
-        name = region["name"]
+        name         = region["name"]
+        city         = region["city"]
+        region_label = f"{city} {name}"
         log.info("[검색JSON] %s...", name)
         try:
             trades    = collect_trades_for_region(region, ym_list)
             cache_key = f"{region['lawd']}|{region['bjdong']}" if region.get("bjdong") else None
             dong_bld  = building_cache.get(cache_key, {}) if cache_key else {}
+
             for t in trades:
-                t["_city"]  = region["city"]
-                t["_dong"]  = name
-                t["_lawd"]  = region["lawd"]
-                meta        = dong_bld.get(t.get("aptNm", ""), {})
-                t["_vlRat"] = meta.get("vlRat", "")
-                t["_bcRat"] = meta.get("bcRat", "")
-            all_trades.extend(trades)
+                apt      = t.get("aptNm", "")
+                area_str = t.get("excluUseAr", "0")
+                try:
+                    area = round(float(area_str), 4)
+                except Exception:
+                    area = 0.0
+
+                try:
+                    amount = int(t.get("dealAmount", "0").replace(",", ""))
+                except Exception:
+                    amount = 0
+
+                y = t.get("dealYear", "2000")
+                m = t.get("dealMonth", "1").zfill(2)
+                d = t.get("dealDay",   "1").zfill(2)
+
+                all_deals.append({
+                    "region":   region_label,
+                    "apt":      apt,
+                    "area":     area,
+                    "pyeong":   to_pyeong(area_str),
+                    "floor":    t.get("floor", ""),
+                    "amount":   amount,
+                    "date":     f"{y}-{m}-{d}",
+                    "direct":   "직" in (t.get("dealingGbn") or ""),
+                    "canceled": t.get("cdealType") == "Y",
+                })
+
+                # 단지 메타 (최초 1회만 저장)
+                if apt and apt not in meta_map:
+                    by = t.get("buildYear", "")
+                    bld = dong_bld.get(apt, {})
+                    meta_map[apt] = {
+                        "buildYear": int(by) if by.isdigit() else None,
+                        "vlRat":     bld.get("vlRat", ""),
+                        "bcRat":     bld.get("bcRat", ""),
+                    }
+
             log.info("  %s: %d건", name, len(trades))
         except Exception as exc:
             log.error("  %s 오류: %s", name, exc)
 
-    total = len(all_trades)
+    total = len(all_deals)
     if total == 0:
         log.warning("수집 0건 — 기존 JSON 보존")
         return
@@ -585,7 +620,8 @@ def generate_search_json(ym_list: list):
         "generated_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "months":       ym_list,
         "total":        total,
-        "trades":       all_trades,
+        "deals":        all_deals,
+        "meta":         meta_map,
     })
     log.info("검색 JSON 저장: %d건", total)
 
