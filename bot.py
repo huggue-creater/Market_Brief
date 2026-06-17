@@ -118,7 +118,7 @@ def yahoo_get(symbol: str) -> Optional[dict]:
 
 def send_telegram(text: str) -> bool:
     url    = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-    params = {"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML"}
+    params = {"chat_id": TELEGRAM_CHAT_ID, "text": text}
     resp   = http_get(url, params=params)
     if resp and resp.ok:
         return True

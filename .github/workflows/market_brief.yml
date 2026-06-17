@@ -41,6 +41,15 @@ jobs:
       - name: Inject search data into index.html
         run: python inject_data.py
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: market-brief-${{ github.run_id }}
+          path: |
+            index.html
+            search_data.json
+          retention-days: 7
+
       - name: Commit & push updated state
         run: |
           git config user.name  "github-actions[bot]"
