@@ -20,7 +20,7 @@ from xml.etree import ElementTree
 import holidays
 import requests
 
-# ── Logging ──────────────────────────────────────────────────────────────────
+# ── Logging ───────────────────────────────────────────────────────────────────
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s %(message)s",
@@ -38,11 +38,19 @@ BUILD_INFO_URL = "http://apis.data.go.kr/1613000/BldRgstService_v2/getBrRecapTit
 UPBIT_URL      = "https://api.upbit.com/v1/ticker"
 COINGECKO_URL  = "https://api.coingecko.com/api/v3/simple/price"
 YAHOO_URL      = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
+YAHOO_URL2     = "https://query2.finance.yahoo.com/v8/finance/chart/{symbol}"
 
-MONTHS_BACK   = 6
-RETRY_COUNT   = 4
-RETRY_DELAYS  = [2, 4, 8, 16]
+MONTHS_BACK    = 6
+RETRY_COUNT    = 4
+RETRY_DELAYS   = [2, 4, 8, 16]
 TELEGRAM_LIMIT = 3800
+
+YAHOO_HEADERS = {
+    "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                   "AppleWebKit/537.36 (KHTML, like Gecko) "
+                   "Chrome/120.0.0.0 Safari/537.36"),
+    "Accept": "application/json",
+}
 
 STATE_FILE       = Path("apt_state.json")
 CACHE_FILE       = Path("building_cache.json")
@@ -50,9 +58,6 @@ SEARCH_JSON_FILE = Path("search_data.json")
 LAST_RUN_FILE    = Path("last_run.txt")
 
 # ── Region definitions ────────────────────────────────────────────────────────
-# lawd : 시군구코드 5자리 (거래 조회)
-# bjdong: 법정동코드 뒤5자리 (건축물대장, None이면 스킵)
-# dong  : API 응답 umdNm 필터링값
 REGIONS = [
     # ── Telegram 알림 ──
     {"city": "하남", "name": "망월동", "lawd": "41450", "bjdong": "10900", "dong": "망월동", "telegram": True},
@@ -66,7 +71,6 @@ REGIONS = [
     {"city": "하남", "name": "감일동", "lawd": "41450", "bjdong": "11400", "dong": "감일동", "telegram": False},
     {"city": "하남", "name": "감이동", "lawd": "41450", "bjdong": "11500", "dong": "감이동", "telegram": False},
     {"city": "하남", "name": "학암동", "lawd": "41450", "bjdong": "11600", "dong": "학암동", "telegram": False},
-    # bjdong 미확보 — 거래조회는 되지만 건축물대장 스킵
     {"city": "하남", "name": "선동",   "lawd": "41450", "bjdong": None,    "dong": "선동",   "telegram": False},
     {"city": "하남", "name": "미사동", "lawd": "41450", "bjdong": None,    "dong": "미사동", "telegram": False},
     {"city": "하남", "name": "위례동", "lawd": "41450", "bjdong": None,    "dong": "위례동", "telegram": False},
@@ -79,39 +83,53 @@ REGIONS = [
 # Utilities
 # ══════════════════════════════════════════════════════════════════════════════
 
-def http_get(url: str, params: dict = None, timeout: int = 15) -> Optional[requests.Response]:
-    """GET with exponential-backoff retry. Returns Response or None."""
+def http_get(url: str, params: dict = None, headers: dict = None,
+             timeout: int = 15) -> Optional[requests.Response]:
     for attempt in range(RETRY_COUNT):
         try:
-            resp = requests.get(url, params=params, timeout=timeout)
+            resp = requests.get(url, params=params, headers=headers, timeout=timeout)
             resp.raise_for_status()
             return resp
         except Exception as exc:
             wait = RETRY_DELAYS[min(attempt, len(RETRY_DELAYS) - 1)]
-            log.warning("GET %s attempt %d/%d failed: %s — retry in %ds",
-                        url.split("?")[0], attempt + 1, RETRY_COUNT, exc, wait)
+            log.warning("GET %s attempt %d/%d: %s — retry in %ds",
+                        url.split("?")[0][:60], attempt + 1, RETRY_COUNT, exc, wait)
             if attempt < RETRY_COUNT - 1:
                 time.sleep(wait)
-    log.error("GET %s failed after %d attempts", url.split("?")[0], RETRY_COUNT)
+    log.error("GET %s 최종 실패", url.split("?")[0][:60])
+    return None
+
+
+def yahoo_get(symbol: str) -> Optional[dict]:
+    """Yahoo Finance 조회 (query1 → query2 fallback). meta dict 반환."""
+    params = {"interval": "1d", "range": "5d"}
+    for base in (YAHOO_URL, YAHOO_URL2):
+        resp = http_get(base.format(symbol=symbol), params=params, headers=YAHOO_HEADERS)
+        if not resp:
+            continue
+        try:
+            result = resp.json()["chart"]["result"]
+            if result:
+                return result[0]["meta"]
+        except Exception as exc:
+            log.warning("Yahoo parse %s: %s", symbol, exc)
     return None
 
 
 def send_telegram(text: str) -> bool:
-    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+    url    = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     params = {"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML"}
-    resp = http_get(url, params=params)
+    resp   = http_get(url, params=params)
     if resp and resp.ok:
         return True
-    log.error("Telegram send failed: %s", resp.text if resp else "no response")
+    log.error("Telegram 전송 실패: %s", resp.text if resp else "no response")
     return False
 
 
 def send_telegram_chunked(text: str) -> bool:
-    """Split long messages and send sequentially."""
     if len(text) <= TELEGRAM_LIMIT:
         return send_telegram(text)
-    lines = text.split("\n")
-    chunk, parts = [], []
+    lines, chunk, parts = text.split("\n"), [], []
     for line in lines:
         if sum(len(l) + 1 for l in chunk) + len(line) > TELEGRAM_LIMIT:
             parts.append("\n".join(chunk))
@@ -132,12 +150,10 @@ def get_ym_list(months_back: int) -> list:
     today = datetime.date.today()
     result = []
     for i in range(months_back):
-        year  = today.year
-        month = today.month - i
-        while month <= 0:
-            month += 12
-            year  -= 1
-        result.append(f"{year}{month:02d}")
+        y, m = today.year, today.month - i
+        while m <= 0:
+            m += 12; y -= 1
+        result.append(f"{y}{m:02d}")
     return result
 
 
@@ -155,23 +171,28 @@ def save_json(path: Path, data):
 
 
 def fmt_krw(amount) -> str:
-    """Convert int or comma-string to Korean '억/만' notation."""
     try:
         val = int(str(amount).replace(",", ""))
-        eok = val // 10000
-        man = val % 10000
+        eok, man = val // 10000, val % 10000
         if eok and man:
-            return f"{eok}억 {man:,}만"
+            return f"{eok}억 {man:,}만원"
         if eok:
-            return f"{eok}억"
-        return f"{val:,}만"
+            return f"{eok}억원"
+        return f"{val:,}만원"
     except Exception:
         return str(amount)
 
 
+def to_pyeong(area_str: str) -> int:
+    try:
+        return round(float(area_str) / 3.3058)
+    except Exception:
+        return 0
+
+
 def price_val(t: dict) -> int:
     try:
-        return int(t.get("dealAmount", "0").replace(",", ""))
+        return int(str(t.get("dealAmount", "0")).replace(",", ""))
     except Exception:
         return 0
 
@@ -185,128 +206,152 @@ def trade_date_int(t: dict) -> int:
         return 0
 
 
+def short_date(t: dict) -> str:
+    """26.05.22 형태"""
+    try:
+        y = str(t.get("dealYear", ""))[-2:]
+        m = int(t.get("dealMonth", 1))
+        d = int(t.get("dealDay", 1))
+        return f"{y}.{m:02d}.{d:02d}"
+    except Exception:
+        return ""
+
+
 def trade_id(t: dict) -> str:
     return "|".join([
-        t.get("umdNm", ""),
-        t.get("aptNm", ""),
-        t.get("dealYear", ""),
-        t.get("dealMonth", ""),
-        t.get("dealDay", ""),
-        t.get("excluUseAr", ""),
-        t.get("floor", ""),
-        t.get("dealAmount", ""),
+        t.get("umdNm", ""), t.get("aptNm", ""),
+        t.get("dealYear", ""), t.get("dealMonth", ""), t.get("dealDay", ""),
+        t.get("excluUseAr", ""), t.get("floor", ""), t.get("dealAmount", ""),
     ])
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Feature 1 — Coin + FX
+# Feature 1 — 코인 + 환율
 # ══════════════════════════════════════════════════════════════════════════════
 
-def get_coin_fx_message() -> str:
-    coins   = ["BTC", "ETH", "XRP"]
-    cg_ids  = {"BTC": "bitcoin", "ETH": "ethereum", "XRP": "ripple"}
+COIN_NAMES = {"BTC": "비트코인", "ETH": "이더리움", "XRP": "리플"}
+CG_IDS     = {"BTC": "bitcoin", "ETH": "ethereum", "XRP": "ripple"}
 
-    # Upbit KRW
-    krw_prices: dict = {}
+def get_coin_fx_message() -> str:
+    coins = ["BTC", "ETH", "XRP"]
+
+    # Upbit: 현재가 + 24h 변동
+    upbit_data: dict = {}
     resp = http_get(UPBIT_URL, params={"markets": ",".join(f"KRW-{c}" for c in coins)})
     if resp:
         for item in resp.json():
             ticker = item["market"].replace("KRW-", "")
-            krw_prices[ticker] = item["trade_price"]
+            upbit_data[ticker] = item  # trade_price, signed_change_rate, change
 
-    # CoinGecko USD
-    usd_prices: dict = {}
-    resp = http_get(COINGECKO_URL, params={"ids": ",".join(cg_ids.values()), "vs_currencies": "usd"})
+    # CoinGecko: USD 현재가 + 24h 변동
+    usd_data: dict = {}
+    resp = http_get(COINGECKO_URL, params={
+        "ids": ",".join(CG_IDS.values()),
+        "vs_currencies": "usd",
+        "include_24hr_change": "true",
+    })
     if resp:
-        for ticker, cg_id in cg_ids.items():
-            usd_prices[ticker] = resp.json().get(cg_id, {}).get("usd")
+        raw = resp.json()
+        for ticker, cg_id in CG_IDS.items():
+            if cg_id in raw:
+                usd_data[ticker] = raw[cg_id]
 
-    # USD/KRW
-    usdkrw = None
-    resp = http_get(YAHOO_URL.format(symbol="USDKRW=X"), params={"interval": "1m", "range": "1d"})
-    if resp:
-        try:
-            usdkrw = resp.json()["chart"]["result"][0]["meta"]["regularMarketPrice"]
-        except Exception:
-            pass
+    # 환율
+    usdkrw, jpykrw = None, None
+    meta_usd = yahoo_get("USDKRW=X")
+    if meta_usd:
+        usdkrw = meta_usd.get("regularMarketPrice")
+    meta_jpy = yahoo_get("JPY=X")
+    if meta_jpy and usdkrw:
+        jpyusd = meta_jpy.get("regularMarketPrice")
+        if jpyusd:
+            jpykrw = usdkrw / jpyusd
 
-    # JPY/KRW (via USDJPY)
-    jpykrw = None
-    resp = http_get(YAHOO_URL.format(symbol="JPY=X"), params={"interval": "1m", "range": "1d"})
-    if resp and usdkrw:
-        try:
-            jpyusd = resp.json()["chart"]["result"][0]["meta"]["regularMarketPrice"]
-            jpykrw = usdkrw / jpyusd  # KRW per 1 JPY
-        except Exception:
-            pass
-
-    lines = ["📊 <b>코인 · 환율</b>"]
+    lines = []
     for c in coins:
-        krw = krw_prices.get(c)
-        usd = usd_prices.get(c)
-        if krw and usd and usdkrw:
-            kimp = (krw / (usd * usdkrw) - 1) * 100
-            sig  = "▲" if kimp >= 0 else "▼"
-            lines.append(f"  {c}: ${usd:,.2f} | ₩{krw:,.0f} | 김프 {sig}{abs(kimp):.2f}%")
-        elif krw:
-            lines.append(f"  {c}: ₩{krw:,.0f}")
+        up  = upbit_data.get(c, {})
+        usd = usd_data.get(c, {})
+
+        krw_price = up.get("trade_price")
+        krw_rate  = up.get("signed_change_rate", 0)  # 0.0033 형태
+        krw_chg   = up.get("change", "EVEN")          # "RISE"/"FALL"/"EVEN"
+
+        usd_price = usd.get("usd")
+        usd_rate  = usd.get("usd_24h_change", 0)
+
+        krw_arrow = "▲" if krw_chg == "RISE" else ("▼" if krw_chg == "FALL" else "-")
+        usd_arrow = "▲" if (usd_rate or 0) >= 0 else "▼"
+
+        lines.append(f"[{COIN_NAMES[c]}]")
+
+        if krw_price:
+            lines.append(f"🇰🇷 {krw_arrow} {krw_price:,.0f} ({krw_rate*100:+.2f}%)")
         else:
-            lines.append(f"  {c}: 데이터 없음")
+            lines.append("🇰🇷 데이터 없음")
+
+        if usd_price:
+            lines.append(f"🇺🇸 {usd_arrow} {usd_price:,.2f} ({usd_rate:+.2f}%)")
+        else:
+            lines.append("🇺🇸 데이터 없음")
+
+        if krw_price and usd_price and usdkrw:
+            kimp = (krw_price / (usd_price * usdkrw) - 1) * 100
+            lines.append(f"김프 : ({kimp:+.2f}%)")
+
+        lines.append("")  # 빈 줄
 
     if usdkrw:
-        lines.append(f"  USD/KRW: {usdkrw:,.1f}")
+        lines.append(f"달러환율: {usdkrw:,.2f}원")
     if jpykrw:
-        lines.append(f"  100JPY/KRW: {jpykrw * 100:,.0f}")
+        lines.append(f"엔화환율(100엔) : {jpykrw * 100:,.2f}원")
 
-    return "\n".join(lines)
+    return "\n".join(lines).strip()
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Feature 2 — Futures / Indices
+# Feature 2 — 선물지수
 # ══════════════════════════════════════════════════════════════════════════════
 
 FUTURES = [
-    ("ES=F",  "US500"),
-    ("NQ=F",  "US Tech100"),
-    ("^VIX",  "VIX"),
-    ("^N225", "Nikkei225"),
-    ("^HSI",  "Hang Seng"),
+    ("ES=F",  "🇺🇸 US 500"),
+    ("NQ=F",  "🇺🇸 US Tech 100"),
+    ("^VIX",  "📊 S&P 500 VIX"),
+    ("^N225", "🇯🇵 Nikkei 225"),
+    ("^HSI",  "🇭🇰 Hang Seng"),
 ]
 
 def get_futures_message() -> str:
-    lines = ["📈 <b>선물 · 지수</b>"]
+    lines = ["[선물지수]"]
     for symbol, label in FUTURES:
-        resp = http_get(YAHOO_URL.format(symbol=symbol), params={"interval": "1m", "range": "1d"})
-        if not resp:
-            lines.append(f"  {label}: 데이터 없음")
+        meta = yahoo_get(symbol)
+        if not meta:
+            lines.append(f"\n{label}\n데이터 없음")
             continue
         try:
-            meta  = resp.json()["chart"]["result"][0]["meta"]
             price = meta["regularMarketPrice"]
             prev  = (meta.get("chartPreviousClose")
                      or meta.get("previousClose")
                      or meta.get("regularMarketPreviousClose"))
+            lines.append(f"\n{label}")
             if prev:
                 chg = price - prev
                 pct = chg / prev * 100
                 sig = "▲" if chg >= 0 else "▼"
-                lines.append(f"  {label}: {price:,.2f} {sig}{abs(pct):.2f}%")
+                lines.append(f"{price:,.2f} {sig} {abs(chg):+,.2f} ({pct:+.2f}%)")
             else:
-                lines.append(f"  {label}: {price:,.2f}")
+                lines.append(f"{price:,.2f}")
         except Exception as exc:
             log.warning("Futures parse %s: %s", symbol, exc)
-            lines.append(f"  {label}: 파싱 오류")
+            lines.append(f"\n{label}\n파싱 오류")
     return "\n".join(lines)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Apartment trade collection (shared by Feature 3 & 4)
+# Apartment trade collection
 # ══════════════════════════════════════════════════════════════════════════════
 
 def fetch_apt_trades_month(lawd: str, ym: str) -> list:
-    """Fetch all pages for (lawd, YYYYMM). Returns list of trade dicts."""
-    all_items = []
-    page = 1
+    all_items, page = [], 1
     while True:
         params = {
             "serviceKey": DATA_GO_KR_KEY,
@@ -317,20 +362,15 @@ def fetch_apt_trades_month(lawd: str, ym: str) -> list:
         }
         resp = http_get(APT_TRADE_URL, params=params)
         if not resp:
-            log.error("  fetch_apt_trades lawd=%s ym=%s page=%d: HTTP 실패", lawd, ym, page)
+            log.error("  fetch_apt_trades lawd=%s ym=%s page=%d 실패", lawd, ym, page)
             break
         try:
             root  = ElementTree.fromstring(resp.text)
-            # 오류 응답 체크
-            result_code = root.findtext(".//resultCode") or root.findtext(".//errMsg") or ""
-            if "SERVICE_KEY" in result_code or "LIMITED" in result_code:
-                log.error("  API 키 오류: %s", result_code)
-                break
             items = root.findall(".//item")
             if not items:
                 break
             for item in items:
-                d = {child.tag: (child.text or "").strip() for child in item}
+                d = {c.tag: (c.text or "").strip() for c in item}
                 all_items.append(d)
             total = int(root.findtext(".//totalCount") or "0")
             if page * 100 >= total:
@@ -343,72 +383,96 @@ def fetch_apt_trades_month(lawd: str, ym: str) -> list:
 
 
 def collect_trades_for_region(region: dict, ym_list: list) -> list:
-    """Collect & filter trades for one region across all months."""
-    dong = region["dong"]
-    lawd = region["lawd"]
-    name = region["name"]
+    dong, lawd, name = region["dong"], region["lawd"], region["name"]
     all_trades = []
     for ym in ym_list:
         try:
-            trades = fetch_apt_trades_month(lawd, ym)
+            trades      = fetch_apt_trades_month(lawd, ym)
             dong_trades = [t for t in trades if t.get("umdNm", "").strip() == dong]
             log.info("  %s: %s → %d건", name, ym, len(dong_trades))
             all_trades.extend(dong_trades)
         except Exception as exc:
-            log.error("  %s %s 수집 오류: %s", name, ym, exc)
+            log.error("  %s %s 오류: %s", name, ym, exc)
     return all_trades
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Feature 3 — Apartment new-trade alerts
+# Feature 3 — 아파트 신규거래 알림
 # ══════════════════════════════════════════════════════════════════════════════
 
-def _build_telegram_apt_msg(region: dict, new_trades: list, known_ids: set, all_trades: list) -> str:
+def _build_telegram_apt_msg(region: dict, new_trades: list,
+                             known_ids: set, all_trades: list) -> str:
+    city = region["city"]
     name = region["name"]
+    today = datetime.date.today().strftime("%Y-%m-%d")
 
-    # Price history from PREVIOUSLY KNOWN non-cancelled trades only
-    old_trades = [t for t in all_trades
-                  if trade_id(t) in known_ids and t.get("cdealType") != "Y"]
-    unit_old: dict = {}
-    for t in sorted(old_trades, key=trade_date_int):
+    # 기존(알려진) 비취소 거래의 가격·날짜 이력 구축
+    # unit_history: (apt, area) → [(price_int, short_date_str, trade)]  (날짜순)
+    unit_history: dict = {}
+    for t in sorted(
+        [t for t in all_trades if trade_id(t) in known_ids and t.get("cdealType") != "Y"],
+        key=trade_date_int
+    ):
         key = (t.get("aptNm", ""), t.get("excluUseAr", ""))
-        unit_old.setdefault(key, []).append(price_val(t))
+        unit_history.setdefault(key, []).append((price_val(t), short_date(t)))
 
-    lines = [f"🏠 <b>{name} 신규 거래</b> ({len(new_trades)}건)"]
+    new_high_count = 0
+    blocks = []
+
     for t in sorted(new_trades, key=trade_date_int):
-        apt        = t.get("aptNm", "")
-        area       = t.get("excluUseAr", "")
-        floor_     = t.get("floor", "")
-        price_s    = fmt_krw(t.get("dealAmount", ""))
-        cur        = price_val(t)
-        cancelled  = t.get("cdealType") == "Y"
-        direct     = "직" in (t.get("dealingGbn") or "")
-        date_s     = (f"{t.get('dealYear','')}."
-                      f"{int(t.get('dealMonth', 1)):02d}."
-                      f"{int(t.get('dealDay', 1)):02d}")
+        apt       = t.get("aptNm", "")
+        area      = t.get("excluUseAr", "")
+        floor_    = t.get("floor", "")
+        cur       = price_val(t)
+        cancelled = t.get("cdealType") == "Y"
+        direct    = "직" in (t.get("dealingGbn") or "")
+        pyeong    = to_pyeong(area)
 
-        key        = (apt, area)
-        old_prices = unit_old.get(key, [])
+        key     = (apt, area)
+        history = unit_history.get(key, [])  # [(price, date), ...]
 
-        flags = []
-        if cancelled:
-            flags.append("❌취소")
-        if direct:
-            flags.append("🤝직거래")
-        if not cancelled and old_prices and cur > max(old_prices):
-            flags.append("🏆신고가")
+        # 이전 최고가 / 직전 실거래
+        prev_max_price, prev_max_date = None, None
+        prev_last_price, prev_last_date = None, None
+        if history:
+            prev_last_price, prev_last_date = history[-1]
+            max_entry = max(history, key=lambda x: x[0])
+            prev_max_price, prev_max_date = max_entry
 
-        line = f"  [{date_s}] {apt} {area}㎡/{floor_}층 {price_s}"
-        if flags:
-            line += "  " + " ".join(flags)
-        if not cancelled and old_prices:
-            prev = old_prices[-1]
-            diff = cur - prev
-            sig  = "▲" if diff >= 0 else "▼"
-            line += f"\n    ↳ 직전 {fmt_krw(prev)} 대비 {sig}{fmt_krw(abs(diff))}"
+        is_new_high = (not cancelled) and (prev_max_price is None or cur > prev_max_price)
+        if is_new_high:
+            new_high_count += 1
 
-        lines.append(line)
-    return "\n".join(lines)
+        apt_label = f"🏠 {apt}"
+        if is_new_high:
+            apt_label += " 🔥 신고가"
+        elif cancelled:
+            apt_label += " ❌ 취소"
+        if direct and not cancelled:
+            apt_label += " 🤝 직거래"
+
+        block = [apt_label]
+        block.append(f"전용 {area}㎡ ({pyeong}평) · {floor_}층")
+        block.append(f"거래가격 : {fmt_krw(cur)}")
+
+        if prev_last_price and prev_last_date:
+            block.append(f"직전 실거래 : {fmt_krw(prev_last_price)} ({prev_last_date})")
+
+        if prev_max_price and prev_max_date:
+            block.append(f"이전 최고가 : {fmt_krw(prev_max_price)} ({prev_max_date})")
+            if not is_new_high and cur > 0:
+                pct = cur / prev_max_price * 100
+                block.append(f"전고점 대비 : {pct:.1f}%")
+
+        blocks.append("\n".join(block))
+
+    total = len(new_trades)
+    header = (f"[아파트 신규신고 - {city} {name}]\n"
+              f"{today} 기준\n\n"
+              f"총 {total}건 신규" +
+              (f" · 🔥 신고가 {new_high_count}건" if new_high_count else ""))
+
+    return header + "\n\n" + "\n\n".join(blocks)
 
 
 def run_apartment_alerts(ym_list: list):
@@ -429,8 +493,7 @@ def run_apartment_alerts(ym_list: list):
                 msg = _build_telegram_apt_msg(region, new_trades, known_ids, all_trades)
                 send_telegram_chunked(msg)
 
-            # Merge all seen IDs into state
-            new_ids = {trade_id(t) for t in all_trades}
+            new_ids    = {trade_id(t) for t in all_trades}
             state[name] = list(set(state.get(name, [])) | new_ids)
         except Exception as exc:
             log.error("  %s 알림 오류: %s", name, exc)
@@ -443,7 +506,6 @@ def run_apartment_alerts(ym_list: list):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def _fetch_building_info(sigungu: str, bjdong: str) -> dict:
-    """Returns {aptNm: {vlRat, bcRat}} or {} on failure."""
     params = {
         "serviceKey": DATA_GO_KR_KEY,
         "sigunguCd":  sigungu,
@@ -458,32 +520,28 @@ def _fetch_building_info(sigungu: str, bjdong: str) -> dict:
         root   = ElementTree.fromstring(resp.text)
         result = {}
         for item in root.findall(".//item"):
-            d     = {child.tag: (child.text or "").strip() for child in item}
-            nm    = d.get("bldNm", "")
+            d  = {c.tag: (c.text or "").strip() for c in item}
+            nm = d.get("bldNm", "")
             if nm:
                 result[nm] = {"vlRat": d.get("vlRat", ""), "bcRat": d.get("bcRat", "")}
         return result
     except Exception as exc:
-        log.warning("Building parse sigungu=%s bjdong=%s: %s", sigungu, bjdong, exc)
+        log.warning("Building parse %s/%s: %s", sigungu, bjdong, exc)
         return {}
 
 
 def update_building_cache() -> dict:
-    cache = load_json(CACHE_FILE, {})
-    changed = False
+    cache, changed = load_json(CACHE_FILE, {}), False
     for region in REGIONS:
         bjdong = region.get("bjdong")
         if not bjdong:
-            log.info("  건축물대장: %s bjdong 없음, 스킵", region["name"])
             continue
         key = f"{region['lawd']}|{bjdong}"
         if key in cache:
-            continue  # 실패(빈 dict) 포함 캐시 히트 → 재조회 안 함
-        log.info("  건축물대장: %s 조회 중...", region["name"])
-        data = _fetch_building_info(region["lawd"], bjdong)
-        cache[key] = data  # 실패해도 {} 저장 → 다음 날 재조회 안 함
+            continue
+        log.info("  건축물대장: %s 조회...", region["name"])
+        cache[key] = _fetch_building_info(region["lawd"], bjdong)
         changed = True
-        log.info("  건축물대장: %s → %d개 단지", region["name"], len(data))
         time.sleep(0.3)
     if changed:
         save_json(CACHE_FILE, cache)
@@ -491,25 +549,21 @@ def update_building_cache() -> dict:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Feature 4 — Search JSON generation
+# Feature 4 — 검색 JSON 생성
 # ══════════════════════════════════════════════════════════════════════════════
 
 def generate_search_json(ym_list: list):
-    log.info("=== 검색 JSON 생성 시작 ===")
+    log.info("=== 검색 JSON 생성 ===")
     building_cache = update_building_cache()
-    region_map     = {r["name"]: r for r in REGIONS}
     all_trades     = []
 
     for region in REGIONS:
         name = region["name"]
-        log.info("[검색JSON] %s 수집 중...", name)
+        log.info("[검색JSON] %s...", name)
         try:
-            trades = collect_trades_for_region(region, ym_list)
-            log.info("  %s: %d건", name, len(trades))
-
+            trades    = collect_trades_for_region(region, ym_list)
             cache_key = f"{region['lawd']}|{region['bjdong']}" if region.get("bjdong") else None
             dong_bld  = building_cache.get(cache_key, {}) if cache_key else {}
-
             for t in trades:
                 t["_city"]  = region["city"]
                 t["_dong"]  = name
@@ -518,14 +572,13 @@ def generate_search_json(ym_list: list):
                 t["_vlRat"] = meta.get("vlRat", "")
                 t["_bcRat"] = meta.get("bcRat", "")
             all_trades.extend(trades)
+            log.info("  %s: %d건", name, len(trades))
         except Exception as exc:
-            log.error("  %s 검색JSON 오류: %s", name, exc)
+            log.error("  %s 오류: %s", name, exc)
 
     total = len(all_trades)
-    log.info("전체 수집: %d건", total)
-
     if total == 0:
-        log.warning("수집 0건 — 기존 JSON 보존 (덮어쓰지 않음)")
+        log.warning("수집 0건 — 기존 JSON 보존")
         return
 
     save_json(SEARCH_JSON_FILE, {
@@ -534,7 +587,7 @@ def generate_search_json(ym_list: list):
         "total":        total,
         "trades":       all_trades,
     })
-    log.info("검색 JSON 저장 완료: %s (%d건)", SEARCH_JSON_FILE, total)
+    log.info("검색 JSON 저장: %d건", total)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -582,13 +635,13 @@ def main():
     except Exception as exc:
         log.error("선물지수 오류: %s", exc)
 
-    log.info("--- 아파트 신규거래 알림 ---")
+    log.info("--- 아파트 알림 ---")
     try:
         run_apartment_alerts(ym_list)
     except Exception as exc:
         log.error("아파트 알림 오류: %s", exc)
 
-    log.info("--- 검색 JSON 생성 ---")
+    log.info("--- 검색 JSON ---")
     try:
         generate_search_json(ym_list)
     except Exception as exc:
