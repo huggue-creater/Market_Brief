@@ -185,7 +185,7 @@ def fmt_krw(amount) -> str:
 
 def to_pyeong(area_str: str) -> int:
     try:
-        return round(float(area_str) / 3.3058)
+        return round(float(area_str) * 1.34 / 3.3058)
     except Exception:
         return 0
 
