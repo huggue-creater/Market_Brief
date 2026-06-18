@@ -52,10 +52,11 @@ YAHOO_HEADERS = {
     "Accept": "application/json",
 }
 
-STATE_FILE       = Path("apt_state.json")
-CACHE_FILE       = Path("building_cache.json")
-SEARCH_JSON_FILE = Path("search_data.json")
-LAST_RUN_FILE    = Path("last_run.txt")
+STATE_FILE          = Path("apt_state.json")
+CACHE_FILE          = Path("building_cache.json")
+SEARCH_JSON_FILE    = Path("search_data.json")
+REPORTED_DATES_FILE = Path("reported_dates.json")
+LAST_RUN_FILE       = Path("last_run.txt")
 
 # ── Region definitions ────────────────────────────────────────────────────────
 REGIONS = [
@@ -477,7 +478,9 @@ def _build_telegram_apt_msg(region: dict, new_trades: list,
 
 
 def run_apartment_alerts(ym_list: list):
-    state = load_json(STATE_FILE, {})
+    state          = load_json(STATE_FILE, {})
+    reported_dates = load_json(REPORTED_DATES_FILE, {})
+    today_str      = datetime.date.today().isoformat()
 
     for region in [r for r in REGIONS if r["telegram"]]:
         name = region["name"]
@@ -493,6 +496,8 @@ def run_apartment_alerts(ym_list: list):
             elif new_trades:
                 msg = _build_telegram_apt_msg(region, new_trades, known_ids, all_trades)
                 send_telegram_chunked(msg)
+                for t in new_trades:
+                    reported_dates[trade_id(t)] = today_str
 
             new_ids    = {trade_id(t) for t in all_trades}
             state[name] = list(set(state.get(name, [])) | new_ids)
@@ -500,6 +505,7 @@ def run_apartment_alerts(ym_list: list):
             log.error("  %s 알림 오류: %s", name, exc)
 
     save_json(STATE_FILE, state)
+    save_json(REPORTED_DATES_FILE, reported_dates)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -556,12 +562,15 @@ def update_building_cache() -> dict:
 def generate_search_json(ym_list: list):
     log.info("=== 검색 JSON 생성 ===")
 
+    reported_dates = load_json(REPORTED_DATES_FILE, {})
+
     existing = load_json(SEARCH_JSON_FILE, {})
     existing_reported: dict = {}
     for d in existing.get("deals", []):
         area_v = d.get("area", 0.0)
         k = f"{d.get('apt','')}|{d.get('date','')}|{area_v:.4f}|{d.get('amount',0)}|{d.get('floor','')}"
-        existing_reported[k] = d.get("reported_date") or d.get("date", "")
+        if d.get("reported_date"):
+            existing_reported[k] = d["reported_date"]
     today_str = datetime.date.today().isoformat()
 
     building_cache = update_building_cache()
@@ -596,7 +605,11 @@ def generate_search_json(ym_list: list):
                 d = t.get("dealDay",   "1").zfill(2)
                 deal_date = f"{y}-{m}-{d}"
                 deal_key  = f"{apt}|{deal_date}|{area:.4f}|{amount}|{t.get('floor', '')}"
-                reported_date = existing_reported.get(deal_key, today_str)
+                reported_date = (
+                    reported_dates.get(trade_id(t)) or
+                    existing_reported.get(deal_key) or
+                    today_str
+                )
 
                 all_deals.append({
                     "region":        region_label,

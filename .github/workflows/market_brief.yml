@@ -55,7 +55,7 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           # Stage only known state files (never accidentally stage secrets etc.)
-          git add apt_state.json building_cache.json search_data.json index.html last_run.txt 2>/dev/null || true
+          git add apt_state.json building_cache.json search_data.json index.html last_run.txt reported_dates.json 2>/dev/null || true
           git diff --cached --quiet || \
             git commit -m "chore: market brief $(date -u +'%Y-%m-%d')" && \
             git push
