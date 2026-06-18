@@ -608,7 +608,7 @@ def generate_search_json(ym_list: list):
                 reported_date = (
                     reported_dates.get(trade_id(t)) or
                     existing_reported.get(deal_key) or
-                    today_str
+                    deal_date
                 )
 
                 all_deals.append({
