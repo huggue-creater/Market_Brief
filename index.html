@@ -37614,7 +37614,7 @@ function init(){
   }
   DATA=prepare(SEARCH_DATA.deals);
   META=SEARCH_DATA.meta||{};
-  document.getElementById("subtitle").textContent=`신고가 기준 일자별 실거래 · ${DATA.length.toLocaleString()}건`;
+  document.getElementById("subtitle").textContent=`신고일 기준 일자별 실거래 · ${DATA.length.toLocaleString()}건`;
   document.getElementById("footer").textContent=`갱신: ${SEARCH_DATA.generated_at||""}`;
   buildCityList();
   render();
@@ -37675,7 +37675,7 @@ function renderList(){
   document.getElementById("detailView").style.display="none";
   const rows=filteredRows();
   const g={};
-  for(const r of rows)(g[r.date]=g[r.date]||[]).push(r);
+  for(const r of rows){const k=r.reported_date||r.date;(g[k]=g[k]||[]).push(r);}
   const days=Object.entries(g)
     .map(([date,list])=>({date,list:list.slice().sort((a,b)=>b.amount-a.amount)}))
     .sort((a,b)=>b.date.localeCompare(a.date));
@@ -37714,7 +37714,7 @@ function renderList(){
         const m=META[r.apt]||{};
         const hist4spark=DATA.filter(x=>x.apt===r.apt&&x.pyeong===r.pyeong&&x.date<=r.date&&!x.canceled).sort((a,b)=>a.date.localeCompare(b.date));
         html+=`<div class="dy-item${isOpen?" open":""}${r.canceled?" canceled":""}${r.isHigh&&!r.canceled?" high":""}" data-id="${id}">`;
-        html+=`<div class="dy-item-head"><div class="dy-item-l"><div class="dy-apt"><span class="dy-apt-link" data-apt="${r.apt.replace(/"/g,"&quot;")}">${r.apt}</span>${r.isHigh&&!r.canceled?'<span style="font-size:13px">🔥</span>':""}<span class="dy-caret${isOpen?" up":""}">▾</span></div><div class="dy-sub">${r.region} · 전용 ${r.area}㎡ · ${r.pyeong}평 · ${r.floor}층</div>${m.buildYear?`<div class="dy-meta"><span>준공 ${m.buildYear}년 (${CUR_YEAR-m.buildYear}년차)</span>${m.vlRat?`<span>용적률 ${m.vlRat}%</span>`:""}</div>`:""}</div><div class="dy-item-mid">${sparkline(hist4spark,{color:r.canceled?"#9A9286":"#B23A2E"})}</div><div class="dy-item-r"><div class="dy-price">${won(r.amount)}</div><div class="dy-tags">${r.canceled?'<span class="t cx">취소</span>':""}${r.isHigh&&!r.canceled?'<span class="t hi">신고가</span>':""}${r.direct&&!r.canceled?'<span class="t dr">직거래</span>':""}</div></div></div>`;
+        html+=`<div class="dy-item-head"><div class="dy-item-l"><div class="dy-apt"><span class="dy-apt-link" data-apt="${r.apt.replace(/"/g,"&quot;")}">${r.apt}</span>${r.isHigh&&!r.canceled?'<span style="font-size:13px">🔥</span>':""}<span class="dy-caret${isOpen?" up":""}">▾</span></div><div class="dy-sub">${r.region} · 전용 ${r.area}㎡ · ${r.pyeong}평 · ${r.floor}층 · 계약 ${r.date.slice(2)}</div>${m.buildYear?`<div class="dy-meta"><span>준공 ${m.buildYear}년 (${CUR_YEAR-m.buildYear}년차)</span>${m.vlRat?`<span>용적률 ${m.vlRat}%</span>`:""}</div>`:""}</div><div class="dy-item-mid">${sparkline(hist4spark,{color:r.canceled?"#9A9286":"#B23A2E"})}</div><div class="dy-item-r"><div class="dy-price">${won(r.amount)}</div><div class="dy-tags">${r.canceled?'<span class="t cx">취소</span>':""}${r.isHigh&&!r.canceled?'<span class="t hi">신고가</span>':""}${r.direct&&!r.canceled?'<span class="t dr">직거래</span>':""}</div></div></div>`;
         if(isOpen){
           const hist=priorDeals(r.apt,r.pyeong,r.date);
           html+=`<div class="dy-hist"><div class="dy-hist-h">${r.pyeong}평 이전 거래</div>`;

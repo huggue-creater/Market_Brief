@@ -454,6 +454,7 @@ def _build_telegram_apt_msg(region: dict, new_trades: list,
         block = [apt_label]
         block.append(f"전용 {area}㎡ ({pyeong}평) · {floor_}층")
         block.append(f"거래가격 : {fmt_krw(cur)}")
+        block.append(f"계약일 : {short_date(t)}")
 
         if prev_last_price and prev_last_date:
             block.append(f"직전 실거래 : {fmt_krw(prev_last_price)} ({prev_last_date})")
@@ -554,6 +555,16 @@ def update_building_cache() -> dict:
 
 def generate_search_json(ym_list: list):
     log.info("=== 검색 JSON 생성 ===")
+
+    existing = load_json(SEARCH_JSON_FILE, {})
+    existing_reported: dict = {}
+    for d in existing.get("deals", []):
+        area_v = d.get("area", 0.0)
+        k = f"{d.get('apt','')}|{d.get('date','')}|{area_v:.4f}|{d.get('amount',0)}|{d.get('floor','')}"
+        if d.get("reported_date"):
+            existing_reported[k] = d["reported_date"]
+    today_str = datetime.date.today().isoformat()
+
     building_cache = update_building_cache()
     all_deals: list = []
     meta_map:  dict = {}  # aptNm → {buildYear, vlRat, bcRat}
@@ -584,17 +595,21 @@ def generate_search_json(ym_list: list):
                 y = t.get("dealYear", "2000")
                 m = t.get("dealMonth", "1").zfill(2)
                 d = t.get("dealDay",   "1").zfill(2)
+                deal_date = f"{y}-{m}-{d}"
+                deal_key  = f"{apt}|{deal_date}|{area:.4f}|{amount}|{t.get('floor', '')}"
+                reported_date = existing_reported.get(deal_key, today_str)
 
                 all_deals.append({
-                    "region":   region_label,
-                    "apt":      apt,
-                    "area":     area,
-                    "pyeong":   to_pyeong(area_str),
-                    "floor":    t.get("floor", ""),
-                    "amount":   amount,
-                    "date":     f"{y}-{m}-{d}",
-                    "direct":   "직" in (t.get("dealingGbn") or ""),
-                    "canceled": t.get("cdealType") == "Y",
+                    "region":        region_label,
+                    "apt":           apt,
+                    "area":          area,
+                    "pyeong":        to_pyeong(area_str),
+                    "floor":         t.get("floor", ""),
+                    "amount":        amount,
+                    "date":          deal_date,
+                    "reported_date": reported_date,
+                    "direct":        "직" in (t.get("dealingGbn") or ""),
+                    "canceled":      t.get("cdealType") == "Y",
                 })
 
                 # 단지 메타 (최초 1회만 저장)
