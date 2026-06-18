@@ -561,8 +561,7 @@ def generate_search_json(ym_list: list):
     for d in existing.get("deals", []):
         area_v = d.get("area", 0.0)
         k = f"{d.get('apt','')}|{d.get('date','')}|{area_v:.4f}|{d.get('amount',0)}|{d.get('floor','')}"
-        if d.get("reported_date"):
-            existing_reported[k] = d["reported_date"]
+        existing_reported[k] = d.get("reported_date") or d.get("date", "")
     today_str = datetime.date.today().isoformat()
 
     building_cache = update_building_cache()
