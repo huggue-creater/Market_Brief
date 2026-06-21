@@ -41402,7 +41402,7 @@ function renderCompare(){
     let diffStr="";
     if(nextP&&avgByPyeong[nextP]&&avgByPyeong[p]){
       const d=avgByPyeong[nextP]-avgByPyeong[p];
-      diffStr=`[${nextP}평] ${d>=0?"+":"−"}${won(Math.abs(d))} 차이`;
+      diffStr=`[${nextP}평] ${d>=0?"+":"−"}${won(Math.abs(d))}`;
     }
     return`<div class="cmp-pyeong-card${on?" on":""}" data-p="${p}"><div class="cp-size">${p}평</div><div class="cp-count">${pyeongCounts[p]}건</div><div class="cp-avg">${won(avgByPyeong[p])}</div>${diffStr?`<div class="cp-diff">${diffStr}</div>`:""}</div>`;
   }).join("")}</div>`;
