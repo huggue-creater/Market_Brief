@@ -13,6 +13,7 @@ import json
 import time
 import logging
 import datetime
+from collections import defaultdict
 from pathlib import Path
 from typing import Optional
 from xml.etree import ElementTree
@@ -34,14 +35,17 @@ TELEGRAM_CHAT_ID   = os.environ["TELEGRAM_CHAT_ID"]
 DATA_GO_KR_KEY     = os.environ["DATA_GO_KR_KEY"]
 
 APT_TRADE_URL  = "http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"
-BUILD_INFO_URL = "http://apis.data.go.kr/1613000/BldRgstService_v2/getBrRecapTitleInfo"
+BUILD_HUB_URL  = "http://apis.data.go.kr/1613000/BldRgstHubService"
+BUILD_INFO_URL = f"{BUILD_HUB_URL}/getBrRecapTitleInfo"
+EXPOS_AREA_URL = f"{BUILD_HUB_URL}/getBrExposPubuseAreaInfo"
 UPBIT_URL      = "https://api.upbit.com/v1/ticker"
 COINGECKO_URL  = "https://api.coingecko.com/api/v3/simple/price"
 YAHOO_URL      = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
 YAHOO_URL2     = "https://query2.finance.yahoo.com/v8/finance/chart/{symbol}"
 
-MONTHS_BACK    = 6
-RETRY_COUNT    = 4
+MONTHS_BACK             = 6
+MAX_NEW_SUPPLY_PER_RUN  = 100
+RETRY_COUNT             = 4
 RETRY_DELAYS   = [2, 4, 8, 16]
 TELEGRAM_LIMIT = 3800
 
@@ -78,6 +82,12 @@ REGIONS = [
     # ── 시흥 ──
     {"city": "시흥", "name": "정왕동", "lawd": "41390", "bjdong": "13200", "dong": "정왕동", "telegram": False},
 ]
+
+# (lawd, dong) → bjdong 역방향 조회
+DONG_TO_BJDONG = {
+    (r["lawd"], r["dong"]): r["bjdong"]
+    for r in REGIONS if r.get("bjdong")
+}
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -402,7 +412,8 @@ def collect_trades_for_region(region: dict, ym_list: list) -> list:
 # ══════════════════════════════════════════════════════════════════════════════
 
 def _build_telegram_apt_msg(region: dict, new_trades: list,
-                             known_ids: set, all_trades: list) -> str:
+                             known_ids: set, all_trades: list,
+                             supply_cache: dict, fetch_count: list) -> str:
     city = region["city"]
     name = region["name"]
     today = datetime.date.today().strftime("%Y-%m-%d")
@@ -427,7 +438,9 @@ def _build_telegram_apt_msg(region: dict, new_trades: list,
         cur       = price_val(t)
         cancelled = t.get("cdealType") == "Y"
         direct    = "직" in (t.get("dealingGbn") or "")
-        pyeong    = to_pyeong(area)
+        bjdong    = DONG_TO_BJDONG.get((region["lawd"], region["dong"]))
+        pyeong    = _supply_pyeong(area, t.get("bonbun", ""), t.get("bubun", ""),
+                                    region["lawd"], bjdong or "", supply_cache, fetch_count)
 
         key     = (apt, area)
         history = unit_history.get(key, [])  # [(price, date), ...]
@@ -480,6 +493,8 @@ def _build_telegram_apt_msg(region: dict, new_trades: list,
 def run_apartment_alerts(ym_list: list):
     state          = load_json(STATE_FILE, {})
     reported_dates = load_json(REPORTED_DATES_FILE, {})
+    bld_cache      = load_json(CACHE_FILE, {})
+    fetch_count    = [0]
     today_str      = datetime.date.today().isoformat()
 
     for region in [r for r in REGIONS if r["telegram"]]:
@@ -494,7 +509,8 @@ def run_apartment_alerts(ym_list: list):
             if not known_ids:
                 log.info("  %s: 첫 실행 — 상태 초기화 (알림 없음)", name)
             elif new_trades:
-                msg = _build_telegram_apt_msg(region, new_trades, known_ids, all_trades)
+                msg = _build_telegram_apt_msg(region, new_trades, known_ids, all_trades,
+                                              bld_cache, fetch_count)
                 send_telegram_chunked(msg)
                 for t in new_trades:
                     reported_dates[trade_id(t)] = today_str
@@ -504,6 +520,8 @@ def run_apartment_alerts(ym_list: list):
         except Exception as exc:
             log.error("  %s 알림 오류: %s", name, exc)
 
+    if fetch_count[0] > 0:
+        save_json(CACHE_FILE, bld_cache)
     save_json(STATE_FILE, state)
     save_json(REPORTED_DATES_FILE, reported_dates)
 
@@ -544,7 +562,7 @@ def update_building_cache() -> dict:
         if not bjdong:
             continue
         key = f"{region['lawd']}|{bjdong}"
-        if key in cache:
+        if key in cache and cache[key]:
             continue
         log.info("  건축물대장: %s 조회...", region["name"])
         cache[key] = _fetch_building_info(region["lawd"], bjdong)
@@ -553,6 +571,119 @@ def update_building_cache() -> dict:
     if changed:
         save_json(CACHE_FILE, cache)
     return cache
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 공급면적 조회 (getBrExposPubuseAreaInfo)
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _fetch_supply_area(lawd: str, bjdong: str, bun: str, ji: str) -> dict:
+    """단지 전 호수의 전유+주거공용 면적을 집계, 전용면적별 공급면적·평형 반환.
+    Returns: {"84.969": {"supply_area": 112.17, "pyeong": 34}, ...}
+    """
+    ho: dict = {}  # (dongNm, hoNm) → {"e": 전유, "c": 주거공용}
+    page = 1
+    while True:
+        resp = http_get(EXPOS_AREA_URL, params={
+            "serviceKey": DATA_GO_KR_KEY,
+            "sigunguCd":  lawd,
+            "bjdongCd":   bjdong,
+            "bun":        bun.zfill(4),
+            "ji":         (ji or "0").zfill(4),
+            "numOfRows":  1000,
+            "pageNo":     page,
+        })
+        if not resp:
+            break
+        try:
+            root  = ElementTree.fromstring(resp.text)
+            items = root.findall(".//item")
+            total = int(root.findtext(".//totalCount") or "0")
+            if not items:
+                break
+            for item in items:
+                d   = {c.tag: (c.text or "").strip() for c in item}
+                k   = (d.get("dongNm", ""), d.get("hoNm", ""))
+                ar  = float(d.get("area", 0) or 0)
+                gb  = d.get("exposPubuseGbCd", "")
+                att = d.get("mainAtchGbCd", "")
+                if k not in ho:
+                    ho[k] = {"e": 0.0, "c": 0.0}
+                if gb == "1" and d.get("mainPurpsCdNm") == "아파트":
+                    ho[k]["e"] += ar
+                elif gb == "2" and att == "0":
+                    ho[k]["c"] += ar
+            if page * 1000 >= total:
+                break
+        except Exception as exc:
+            log.warning("_fetch_supply_area %s/%s/%s/%s p%d: %s",
+                        lawd, bjdong, bun, ji, page, exc)
+            break
+        page += 1
+        time.sleep(0.2)
+
+    buckets: dict = {}
+    for v in ho.values():
+        e = round(v["e"], 3)
+        if e <= 0:
+            continue
+        if e not in buckets:
+            buckets[e] = []
+        buckets[e].append(v["e"] + v["c"])
+
+    return {
+        str(e): {
+            "supply_area": round(sum(sl) / len(sl), 2),
+            "pyeong":      round(sum(sl) / len(sl) * 0.3025),
+        }
+        for e, sl in buckets.items()
+    }
+
+
+def _supply_pyeong(exclu_str: str, bun: str, ji: str,
+                   lawd: str, bjdong: str,
+                   cache: dict, fetch_count: list) -> int:
+    """공급면적 기준 평형 반환. 캐시 miss 시 API 조회(최대 MAX_NEW_SUPPLY_PER_RUN회)."""
+    if not bun or bun == "0" or not bjdong:
+        return to_pyeong(exclu_str)
+
+    ck = f"supply|{lawd}|{bun.zfill(4)}|{(ji or '0').zfill(4)}"
+
+    if ck not in cache:
+        if fetch_count[0] >= MAX_NEW_SUPPLY_PER_RUN:
+            return to_pyeong(exclu_str)
+        log.info("  공급면적 API 조회: lawd=%s bun=%s ji=%s", lawd, bun, ji)
+        data = _fetch_supply_area(lawd, bjdong, bun, ji)
+        cache[ck] = data if data else {"_empty": True}
+        fetch_count[0] += 1
+
+    apt_data = cache.get(ck, {})
+    if not apt_data or "_empty" in apt_data:
+        return to_pyeong(exclu_str)
+
+    try:
+        ef = round(float(exclu_str), 3)
+    except Exception:
+        return to_pyeong(exclu_str)
+
+    if str(ef) in apt_data:
+        return apt_data[str(ef)]["pyeong"]
+
+    # 소수점 근사 매칭 (0.05㎡ 이내)
+    best_k, best_diff = None, 9999.0
+    for k in apt_data:
+        if k == "_empty":
+            continue
+        try:
+            diff = abs(float(k) - ef)
+            if diff < best_diff:
+                best_diff, best_k = diff, k
+        except Exception:
+            pass
+    if best_k and best_diff <= 0.05:
+        return apt_data[best_k]["pyeong"]
+
+    return to_pyeong(exclu_str)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -574,6 +705,7 @@ def generate_search_json(ym_list: list):
     today_str = datetime.date.today().isoformat()
 
     building_cache = update_building_cache()
+    fetch_count    = [0]
     all_deals: list = []
     meta_map:  dict = {}  # aptNm → {buildYear, vlRat, bcRat}
 
@@ -611,11 +743,14 @@ def generate_search_json(ym_list: list):
                     deal_date
                 )
 
+                bjdong = region.get("bjdong") or ""
                 all_deals.append({
                     "region":        region_label,
                     "apt":           apt,
                     "area":          area,
-                    "pyeong":        to_pyeong(area_str),
+                    "pyeong":        _supply_pyeong(
+                                         area_str, t.get("bonbun", ""), t.get("bubun", ""),
+                                         region["lawd"], bjdong, building_cache, fetch_count),
                     "floor":         t.get("floor", ""),
                     "amount":        amount,
                     "date":          deal_date,
@@ -637,6 +772,9 @@ def generate_search_json(ym_list: list):
             log.info("  %s: %d건", name, len(trades))
         except Exception as exc:
             log.error("  %s 오류: %s", name, exc)
+
+    if fetch_count[0] > 0:
+        save_json(CACHE_FILE, building_cache)
 
     total = len(all_deals)
     if total == 0:
