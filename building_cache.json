@@ -5263,5 +5263,595 @@
   "bldmeta|41390|1788|0003": {
     "vlRat": "150.1",
     "bcRat": "21.08"
+  },
+  "41450|11200": {
+    "리버나인 RIVERNINE": {
+      "vlRat": "215.06",
+      "bcRat": "18.6"
+    },
+    "미사강변 더샵 리버포레": {
+      "vlRat": "209.97",
+      "bcRat": "13.25"
+    },
+    "미사강변 2차 푸르지오": {
+      "vlRat": "209.82",
+      "bcRat": "14.01"
+    },
+    "미사강변 센트리버": {
+      "vlRat": "212.63",
+      "bcRat": "15.79"
+    },
+    "리버스위트칸타빌": {
+      "vlRat": "209.6527",
+      "bcRat": "12.3812"
+    },
+    "미사강변리슈빌엔에이치에프": {
+      "vlRat": "219.32",
+      "bcRat": "16.14"
+    },
+    "미사강변도시 베라체": {
+      "vlRat": "218.49",
+      "bcRat": "19.21"
+    },
+    "미사강변리버뷰자이": {
+      "vlRat": "209.95",
+      "bcRat": "13.71"
+    }
+  },
+  "supply|41450|0423|0000": {
+    "84.88": {
+      "supply_area": 115.75,
+      "pyeong": 35
+    },
+    "74.95": {
+      "supply_area": 102.21,
+      "pyeong": 31
+    },
+    "84.97": {
+      "supply_area": 115.78,
+      "pyeong": 35
+    },
+    "84.89": {
+      "supply_area": 115.76,
+      "pyeong": 35
+    },
+    "74.99": {
+      "supply_area": 102.26,
+      "pyeong": 31
+    }
+  },
+  "bldmeta|41450|0423|0000": {
+    "vlRat": "215.06",
+    "bcRat": "18.6"
+  },
+  "supply|41450|0453|0000": {
+    "84.86": {
+      "supply_area": 112.27,
+      "pyeong": 34
+    },
+    "74.85": {
+      "supply_area": 99.02,
+      "pyeong": 30
+    },
+    "84.84": {
+      "supply_area": 112.24,
+      "pyeong": 34
+    }
+  },
+  "bldmeta|41450|0453|0000": {
+    "vlRat": "218.49",
+    "bcRat": "19.21"
+  },
+  "supply|41450|0427|0000": {
+    "112.9": {
+      "supply_area": 141.09,
+      "pyeong": 43
+    },
+    "89.7": {
+      "supply_area": 115.81,
+      "pyeong": 35
+    },
+    "98.69": {
+      "supply_area": 128.69,
+      "pyeong": 39
+    },
+    "98.78": {
+      "supply_area": 125.97,
+      "pyeong": 38
+    },
+    "98.54": {
+      "supply_area": 127.39,
+      "pyeong": 39
+    },
+    "112.92": {
+      "supply_area": 141.32,
+      "pyeong": 43
+    },
+    "89.92": {
+      "supply_area": 116.99,
+      "pyeong": 35
+    },
+    "98.96": {
+      "supply_area": 126.43,
+      "pyeong": 38
+    }
+  },
+  "bldmeta|41450|0427|0000": {
+    "vlRat": "209.97",
+    "bcRat": "13.25"
+  },
+  "supply|41450|0433|0000": {
+    "101.882": {
+      "supply_area": 131.8,
+      "pyeong": 40
+    },
+    "101.892": {
+      "supply_area": 132.07,
+      "pyeong": 40
+    },
+    "101.818": {
+      "supply_area": 131.54,
+      "pyeong": 40
+    },
+    "93.949": {
+      "supply_area": 121.61,
+      "pyeong": 37
+    },
+    "101.873": {
+      "supply_area": 131.38,
+      "pyeong": 40
+    }
+  },
+  "bldmeta|41450|0433|0000": {
+    "vlRat": "209.82",
+    "bcRat": "14.01"
+  },
+  "supply|41450|0436|0000": {
+    "59.91": {
+      "supply_area": 83.14,
+      "pyeong": 25
+    },
+    "84.89": {
+      "supply_area": 117.8,
+      "pyeong": 36
+    },
+    "59.76": {
+      "supply_area": 82.93,
+      "pyeong": 25
+    },
+    "74.91": {
+      "supply_area": 103.95,
+      "pyeong": 31
+    },
+    "84.77": {
+      "supply_area": 117.63,
+      "pyeong": 36
+    },
+    "84.93": {
+      "supply_area": 117.86,
+      "pyeong": 36
+    },
+    "74.97": {
+      "supply_area": 104.03,
+      "pyeong": 31
+    },
+    "59.98": {
+      "supply_area": 83.23,
+      "pyeong": 25
+    },
+    "84.94": {
+      "supply_area": 117.87,
+      "pyeong": 36
+    },
+    "59.8": {
+      "supply_area": 82.98,
+      "pyeong": 25
+    },
+    "74.95": {
+      "supply_area": 104.01,
+      "pyeong": 31
+    }
+  },
+  "bldmeta|41450|0436|0000": {
+    "vlRat": "212.63",
+    "bcRat": "15.79"
+  },
+  "supply|41450|0455|0000": {
+    "102.776": {
+      "supply_area": 131.21,
+      "pyeong": 40
+    },
+    "102.042": {
+      "supply_area": 132.22,
+      "pyeong": 40
+    },
+    "98.541": {
+      "supply_area": 125.6,
+      "pyeong": 38
+    },
+    "98.612": {
+      "supply_area": 125.41,
+      "pyeong": 38
+    },
+    "98.007": {
+      "supply_area": 125.5,
+      "pyeong": 38
+    },
+    "91.641": {
+      "supply_area": 118.63,
+      "pyeong": 36
+    },
+    "132.388": {
+      "supply_area": 171.84,
+      "pyeong": 52
+    },
+    "132.5": {
+      "supply_area": 171.66,
+      "pyeong": 52
+    }
+  },
+  "bldmeta|41450|0455|0000": {
+    "vlRat": "209.95",
+    "bcRat": "13.71"
+  },
+  "supply|41450|0441|0000": {
+    "92.547": {
+      "supply_area": 118.33,
+      "pyeong": 36
+    },
+    "95.398": {
+      "supply_area": 122.5,
+      "pyeong": 37
+    },
+    "102.463": {
+      "supply_area": 130.7,
+      "pyeong": 40
+    },
+    "97.727": {
+      "supply_area": 125.8,
+      "pyeong": 38
+    },
+    "138.767": {
+      "supply_area": 180.11,
+      "pyeong": 54
+    }
+  },
+  "bldmeta|41450|0441|0000": {
+    "vlRat": "209.6527",
+    "bcRat": "12.3812"
+  },
+  "supply|41390|1942|0001": {
+    "59.79": {
+      "supply_area": 79.4,
+      "pyeong": 24
+    },
+    "84.91": {
+      "supply_area": 120.96,
+      "pyeong": 37
+    },
+    "59.85": {
+      "supply_area": 72.79,
+      "pyeong": 22
+    }
+  },
+  "supply|41390|1785|0001": {
+    "59.98": {
+      "supply_area": 76.83,
+      "pyeong": 23
+    },
+    "84.93": {
+      "supply_area": 108.75,
+      "pyeong": 33
+    },
+    "59.82": {
+      "supply_area": 76.62,
+      "pyeong": 23
+    },
+    "59.99": {
+      "supply_area": 73.31,
+      "pyeong": 22
+    }
+  },
+  "supply|41390|1865|0000": {
+    "84.76": {
+      "supply_area": 108.15,
+      "pyeong": 33
+    },
+    "59.91": {
+      "supply_area": 79.18,
+      "pyeong": 24
+    },
+    "59.25": {
+      "supply_area": 72.83,
+      "pyeong": 22
+    }
+  },
+  "supply|41390|1878|0004": {
+    "117.251": {
+      "supply_area": 139.66,
+      "pyeong": 42
+    },
+    "84.98": {
+      "supply_area": 107.99,
+      "pyeong": 33
+    }
+  },
+  "supply|41390|1878|0008": {
+    "117.251": {
+      "supply_area": 140.85,
+      "pyeong": 43
+    },
+    "84.891": {
+      "supply_area": 101.17,
+      "pyeong": 31
+    }
+  },
+  "supply|41390|1877|0005": {
+    "59.89": {
+      "supply_area": 82.6,
+      "pyeong": 25
+    },
+    "84.94": {
+      "supply_area": 113.68,
+      "pyeong": 34
+    },
+    "33.4": {
+      "supply_area": 50.64,
+      "pyeong": 15
+    },
+    "41.97": {
+      "supply_area": 60.9,
+      "pyeong": 18
+    }
+  },
+  "supply|41390|1850|0000": {
+    "84.88": {
+      "supply_area": 101.16,
+      "pyeong": 31
+    },
+    "59.846": {
+      "supply_area": 72.37,
+      "pyeong": 22
+    },
+    "59.856": {
+      "supply_area": 72.46,
+      "pyeong": 22
+    }
+  },
+  "supply|41390|1864|0000": {
+    "84.55": {
+      "supply_area": 104.82,
+      "pyeong": 32
+    },
+    "59.57": {
+      "supply_area": 77.62,
+      "pyeong": 23
+    },
+    "84.52": {
+      "supply_area": 99.89,
+      "pyeong": 30
+    },
+    "59.59": {
+      "supply_area": 80.61,
+      "pyeong": 24
+    }
+  },
+  "supply|41390|1629|0000": {
+    "54.63": {
+      "supply_area": 67.93,
+      "pyeong": 21
+    },
+    "59.58": {
+      "supply_area": 79.44,
+      "pyeong": 24
+    }
+  },
+  "supply|41390|1875|0005": {
+    "84.93": {
+      "supply_area": 108.73,
+      "pyeong": 33
+    },
+    "59.98": {
+      "supply_area": 76.81,
+      "pyeong": 23
+    },
+    "59.99": {
+      "supply_area": 73.3,
+      "pyeong": 22
+    },
+    "59.82": {
+      "supply_area": 76.61,
+      "pyeong": 23
+    }
+  },
+  "supply|41390|1876|0002": {
+    "59.97": {
+      "supply_area": 79.3,
+      "pyeong": 24
+    }
+  },
+  "supply|41390|1871|0005": {
+    "84.93": {
+      "supply_area": 110.89,
+      "pyeong": 34
+    }
+  },
+  "supply|41390|1870|0001": {
+    "101.991": {
+      "supply_area": 122.54,
+      "pyeong": 37
+    },
+    "84.93": {
+      "supply_area": 99.85,
+      "pyeong": 30
+    }
+  },
+  "supply|41390|1847|0000": {
+    "48.45": {
+      "supply_area": 49.36,
+      "pyeong": 15
+    }
+  },
+  "supply|41390|1868|0000": {
+    "84.64": {
+      "supply_area": 103.96,
+      "pyeong": 31
+    },
+    "59.67": {
+      "supply_area": 81.2,
+      "pyeong": 25
+    },
+    "59.97": {
+      "supply_area": 72.54,
+      "pyeong": 22
+    },
+    "84.7": {
+      "supply_area": 104.02,
+      "pyeong": 31
+    },
+    "59.88": {
+      "supply_area": 72.25,
+      "pyeong": 22
+    }
+  },
+  "supply|41390|1942|0002": {
+    "59.835": {
+      "supply_area": 67.7,
+      "pyeong": 20
+    },
+    "84.94": {
+      "supply_area": 98.1,
+      "pyeong": 30
+    },
+    "25.04": {
+      "supply_area": 32.49,
+      "pyeong": 10
+    }
+  },
+  "supply|41390|1877|0002": {
+    "84.84": {
+      "supply_area": 109.47,
+      "pyeong": 33
+    },
+    "59.88": {
+      "supply_area": 79.99,
+      "pyeong": 24
+    }
+  },
+  "supply|41390|1877|0001": {
+    "59.937": {
+      "supply_area": 78.24,
+      "pyeong": 24
+    }
+  },
+  "supply|41390|1846|0000": {
+    "84.97": {
+      "supply_area": 107.1,
+      "pyeong": 32
+    },
+    "59.85": {
+      "supply_area": 72.52,
+      "pyeong": 22
+    },
+    "59.67": {
+      "supply_area": 78.65,
+      "pyeong": 24
+    }
+  },
+  "supply|41390|1869|0000": {
+    "59.67": {
+      "supply_area": 81.26,
+      "pyeong": 25
+    },
+    "84.7": {
+      "supply_area": 104.06,
+      "pyeong": 31
+    },
+    "59.97": {
+      "supply_area": 72.54,
+      "pyeong": 22
+    },
+    "59.88": {
+      "supply_area": 72.25,
+      "pyeong": 22
+    },
+    "84.64": {
+      "supply_area": 103.99,
+      "pyeong": 31
+    }
+  },
+  "supply|41390|1872|0005": {
+    "84.974": {
+      "supply_area": 106.25,
+      "pyeong": 32
+    },
+    "73.994": {
+      "supply_area": 94.36,
+      "pyeong": 29
+    }
+  },
+  "supply|41390|1886|0003": {
+    "84.98": {
+      "supply_area": 98.34,
+      "pyeong": 30
+    },
+    "103.07": {
+      "supply_area": 117.21,
+      "pyeong": 35
+    },
+    "74.85": {
+      "supply_area": 88.8,
+      "pyeong": 27
+    }
+  },
+  "supply|41390|1848|0004": {
+    "59.286": {
+      "supply_area": 77.59,
+      "pyeong": 23
+    },
+    "59.78": {
+      "supply_area": 72.89,
+      "pyeong": 22
+    }
+  },
+  "supply|41390|1867|0001": {
+    "66.0": {
+      "supply_area": 88.33,
+      "pyeong": 27
+    },
+    "84.93": {
+      "supply_area": 110.06,
+      "pyeong": 33
+    }
+  },
+  "supply|41390|1874|0002": {
+    "84.9": {
+      "supply_area": 108.56,
+      "pyeong": 33
+    },
+    "128.43": {
+      "supply_area": 157.26,
+      "pyeong": 48
+    }
+  },
+  "supply|41390|1849|0006": {
+    "85.0": {
+      "supply_area": 94.84,
+      "pyeong": 29
+    },
+    "124.77": {
+      "supply_area": 124.77,
+      "pyeong": 38
+    }
+  },
+  "supply|41390|1788|0003": {
+    "84.987": {
+      "supply_area": 108.25,
+      "pyeong": 33
+    },
+    "73.994": {
+      "supply_area": 95.81,
+      "pyeong": 29
+    }
   }
 }
