@@ -1,131 +1,88 @@
 #!/usr/bin/env python3
-"""
-건축물대장 getBrExposInfo (전유공유부 면적) API 테스트 v2
-- bonbun/bubun 필드 직접 사용
-- 500 응답 본문 출력
-- 여러 엔드포인트 비교
-"""
-import os, time
+"""건축물대장 API 디버깅 테스트 v3"""
+import os, time, urllib.parse
 import requests
 from xml.etree import ElementTree
 
 TRADE_KEY = os.environ["DATA_GO_KR_KEY"]
-BUILD_KEY = os.environ.get("BUILD_API_KEY", TRADE_KEY)
+BUILD_KEY = os.environ.get("BUILD_API_KEY", "")
 
+print(f"  TRADE_KEY 마지막 8자: ...{TRADE_KEY[-8:]}")
+print(f"  BUILD_KEY 마지막 8자: ...{BUILD_KEY[-8:] if BUILD_KEY else '(없음)'}")
+print(f"  BUILD_KEY == TRADE_KEY: {BUILD_KEY == TRADE_KEY}")
+
+BASE_HTTP  = "http://apis.data.go.kr/1613000/BldRgstService_v2"
+BASE_HTTPS = "https://apis.data.go.kr/1613000/BldRgstService_v2"
 APT_TRADE_URL = "http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"
-BASE = "http://apis.data.go.kr/1613000/BldRgstService_v2"
 
 SIGUNGU = "41450"
-BJDONG  = "10900"  # 망월동
+BJDONG  = "10900"
 
-def get(url, params, label=""):
+def call(url, params, label):
     t0 = time.time()
     r = requests.get(url, params=params, timeout=15)
-    elapsed = time.time() - t0
-    print(f"  [{label}] {elapsed:.2f}s  HTTP {r.status_code}")
-    return r, elapsed
+    print(f"  [{label}] {time.time()-t0:.2f}s  HTTP {r.status_code}")
+    print(f"  응답: {r.text[:300]}")
+    return r
 
-# ─── STEP 1. 실거래가 API ─────────────────────────────────────────────────────
-print("\n═══ STEP 1. 실거래가 API (망월동 202606) ════════════════")
-r, _ = get(APT_TRADE_URL, {
+# ─── 실거래가로 bonbun/bubun 추출 ─────────────────────────────────────────────
+print("\n=== STEP 1. 실거래가 샘플 ===")
+r = requests.get(APT_TRADE_URL, params={
     "serviceKey": TRADE_KEY, "LAWD_CD": "41450",
-    "DEAL_YMD": "202606", "numOfRows": 50, "pageNo": 1,
-}, "실거래가")
-
+    "DEAL_YMD": "202606", "numOfRows": 10, "pageNo": 1,
+}, timeout=15)
 root = ElementTree.fromstring(r.text)
 trades = [
     {c.tag: (c.text or "").strip() for c in item}
     for item in root.findall(".//item")
     if (item.findtext("umdNm") or "").strip() == "망월동"
 ]
-print(f"  망월동: {len(trades)}건")
+t = trades[0] if trades else {}
+bonbun = t.get("bonbun", "1170").zfill(4)
+bubun  = t.get("bubun",  "0000").zfill(4)
+print(f"  샘플: {t.get('aptNm')}  bonbun={bonbun} bubun={bubun}")
 
-# 고유 (apt, bonbun, bubun) 샘플 3개
-seen, samples = set(), []
-for t in trades:
-    key = (t.get("aptNm",""), t.get("bonbun",""), t.get("bubun",""))
-    if key not in seen and t.get("bonbun",""):
-        seen.add(key); samples.append(t)
-    if len(samples) >= 3:
-        break
+# ─── 시도 1: http + bun/ji 있음 (기존 방식) ────────────────────────────────────
+print("\n=== STEP 2. getBrRecapTitleInfo (bot.py 방식 - bun/ji 없음) ===")
+call(f"{BASE_HTTP}/getBrRecapTitleInfo", {
+    "serviceKey": BUILD_KEY or TRADE_KEY,
+    "sigunguCd": SIGUNGU, "bjdongCd": BJDONG,
+    "numOfRows": 5, "pageNo": 1,
+}, "RecapTitle-nobun")
 
-print(f"\n  샘플 (bonbun/bubun 직접 사용):")
-for t in samples:
-    print(f"    {t.get('aptNm'):35s}  bonbun={t.get('bonbun'):6s} bubun={t.get('bubun'):4s}  전용={t.get('excluUseAr')}㎡")
+# ─── 시도 2: https ──────────────────────────────────────────────────────────────
+print("\n=== STEP 3. getBrRecapTitleInfo (https) ===")
+call(f"{BASE_HTTPS}/getBrRecapTitleInfo", {
+    "serviceKey": BUILD_KEY or TRADE_KEY,
+    "sigunguCd": SIGUNGU, "bjdongCd": BJDONG,
+    "numOfRows": 5, "pageNo": 1,
+}, "RecapTitle-https")
 
-# ─── STEP 2. 여러 엔드포인트 시도 ────────────────────────────────────────────
-endpoints = [
-    ("getBrExposInfo",     "전유공유부 면적"),
-    ("getBrFlrOulnInfo",   "층별개요"),
-    ("getBrTitleInfo",     "표제부 상세"),
-    ("getBrRecapTitleInfo","표제부(기존)"),
-]
+# ─── 시도 3: TRADE_KEY로 건축물대장 시도 ────────────────────────────────────────
+print("\n=== STEP 4. getBrRecapTitleInfo (TRADE_KEY 사용) ===")
+call(f"{BASE_HTTP}/getBrRecapTitleInfo", {
+    "serviceKey": TRADE_KEY,
+    "sigunguCd": SIGUNGU, "bjdongCd": BJDONG,
+    "numOfRows": 5, "pageNo": 1,
+}, "RecapTitle-tradekey")
 
-t = samples[0]
-bonbun = t.get("bonbun", "").zfill(4)
-bubun  = t.get("bubun",  "").zfill(4)
-exclu  = t.get("excluUseAr", "")
-apt    = t.get("aptNm", "")
+# ─── 시도 4: 인코딩된 키 형태 ───────────────────────────────────────────────────
+print("\n=== STEP 5. URL 직접 조합 (key 인코딩) ===")
+key = BUILD_KEY or TRADE_KEY
+encoded_key = urllib.parse.quote(key, safe='')
+url = f"{BASE_HTTP}/getBrRecapTitleInfo?serviceKey={encoded_key}&sigunguCd={SIGUNGU}&bjdongCd={BJDONG}&numOfRows=5&pageNo=1"
+t0 = time.time()
+r = requests.get(url, timeout=15)
+print(f"  [직접URL] {time.time()-t0:.2f}s  HTTP {r.status_code}")
+print(f"  응답: {r.text[:300]}")
 
-print(f"\n═══ STEP 2. 엔드포인트별 테스트 [{apt}] bun={bonbun} ji={bubun} ════")
+# ─── 시도 5: getBrExposInfo + bun/ji ────────────────────────────────────────────
+print("\n=== STEP 6. getBrExposInfo (BUILD_KEY, bun/ji 포함) ===")
+call(f"{BASE_HTTP}/getBrExposInfo", {
+    "serviceKey": BUILD_KEY or TRADE_KEY,
+    "sigunguCd": SIGUNGU, "bjdongCd": BJDONG,
+    "bun": bonbun, "ji": bubun,
+    "numOfRows": 100, "pageNo": 1,
+}, "ExposInfo")
 
-for ep, label in endpoints:
-    print(f"\n  ── {label} ({ep}) ──")
-    r, elapsed = get(f"{BASE}/{ep}", {
-        "serviceKey": BUILD_KEY,
-        "sigunguCd":  SIGUNGU,
-        "bjdongCd":   BJDONG,
-        "bun":        bonbun,
-        "ji":         bubun,
-        "numOfRows":  200,
-        "pageNo":     1,
-    }, ep)
-
-    print(f"  응답 앞 500자: {r.text[:500]}")
-
-    if r.status_code == 200:
-        try:
-            root = ElementTree.fromstring(r.text)
-            items = root.findall(".//item")
-            total = root.findtext(".//totalCount") or "0"
-            print(f"  totalCount={total}, 파싱={len(items)}건")
-            if items:
-                first = {c.tag: (c.text or "").strip() for c in items[0]}
-                print(f"  필드: {list(first.keys())}")
-                # 면적 관련 필드
-                area_fields = {k: v for k, v in first.items() if any(x in k.lower() for x in ["ar","area","area","플"])}
-                print(f"  면적 필드: {area_fields}")
-
-                # getBrExposInfo: 전유/공유 구분 출력
-                if ep == "getBrExposInfo":
-                    print(f"\n  [전유/공유 분류]")
-                    for item in items[:10]:
-                        d = {c.tag: (c.text or "").strip() for c in item}
-                        print(f"    구분={d.get('exposPubuseGbCdNm',d.get('mainAtchGbCdNm','?')):10s}  "
-                              f"면적={d.get('area',d.get('excluUseAr','?')):10s}  "
-                              f"전체: {d}")
-        except Exception as e:
-            print(f"  XML 파싱 오류: {e}")
-
-    time.sleep(0.5)
-
-# ─── STEP 3. sigunguCd+bjdongCd만으로도 시도 (bun/ji 없이) ──────────────────
-print(f"\n═══ STEP 3. getBrExposInfo (bun/ji 없이, dong 전체) ════")
-r, elapsed = get(f"{BASE}/getBrExposInfo", {
-    "serviceKey": BUILD_KEY,
-    "sigunguCd":  SIGUNGU,
-    "bjdongCd":   BJDONG,
-    "numOfRows":  10,
-    "pageNo":     1,
-}, "ExposInfo-nodong")
-print(f"  응답: {r.text[:600]}")
-if r.status_code == 200:
-    try:
-        root = ElementTree.fromstring(r.text)
-        items = root.findall(".//item")
-        if items:
-            first = {c.tag: (c.text or "").strip() for c in items[0]}
-            print(f"  필드: {list(first.keys())}")
-    except: pass
-
-print("\n═══ 완료 ════════════════════════════════════════════════")
+print("\n=== 완료 ===")
