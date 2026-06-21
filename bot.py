@@ -30,8 +30,8 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 # ── Config ────────────────────────────────────────────────────────────────────
-TELEGRAM_BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
-TELEGRAM_CHAT_ID   = os.environ["TELEGRAM_CHAT_ID"]
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+TELEGRAM_CHAT_ID   = os.environ.get("TELEGRAM_CHAT_ID", "")
 DATA_GO_KR_KEY     = os.environ["DATA_GO_KR_KEY"]
 
 APT_TRADE_URL  = "http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"
@@ -810,8 +810,25 @@ def check_dup_run() -> bool:
 
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--json-only", action="store_true",
+                        help="검색 JSON 재생성만 실행 (Telegram 없음, 주말/중복 체크 없음)")
+    args = parser.parse_args()
+
     today = datetime.date.today()
     log.info("=== Market Brief 시작: %s ===", today)
+
+    if args.json_only:
+        log.info("--json-only 모드: 검색 JSON 재생성만 실행")
+        ym_list = get_ym_list(MONTHS_BACK)
+        log.info("조회 월: %s", ym_list)
+        try:
+            generate_search_json(ym_list)
+        except Exception as exc:
+            log.error("검색 JSON 오류: %s", exc)
+        log.info("=== 완료 ===")
+        return
 
     if is_holiday_or_weekend(today):
         log.info("공휴일/주말 — 스킵")
