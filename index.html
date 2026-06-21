@@ -41308,7 +41308,7 @@ function renderCmpMultiChart(series){
   for(let i=0;i<=4;i++){
     const a=mn+(mx-mn)*i/4,y=yS(a);
     out+=`<line x1="${pL}" y1="${y.toFixed(1)}" x2="${W-pR}" y2="${y.toFixed(1)}" stroke="#E7E0D2" stroke-width="1"/>`;
-    out+=`<text x="${pL-6}" y="${(y+4).toFixed(1)}" text-anchor="end" font-size="10" fill="#8A8378">${won(Math.round(a))}</text>`;
+    out+=`<text x="${pL-6}" y="${(y+4).toFixed(1)}" text-anchor="end" font-size="10" fill="#8A8378">${((Math.round(a)/10000).toFixed(1).replace(/\.0$/,""))+"억"}</text>`;
   }
   const months=new Set();
   for(const p of allPts)months.add(p.date.slice(0,7));
@@ -41499,7 +41499,7 @@ function renderChart(pts){
   for(let i=0;i<=4;i++){
     const a=mn+(mx-mn)*i/4,y=yS(a);
     out+=`<line x1="${pL}" y1="${y.toFixed(1)}" x2="${W-pR}" y2="${y.toFixed(1)}" stroke="#E7E0D2" stroke-width="1"/>`;
-    out+=`<text x="${pL-6}" y="${(y+4).toFixed(1)}" text-anchor="end" font-size="10" fill="#8A8378">${won(Math.round(a))}</text>`;
+    out+=`<text x="${pL-6}" y="${(y+4).toFixed(1)}" text-anchor="end" font-size="10" fill="#8A8378">${((Math.round(a)/10000).toFixed(1).replace(/\.0$/,""))+"억"}</text>`;
   }
   const tc=Math.min(5,pts.length);
   const st=Math.floor((pts.length-1)/(tc-1||1));
