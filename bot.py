@@ -76,7 +76,7 @@ REGIONS = [
     {"city": "하남", "name": "감일동", "lawd": "41450", "bjdong": "11400", "dong": "감일동", "telegram": False},
     {"city": "하남", "name": "감이동", "lawd": "41450", "bjdong": "11500", "dong": "감이동", "telegram": False},
     {"city": "하남", "name": "학암동", "lawd": "41450", "bjdong": "11600", "dong": "학암동", "telegram": False},
-    {"city": "하남", "name": "선동",   "lawd": "41450", "bjdong": None,    "dong": "선동",   "telegram": False},
+    {"city": "하남", "name": "선동",   "lawd": "41450", "bjdong": "11200", "dong": "선동",   "telegram": False},
     {"city": "하남", "name": "미사동", "lawd": "41450", "bjdong": None,    "dong": "미사동", "telegram": False},
     {"city": "하남", "name": "위례동", "lawd": "41450", "bjdong": None,    "dong": "위례동", "telegram": False},
     # ── 시흥 ──
