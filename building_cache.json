@@ -2752,5 +2752,2516 @@
       "supply_area": 247.0,
       "pyeong": 75
     }
+  },
+  "bldmeta|41450|1170|0000": {
+    "vlRat": "219.97",
+    "bcRat": "16.18"
+  },
+  "bldmeta|41450|1125|0000": {
+    "vlRat": "0",
+    "bcRat": "0"
+  },
+  "bldmeta|41450|1162|0000": {
+    "vlRat": "219.755",
+    "bcRat": "14.66"
+  },
+  "bldmeta|41450|1177|0000": {
+    "vlRat": "209.92",
+    "bcRat": "12.41"
+  },
+  "bldmeta|41450|1062|0000": {
+    "vlRat": "209.61",
+    "bcRat": "17.35"
+  },
+  "bldmeta|41450|0938|0000": {
+    "vlRat": "215.32",
+    "bcRat": "20.79"
+  },
+  "bldmeta|41450|0946|0000": {
+    "vlRat": "218.9",
+    "bcRat": "20.17"
+  },
+  "bldmeta|41450|0904|0000": {
+    "vlRat": "217.14",
+    "bcRat": "21.15"
+  },
+  "bldmeta|41450|1034|0000": {
+    "vlRat": "201.92",
+    "bcRat": "15.04"
+  },
+  "bldmeta|41450|1127|0000": {
+    "vlRat": "396.29",
+    "bcRat": "42.07"
+  },
+  "bldmeta|41450|0956|0000": {
+    "vlRat": "219.5",
+    "bcRat": "18.23"
+  },
+  "bldmeta|41450|0910|0000": {
+    "vlRat": "217.73",
+    "bcRat": "15.57"
+  },
+  "bldmeta|41450|1050|0000": {
+    "vlRat": "208.34",
+    "bcRat": "17.19"
+  },
+  "bldmeta|41450|1060|0000": {
+    "vlRat": "209.356",
+    "bcRat": "20.0396"
+  },
+  "bldmeta|41465|0869|0000": {
+    "vlRat": "147.93",
+    "bcRat": "11.08"
+  },
+  "bldmeta|41465|0850|0000": {
+    "vlRat": "207.33",
+    "bcRat": "14.73"
+  },
+  "bldmeta|41465|0096|0001": {
+    "vlRat": "249.3",
+    "bcRat": "21.9"
+  },
+  "bldmeta|41465|0867|0000": {
+    "vlRat": "192.85",
+    "bcRat": "18.9"
+  },
+  "bldmeta|41465|0861|0000": {
+    "vlRat": "199.05",
+    "bcRat": "14.38"
+  },
+  "bldmeta|41465|1219|0000": {
+    "_empty": true
+  },
+  "bldmeta|41465|0852|0000": {
+    "vlRat": "199.74",
+    "bcRat": "18.54"
+  },
+  "bldmeta|41465|1206|0000": {
+    "vlRat": "184.71",
+    "bcRat": "15.2"
+  },
+  "bldmeta|41465|0859|0000": {
+    "vlRat": "227.85",
+    "bcRat": "15.98"
+  },
+  "bldmeta|41465|0032|0011": {
+    "_empty": true
+  },
+  "bldmeta|41465|1134|0000": {
+    "vlRat": "165.30996",
+    "bcRat": "12.065902"
+  },
+  "bldmeta|41465|0837|0000": {
+    "vlRat": "246.75",
+    "bcRat": "17.95"
+  },
+  "bldmeta|41465|0855|0000": {
+    "vlRat": "187.31",
+    "bcRat": "13.36"
+  },
+  "bldmeta|41465|0860|0000": {
+    "vlRat": "199.32",
+    "bcRat": "16.16"
+  },
+  "bldmeta|41465|0843|0000": {
+    "vlRat": "246.4",
+    "bcRat": "18.66"
+  },
+  "bldmeta|41465|0825|0000": {
+    "vlRat": "228.56",
+    "bcRat": "19.05"
+  },
+  "bldmeta|41465|0085|0006": {
+    "vlRat": "247",
+    "bcRat": "18.25"
+  },
+  "bldmeta|41465|0858|0000": {
+    "vlRat": "226.23",
+    "bcRat": "17.39"
+  },
+  "bldmeta|41465|0001|0000": {
+    "vlRat": "248.15",
+    "bcRat": "16.02671"
+  },
+  "bldmeta|41465|0842|0000": {
+    "vlRat": "248.82",
+    "bcRat": "20.17"
+  },
+  "bldmeta|41465|0030|0000": {
+    "vlRat": "238.39",
+    "bcRat": "17.97"
+  },
+  "bldmeta|41465|0853|0000": {
+    "vlRat": "197.73",
+    "bcRat": "16.320188"
+  },
+  "bldmeta|41465|0099|0000": {
+    "vlRat": "249.06",
+    "bcRat": "20.62"
+  },
+  "bldmeta|41465|1099|0000": {
+    "vlRat": "199.36",
+    "bcRat": "19.5"
+  },
+  "bldmeta|41465|1108|0000": {
+    "vlRat": "195.1",
+    "bcRat": "15.43"
+  },
+  "bldmeta|41465|0866|0000": {
+    "vlRat": "199.24",
+    "bcRat": "13.49"
+  },
+  "bldmeta|41465|0857|0000": {
+    "vlRat": "216.14",
+    "bcRat": "17.5"
+  },
+  "bldmeta|41465|0832|0000": {
+    "vlRat": "249.75",
+    "bcRat": "18.2"
+  },
+  "bldmeta|41465|0838|0000": {
+    "vlRat": "243.99",
+    "bcRat": "19.11"
+  },
+  "bldmeta|41465|0824|0000": {
+    "vlRat": "251.21",
+    "bcRat": "19.68"
+  },
+  "bldmeta|41465|0856|0000": {
+    "vlRat": "197.725",
+    "bcRat": "14.712"
+  },
+  "bldmeta|41465|0828|0000": {
+    "vlRat": "247.07",
+    "bcRat": "19.39"
+  },
+  "bldmeta|41465|1214|0000": {
+    "vlRat": "270.8",
+    "bcRat": "20.97"
+  },
+  "bldmeta|41465|0864|0000": {
+    "vlRat": "197.314",
+    "bcRat": "12.701"
+  },
+  "bldmeta|41465|0827|0000": {
+    "vlRat": "249.94",
+    "bcRat": "20.37"
+  },
+  "bldmeta|41465|1115|0000": {
+    "vlRat": "179.65884",
+    "bcRat": "12.036864"
+  },
+  "bldmeta|41465|0851|0000": {
+    "vlRat": "193.7",
+    "bcRat": "14.63"
+  },
+  "bldmeta|41465|1203|0000": {
+    "_empty": true
+  },
+  "bldmeta|41465|0831|0000": {
+    "vlRat": "248.3",
+    "bcRat": "20.26"
+  },
+  "bldmeta|41465|1201|0000": {
+    "vlRat": "246.69",
+    "bcRat": "46.83"
+  },
+  "bldmeta|41465|0840|0000": {
+    "vlRat": "247.18",
+    "bcRat": "17.01"
+  },
+  "bldmeta|41465|1113|0000": {
+    "vlRat": "151.19",
+    "bcRat": "10.33"
+  },
+  "bldmeta|41465|0032|0009": {
+    "_empty": true
+  },
+  "bldmeta|41465|0168|0001": {
+    "vlRat": "226.33",
+    "bcRat": "18.4"
+  },
+  "bldmeta|41465|1204|0000": {
+    "vlRat": "243.23",
+    "bcRat": "15.84"
+  },
+  "bldmeta|41465|0033|0000": {
+    "_empty": true
+  },
+  "bldmeta|41465|1107|0000": {
+    "vlRat": "194.17",
+    "bcRat": "19.33"
+  },
+  "bldmeta|41465|0192|0005": {
+    "_empty": true
+  },
+  "bldmeta|41465|0096|0003": {
+    "_empty": true
+  },
+  "bldmeta|28185|0593|0003": {
+    "_empty": true
+  },
+  "bldmeta|28185|0532|0000": {
+    "vlRat": "109.71",
+    "bcRat": "9.24"
+  },
+  "bldmeta|28185|0540|0000": {
+    "vlRat": "97.5",
+    "bcRat": "21.34"
+  },
+  "bldmeta|28185|0578|0001": {
+    "vlRat": "117.23",
+    "bcRat": "16.62"
+  },
+  "bldmeta|28185|0534|0000": {
+    "vlRat": "110.74",
+    "bcRat": "120.63"
+  },
+  "bldmeta|28185|0533|0000": {
+    "vlRat": "0",
+    "bcRat": "0"
+  },
+  "bldmeta|28185|0635|0000": {
+    "vlRat": "220.6",
+    "bcRat": "13.26"
+  },
+  "bldmeta|28185|0634|0000": {
+    "vlRat": "200.476",
+    "bcRat": "12.9"
+  },
+  "bldmeta|28185|0541|0000": {
+    "vlRat": "109.99",
+    "bcRat": "16.67"
+  },
+  "bldmeta|28185|0582|0002": {
+    "vlRat": "0",
+    "bcRat": "0"
+  },
+  "bldmeta|28185|0582|0000": {
+    "vlRat": "0",
+    "bcRat": "0"
+  },
+  "bldmeta|28185|0537|0000": {
+    "vlRat": "116.03",
+    "bcRat": "11.51"
+  },
+  "bldmeta|28185|0576|0000": {
+    "vlRat": "116.49",
+    "bcRat": "11.65"
+  },
+  "bldmeta|28185|0538|0000": {
+    "vlRat": "122.6",
+    "bcRat": "13.52"
+  },
+  "bldmeta|28185|0535|0002": {
+    "vlRat": "762.55",
+    "bcRat": "192.93"
+  },
+  "bldmeta|28185|0633|0000": {
+    "vlRat": "0",
+    "bcRat": "0"
+  },
+  "bldmeta|28185|0578|0002": {
+    "vlRat": "185.93",
+    "bcRat": "14.63"
+  },
+  "bldmeta|28185|0577|0000": {
+    "vlRat": "125",
+    "bcRat": "25.54"
+  },
+  "bldmeta|28185|0579|0000": {
+    "vlRat": "0",
+    "bcRat": "0"
+  },
+  "bldmeta|28185|0536|0000": {
+    "vlRat": "132.04",
+    "bcRat": "14.54"
+  },
+  "bldmeta|41450|0577|0000": {
+    "vlRat": "199.99",
+    "bcRat": "15.03"
+  },
+  "bldmeta|41450|0568|0000": {
+    "vlRat": "301.78",
+    "bcRat": "18.95"
+  },
+  "bldmeta|41450|0602|0000": {
+    "vlRat": "199.96",
+    "bcRat": "16.27"
+  },
+  "bldmeta|41450|0527|0000": {
+    "vlRat": "0",
+    "bcRat": "0"
+  },
+  "bldmeta|41450|0528|0005": {
+    "vlRat": "0",
+    "bcRat": "0"
+  },
+  "bldmeta|41450|0100|0000": {
+    "vlRat": "349.18",
+    "bcRat": "24.81"
+  },
+  "bldmeta|41450|0528|0000": {
+    "vlRat": "0",
+    "bcRat": "0"
+  },
+  "bldmeta|41450|0562|0000": {
+    "vlRat": "235.66",
+    "bcRat": "12.95"
+  },
+  "bldmeta|41450|0430|0007": {
+    "_empty": true
+  },
+  "bldmeta|41450|0427|0066": {
+    "_empty": true
+  },
+  "bldmeta|41450|0427|0025": {
+    "_empty": true
+  },
+  "bldmeta|41450|0569|0000": {
+    "vlRat": "328",
+    "bcRat": "18.83"
+  },
+  "bldmeta|41450|0560|0000": {
+    "vlRat": "254.2",
+    "bcRat": "14.26"
+  },
+  "bldmeta|41450|0452|0001": {
+    "vlRat": "368.24",
+    "bcRat": "26.83"
+  },
+  "bldmeta|41450|0561|0000": {
+    "vlRat": "243.78",
+    "bcRat": "14.9"
+  },
+  "bldmeta|41450|0593|0000": {
+    "vlRat": "199.95",
+    "bcRat": "15.48"
+  },
+  "bldmeta|41450|0570|0000": {
+    "vlRat": "0",
+    "bcRat": "0"
+  },
+  "supply|41450|0427|0206": {
+    "57.62": {
+      "supply_area": 75.24,
+      "pyeong": 23
+    },
+    "59.45": {
+      "supply_area": 75.8,
+      "pyeong": 23
+    },
+    "59.95": {
+      "supply_area": 78.28,
+      "pyeong": 24
+    },
+    "59.69": {
+      "supply_area": 77.96,
+      "pyeong": 24
+    }
+  },
+  "bldmeta|41450|0427|0206": {
+    "_empty": true
+  },
+  "supply|41450|0415|0010": {
+    "82.001": {
+      "supply_area": 148.61,
+      "pyeong": 45
+    },
+    "72.774": {
+      "supply_area": 132.65,
+      "pyeong": 40
+    },
+    "84.037": {
+      "supply_area": 152.13,
+      "pyeong": 46
+    },
+    "100.264": {
+      "supply_area": 180.82,
+      "pyeong": 55
+    }
+  },
+  "bldmeta|41450|0415|0010": {
+    "_empty": true
+  },
+  "supply|41450|0430|0035": {
+    "59.88": {
+      "supply_area": 78.91,
+      "pyeong": 24
+    },
+    "59.4": {
+      "supply_area": 78.27,
+      "pyeong": 24
+    },
+    "59.89": {
+      "supply_area": 78.93,
+      "pyeong": 24
+    },
+    "59.83": {
+      "supply_area": 78.85,
+      "pyeong": 24
+    }
+  },
+  "bldmeta|41450|0430|0035": {
+    "_empty": true
+  },
+  "supply|41450|0381|0008": {
+    "49.83": {
+      "supply_area": 49.83,
+      "pyeong": 15
+    }
+  },
+  "bldmeta|41450|0381|0008": {
+    "_empty": true
+  },
+  "supply|41450|0521|0000": {
+    "84.89": {
+      "supply_area": 107.69,
+      "pyeong": 33
+    },
+    "84.965": {
+      "supply_area": 107.71,
+      "pyeong": 33
+    }
+  },
+  "bldmeta|41450|0521|0000": {
+    "vlRat": "0",
+    "bcRat": "0"
+  },
+  "supply|41450|0518|0000": {
+    "59.97": {
+      "supply_area": 81.56,
+      "pyeong": 25
+    },
+    "49.58": {
+      "supply_area": 67.43,
+      "pyeong": 20
+    }
+  },
+  "bldmeta|41450|0518|0000": {
+    "vlRat": "203.8",
+    "bcRat": "16.73"
+  },
+  "supply|41450|0520|0000": {
+    "102.0": {
+      "supply_area": 124.46,
+      "pyeong": 38
+    },
+    "101.99": {
+      "supply_area": 124.46,
+      "pyeong": 38
+    },
+    "134.98": {
+      "supply_area": 158.94,
+      "pyeong": 48
+    },
+    "135.0": {
+      "supply_area": 158.97,
+      "pyeong": 48
+    }
+  },
+  "bldmeta|41450|0520|0000": {
+    "vlRat": "221.32",
+    "bcRat": "18.13"
+  },
+  "supply|41450|0537|0000": {
+    "58.929": {
+      "supply_area": 105.17,
+      "pyeong": 32
+    },
+    "84.179": {
+      "supply_area": 150.23,
+      "pyeong": 45
+    }
+  },
+  "bldmeta|41450|0537|0000": {
+    "_empty": true
+  },
+  "supply|41450|0823|0000": {
+    "84.962": {
+      "supply_area": 112.19,
+      "pyeong": 34
+    },
+    "100.906": {
+      "supply_area": 125.3,
+      "pyeong": 38
+    },
+    "84.969": {
+      "supply_area": 112.17,
+      "pyeong": 34
+    },
+    "84.956": {
+      "supply_area": 109.71,
+      "pyeong": 33
+    },
+    "84.942": {
+      "supply_area": 112.38,
+      "pyeong": 34
+    },
+    "84.966": {
+      "supply_area": 111.59,
+      "pyeong": 34
+    }
+  },
+  "bldmeta|41450|0823|0000": {
+    "vlRat": "179.87",
+    "bcRat": "20.56"
+  },
+  "supply|41450|0691|0000": {
+    "84.99": {
+      "supply_area": 107.79,
+      "pyeong": 33
+    },
+    "59.98": {
+      "supply_area": 78.54,
+      "pyeong": 24
+    },
+    "125.07": {
+      "supply_area": 154.92,
+      "pyeong": 47
+    },
+    "59.99": {
+      "supply_area": 81.29,
+      "pyeong": 25
+    }
+  },
+  "bldmeta|41450|0691|0000": {
+    "vlRat": "287.28",
+    "bcRat": "16.86"
+  },
+  "supply|41450|0748|0000": {
+    "84.96": {
+      "supply_area": 108.08,
+      "pyeong": 33
+    }
+  },
+  "bldmeta|41450|0748|0000": {
+    "vlRat": "179.68",
+    "bcRat": "20.28"
+  },
+  "supply|41450|0695|0000": {
+    "59.91": {
+      "supply_area": 81.07,
+      "pyeong": 25
+    },
+    "84.96": {
+      "supply_area": 107.89,
+      "pyeong": 33
+    }
+  },
+  "supply|41450|0681|0000": {
+    "169.61": {
+      "supply_area": 217.09,
+      "pyeong": 66
+    },
+    "84.805": {
+      "supply_area": 108.55,
+      "pyeong": 33
+    },
+    "254.415": {
+      "supply_area": 325.64,
+      "pyeong": 99
+    },
+    "339.22": {
+      "supply_area": 434.19,
+      "pyeong": 131
+    }
+  },
+  "bldmeta|41450|0681|0000": {
+    "vlRat": "349.97",
+    "bcRat": "18.92"
+  },
+  "supply|41450|0948|0000": {
+    "59.98": {
+      "supply_area": 79.37,
+      "pyeong": 24
+    },
+    "59.882": {
+      "supply_area": 79.66,
+      "pyeong": 24
+    },
+    "74.642": {
+      "supply_area": 99.11,
+      "pyeong": 30
+    },
+    "84.874": {
+      "supply_area": 109.72,
+      "pyeong": 33
+    },
+    "50.199": {
+      "supply_area": 69.4,
+      "pyeong": 21
+    },
+    "39.449": {
+      "supply_area": 57.72,
+      "pyeong": 17
+    },
+    "39.51": {
+      "supply_area": 55.99,
+      "pyeong": 17
+    }
+  },
+  "bldmeta|41450|0948|0000": {
+    "vlRat": "247.16",
+    "bcRat": "19.24"
+  },
+  "supply|41450|0731|0000": {
+    "84.966": {
+      "supply_area": 110.25,
+      "pyeong": 33
+    },
+    "84.962": {
+      "supply_area": 110.85,
+      "pyeong": 34
+    },
+    "84.969": {
+      "supply_area": 111.83,
+      "pyeong": 34
+    },
+    "84.956": {
+      "supply_area": 109.64,
+      "pyeong": 33
+    },
+    "84.942": {
+      "supply_area": 112.31,
+      "pyeong": 34
+    }
+  },
+  "bldmeta|41450|0731|0000": {
+    "vlRat": "180.39",
+    "bcRat": "20.68"
+  },
+  "supply|41450|0524|0000": {
+    "84.81": {
+      "supply_area": 108.58,
+      "pyeong": 33
+    },
+    "59.91": {
+      "supply_area": 81.2,
+      "pyeong": 25
+    }
+  },
+  "bldmeta|41450|0524|0000": {
+    "vlRat": "0",
+    "bcRat": "0"
+  },
+  "supply|41450|0947|0000": {
+    "59.963": {
+      "supply_area": 84.89,
+      "pyeong": 26
+    },
+    "59.993": {
+      "supply_area": 78.4,
+      "pyeong": 24
+    }
+  },
+  "bldmeta|41450|0947|0000": {
+    "vlRat": "249.8",
+    "bcRat": "19.88"
+  },
+  "supply|41450|0688|0000": {
+    "84.99": {
+      "supply_area": 108.73,
+      "pyeong": 33
+    },
+    "118.62": {
+      "supply_area": 150.26,
+      "pyeong": 45
+    },
+    "84.83": {
+      "supply_area": 110.26,
+      "pyeong": 33
+    }
+  },
+  "bldmeta|41450|0688|0000": {
+    "vlRat": "346.16",
+    "bcRat": "25.93"
+  },
+  "supply|41450|0346|0000": {
+    "59.04": {
+      "supply_area": 80.39,
+      "pyeong": 24
+    },
+    "84.935": {
+      "supply_area": 103.49,
+      "pyeong": 31
+    },
+    "103.005": {
+      "supply_area": 124.01,
+      "pyeong": 38
+    }
+  },
+  "bldmeta|41450|0346|0000": {
+    "vlRat": "365.54",
+    "bcRat": "25.07"
+  },
+  "supply|41450|0404|0001": {
+    "84.999": {
+      "supply_area": 109.9,
+      "pyeong": 33
+    },
+    "84.982": {
+      "supply_area": 109.88,
+      "pyeong": 33
+    },
+    "84.825": {
+      "supply_area": 109.68,
+      "pyeong": 33
+    },
+    "59.998": {
+      "supply_area": 77.58,
+      "pyeong": 23
+    },
+    "59.805": {
+      "supply_area": 77.33,
+      "pyeong": 23
+    }
+  },
+  "bldmeta|41450|0404|0001": {
+    "vlRat": "290.67",
+    "bcRat": "20.35"
+  },
+  "supply|41450|0747|0000": {
+    "84.921": {
+      "supply_area": 107.65,
+      "pyeong": 33
+    }
+  },
+  "bldmeta|41450|0747|0000": {
+    "vlRat": "179.84",
+    "bcRat": "22.15"
+  },
+  "supply|41450|0692|0000": {
+    "84.99": {
+      "supply_area": 109.67,
+      "pyeong": 33
+    },
+    "115.69": {
+      "supply_area": 145.56,
+      "pyeong": 44
+    }
+  },
+  "bldmeta|41450|0692|0000": {
+    "vlRat": "307.96",
+    "bcRat": "20.43"
+  },
+  "supply|41450|0687|0000": {
+    "84.83": {
+      "supply_area": 112.99,
+      "pyeong": 34
+    },
+    "84.9": {
+      "supply_area": 111.17,
+      "pyeong": 34
+    },
+    "75.27": {
+      "supply_area": 100.33,
+      "pyeong": 30
+    },
+    "52.48": {
+      "supply_area": 67.59,
+      "pyeong": 20
+    },
+    "68.2": {
+      "supply_area": 90.52,
+      "pyeong": 27
+    }
+  },
+  "bldmeta|41450|0687|0000": {
+    "_empty": true
+  },
+  "supply|41450|0729|0000": {
+    "101.99": {
+      "supply_area": 128.46,
+      "pyeong": 39
+    }
+  },
+  "bldmeta|41450|0729|0000": {
+    "vlRat": "179.78",
+    "bcRat": "19.85"
+  },
+  "supply|41450|0369|0004": {
+    "84.98": {
+      "supply_area": 139.23,
+      "pyeong": 42
+    },
+    "67.1": {
+      "supply_area": 105.61,
+      "pyeong": 32
+    },
+    "70.45": {
+      "supply_area": 116.79,
+      "pyeong": 35
+    },
+    "81.6": {
+      "supply_area": 135.2,
+      "pyeong": 41
+    },
+    "75.62": {
+      "supply_area": 124.57,
+      "pyeong": 38
+    },
+    "49.59": {
+      "supply_area": 82.96,
+      "pyeong": 25
+    },
+    "50.15": {
+      "supply_area": 84.54,
+      "pyeong": 26
+    }
+  },
+  "bldmeta|41450|0369|0004": {
+    "_empty": true
+  },
+  "supply|41450|0537|0001": {
+    "204.57": {
+      "supply_area": 254.71,
+      "pyeong": 77
+    },
+    "174.78": {
+      "supply_area": 217.62,
+      "pyeong": 66
+    },
+    "59.8": {
+      "supply_area": 74.46,
+      "pyeong": 23
+    },
+    "59.83": {
+      "supply_area": 74.49,
+      "pyeong": 23
+    },
+    "84.97": {
+      "supply_area": 105.8,
+      "pyeong": 32
+    },
+    "144.8": {
+      "supply_area": 180.29,
+      "pyeong": 55
+    },
+    "119.6": {
+      "supply_area": 148.91,
+      "pyeong": 45
+    },
+    "114.98": {
+      "supply_area": 143.16,
+      "pyeong": 43
+    },
+    "204.6": {
+      "supply_area": 254.75,
+      "pyeong": 77
+    },
+    "229.96": {
+      "supply_area": 286.32,
+      "pyeong": 87
+    },
+    "199.95": {
+      "supply_area": 248.96,
+      "pyeong": 75
+    }
+  },
+  "bldmeta|41450|0537|0001": {
+    "vlRat": "307.6",
+    "bcRat": "23.06"
+  },
+  "supply|41450|0519|0004": {
+    "70.689": {
+      "supply_area": 134.76,
+      "pyeong": 41
+    },
+    "56.901": {
+      "supply_area": 108.64,
+      "pyeong": 33
+    },
+    "74.439": {
+      "supply_area": 141.92,
+      "pyeong": 43
+    },
+    "77.09": {
+      "supply_area": 147.45,
+      "pyeong": 45
+    },
+    "84.966": {
+      "supply_area": 162.3,
+      "pyeong": 49
+    },
+    "84.364": {
+      "supply_area": 162.3,
+      "pyeong": 49
+    }
+  },
+  "bldmeta|41450|0519|0004": {
+    "_empty": true
+  },
+  "supply|41450|0684|0000": {
+    "84.432": {
+      "supply_area": 114.18,
+      "pyeong": 35
+    },
+    "168.864": {
+      "supply_area": 228.35,
+      "pyeong": 69
+    },
+    "144.056": {
+      "supply_area": 202.33,
+      "pyeong": 61
+    }
+  },
+  "bldmeta|41450|0684|0000": {
+    "vlRat": "350.6",
+    "bcRat": "18.44"
+  },
+  "supply|41450|0372|0002": {
+    "32.004": {
+      "supply_area": 62.06,
+      "pyeong": 19
+    },
+    "30.004": {
+      "supply_area": 58.18,
+      "pyeong": 18
+    },
+    "25.604": {
+      "supply_area": 49.65,
+      "pyeong": 15
+    },
+    "30.804": {
+      "supply_area": 59.73,
+      "pyeong": 18
+    },
+    "45.604": {
+      "supply_area": 88.43,
+      "pyeong": 27
+    }
+  },
+  "bldmeta|41450|0372|0002": {
+    "_empty": true
+  },
+  "supply|41450|0336|0040": {
+    "84.69": {
+      "supply_area": 99.15,
+      "pyeong": 30
+    },
+    "59.4": {
+      "supply_area": 77.56,
+      "pyeong": 23
+    }
+  },
+  "bldmeta|41450|0336|0040": {
+    "vlRat": "0",
+    "bcRat": "0"
+  },
+  "supply|41450|0690|0000": {
+    "84.99": {
+      "supply_area": 108.51,
+      "pyeong": 33
+    },
+    "84.91": {
+      "supply_area": 112.7,
+      "pyeong": 34
+    }
+  },
+  "bldmeta|41450|0690|0000": {
+    "vlRat": "281.51",
+    "bcRat": "19.99"
+  },
+  "supply|41450|0689|0000": {
+    "84.99": {
+      "supply_area": 110.14,
+      "pyeong": 33
+    },
+    "59.99": {
+      "supply_area": 82.72,
+      "pyeong": 25
+    },
+    "84.86": {
+      "supply_area": 110.18,
+      "pyeong": 33
+    }
+  },
+  "bldmeta|41450|0689|0000": {
+    "vlRat": "349.28",
+    "bcRat": "19.35"
+  },
+  "supply|41450|0477|0000": {
+    "84.385": {
+      "supply_area": 112.54,
+      "pyeong": 34
+    },
+    "74.704": {
+      "supply_area": 99.88,
+      "pyeong": 30
+    }
+  },
+  "bldmeta|41450|0477|0000": {
+    "vlRat": "209.51",
+    "bcRat": "16.57"
+  },
+  "supply|41450|0627|0000": {
+    "98.963": {
+      "supply_area": 128.54,
+      "pyeong": 39
+    },
+    "98.565": {
+      "supply_area": 129.3,
+      "pyeong": 39
+    }
+  },
+  "bldmeta|41450|0627|0000": {
+    "vlRat": "198.9",
+    "bcRat": "17.14"
+  },
+  "supply|41450|0630|0000": {
+    "59.844": {
+      "supply_area": 80.8,
+      "pyeong": 24
+    },
+    "59.671": {
+      "supply_area": 80.51,
+      "pyeong": 24
+    },
+    "52.349": {
+      "supply_area": 73.92,
+      "pyeong": 22
+    }
+  },
+  "bldmeta|41450|0630|0000": {
+    "vlRat": "199.93",
+    "bcRat": "18.59"
+  },
+  "supply|41450|0573|0000": {
+    "84.328": {
+      "supply_area": 112.49,
+      "pyeong": 34
+    },
+    "93.012": {
+      "supply_area": 123.59,
+      "pyeong": 37
+    },
+    "93.007": {
+      "supply_area": 124.36,
+      "pyeong": 38
+    }
+  },
+  "bldmeta|41450|0573|0000": {
+    "vlRat": "209.7551",
+    "bcRat": "13.7575"
+  },
+  "supply|41450|0470|0000": {
+    "74.98": {
+      "supply_area": 103.49,
+      "pyeong": 31
+    },
+    "59.93": {
+      "supply_area": 82.72,
+      "pyeong": 25
+    },
+    "74.94": {
+      "supply_area": 103.44,
+      "pyeong": 31
+    },
+    "84.96": {
+      "supply_area": 117.27,
+      "pyeong": 35
+    },
+    "84.94": {
+      "supply_area": 117.24,
+      "pyeong": 35
+    }
+  },
+  "bldmeta|41450|0470|0000": {
+    "vlRat": "218.53",
+    "bcRat": "15.71"
+  },
+  "supply|41450|0486|0000": {
+    "84.038": {
+      "supply_area": 110.41,
+      "pyeong": 33
+    },
+    "101.819": {
+      "supply_area": 132.41,
+      "pyeong": 40
+    },
+    "73.025": {
+      "supply_area": 96.14,
+      "pyeong": 29
+    },
+    "84.105": {
+      "supply_area": 110.54,
+      "pyeong": 33
+    },
+    "93.182": {
+      "supply_area": 122.32,
+      "pyeong": 37
+    },
+    "93.061": {
+      "supply_area": 122.39,
+      "pyeong": 37
+    },
+    "73.075": {
+      "supply_area": 96.7,
+      "pyeong": 29
+    },
+    "93.362": {
+      "supply_area": 122.46,
+      "pyeong": 37
+    }
+  },
+  "bldmeta|41450|0486|0000": {
+    "vlRat": "209.85",
+    "bcRat": "13.97"
+  },
+  "supply|41450|0480|0000": {
+    "91.446": {
+      "supply_area": 117.88,
+      "pyeong": 36
+    },
+    "96.988": {
+      "supply_area": 123.52,
+      "pyeong": 37
+    },
+    "96.753": {
+      "supply_area": 123.64,
+      "pyeong": 37
+    },
+    "101.795": {
+      "supply_area": 130.08,
+      "pyeong": 39
+    },
+    "96.385": {
+      "supply_area": 122.41,
+      "pyeong": 37
+    },
+    "132.269": {
+      "supply_area": 171.04,
+      "pyeong": 52
+    },
+    "132.942": {
+      "supply_area": 171.79,
+      "pyeong": 52
+    }
+  },
+  "bldmeta|41450|0480|0000": {
+    "vlRat": "209.98",
+    "bcRat": "13.47"
+  },
+  "supply|41450|0471|0000": {
+    "84.947": {
+      "supply_area": 109.15,
+      "pyeong": 33
+    },
+    "97.284": {
+      "supply_area": 123.27,
+      "pyeong": 37
+    },
+    "97.713": {
+      "supply_area": 124.27,
+      "pyeong": 38
+    }
+  },
+  "bldmeta|41450|0471|0000": {
+    "vlRat": "209.77",
+    "bcRat": "16.71"
+  },
+  "supply|41450|0559|0000": {
+    "59.9": {
+      "supply_area": 83.06,
+      "pyeong": 25
+    },
+    "59.98": {
+      "supply_area": 83.17,
+      "pyeong": 25
+    },
+    "74.97": {
+      "supply_area": 103.95,
+      "pyeong": 31
+    },
+    "84.93": {
+      "supply_area": 117.76,
+      "pyeong": 36
+    },
+    "84.99": {
+      "supply_area": 117.85,
+      "pyeong": 36
+    }
+  },
+  "bldmeta|41450|0559|0000": {
+    "vlRat": "219.89",
+    "bcRat": "12.95"
+  },
+  "supply|41450|0626|0000": {
+    "84.825": {
+      "supply_area": 112.38,
+      "pyeong": 34
+    },
+    "84.128": {
+      "supply_area": 113.57,
+      "pyeong": 34
+    },
+    "59.716": {
+      "supply_area": 80.68,
+      "pyeong": 24
+    }
+  },
+  "bldmeta|41450|0626|0000": {
+    "vlRat": "199.95",
+    "bcRat": "19.25"
+  },
+  "supply|41450|0565|0000": {
+    "84.99": {
+      "supply_area": 116.76,
+      "pyeong": 35
+    },
+    "84.97": {
+      "supply_area": 116.73,
+      "pyeong": 35
+    },
+    "74.99": {
+      "supply_area": 103.02,
+      "pyeong": 31
+    },
+    "74.98": {
+      "supply_area": 103.01,
+      "pyeong": 31
+    }
+  },
+  "bldmeta|41450|0565|0000": {
+    "vlRat": "219.93",
+    "bcRat": "14.2"
+  },
+  "supply|41450|0519|0000": {
+    "74.93": {
+      "supply_area": 103.87,
+      "pyeong": 31
+    },
+    "84.91": {
+      "supply_area": 118.43,
+      "pyeong": 36
+    },
+    "84.95": {
+      "supply_area": 118.49,
+      "pyeong": 36
+    }
+  },
+  "bldmeta|41450|0519|0000": {
+    "vlRat": "149.5",
+    "bcRat": "14.99"
+  },
+  "supply|41450|0438|0000": {
+    "84.893": {
+      "supply_area": 109.92,
+      "pyeong": 33
+    },
+    "114.921": {
+      "supply_area": 146.61,
+      "pyeong": 44
+    },
+    "84.894": {
+      "supply_area": 109.72,
+      "pyeong": 33
+    },
+    "114.764": {
+      "supply_area": 140.9,
+      "pyeong": 43
+    }
+  },
+  "bldmeta|41450|0438|0000": {
+    "vlRat": "354.692",
+    "bcRat": "61.467"
+  },
+  "supply|41450|0491|0000": {
+    "99.643": {
+      "supply_area": 127.73,
+      "pyeong": 39
+    },
+    "90.818": {
+      "supply_area": 116.47,
+      "pyeong": 35
+    },
+    "99.433": {
+      "supply_area": 128.02,
+      "pyeong": 39
+    },
+    "152.515": {
+      "supply_area": 199.97,
+      "pyeong": 60
+    }
+  },
+  "bldmeta|41450|0491|0000": {
+    "vlRat": "217.21",
+    "bcRat": "14.74"
+  },
+  "supply|41450|0535|0000": {
+    "84.75": {
+      "supply_area": 119.73,
+      "pyeong": 36
+    },
+    "74.82": {
+      "supply_area": 105.61,
+      "pyeong": 32
+    },
+    "59.92": {
+      "supply_area": 84.65,
+      "pyeong": 26
+    },
+    "51.76": {
+      "supply_area": 73.13,
+      "pyeong": 22
+    },
+    "59.89": {
+      "supply_area": 84.61,
+      "pyeong": 26
+    }
+  },
+  "bldmeta|41450|0535|0000": {
+    "vlRat": "217.98",
+    "bcRat": "19.42"
+  },
+  "supply|41450|0445|0000": {
+    "84.648": {
+      "supply_area": 112.5,
+      "pyeong": 34
+    }
+  },
+  "bldmeta|41450|0445|0000": {
+    "vlRat": "200.16",
+    "bcRat": "15.1"
+  },
+  "supply|41450|0458|0000": {
+    "84.426": {
+      "supply_area": 110.82,
+      "pyeong": 34
+    },
+    "73.811": {
+      "supply_area": 97.91,
+      "pyeong": 30
+    }
+  },
+  "bldmeta|41450|0458|0000": {
+    "vlRat": "219.96",
+    "bcRat": "12.66"
+  },
+  "supply|41450|0530|0000": {
+    "84.87": {
+      "supply_area": 117.19,
+      "pyeong": 35
+    },
+    "84.92": {
+      "supply_area": 117.26,
+      "pyeong": 35
+    },
+    "74.91": {
+      "supply_area": 103.43,
+      "pyeong": 31
+    }
+  },
+  "bldmeta|41450|0530|0000": {
+    "vlRat": "219.26",
+    "bcRat": "15.46"
+  },
+  "supply|41450|0500|0000": {
+    "99.643": {
+      "supply_area": 126.88,
+      "pyeong": 38
+    },
+    "99.433": {
+      "supply_area": 127.79,
+      "pyeong": 39
+    },
+    "90.241": {
+      "supply_area": 117.66,
+      "pyeong": 36
+    },
+    "90.818": {
+      "supply_area": 116.26,
+      "pyeong": 35
+    },
+    "152.515": {
+      "supply_area": 199.61,
+      "pyeong": 60
+    }
+  },
+  "bldmeta|41450|0500|0000": {
+    "vlRat": "219",
+    "bcRat": "13.83"
+  },
+  "supply|41450|0448|0000": {
+    "84.88": {
+      "supply_area": 116.07,
+      "pyeong": 35
+    },
+    "84.95": {
+      "supply_area": 116.25,
+      "pyeong": 35
+    },
+    "74.73": {
+      "supply_area": 102.27,
+      "pyeong": 31
+    },
+    "84.89": {
+      "supply_area": 116.17,
+      "pyeong": 35
+    },
+    "74.72": {
+      "supply_area": 102.25,
+      "pyeong": 31
+    }
+  },
+  "bldmeta|41450|0448|0000": {
+    "vlRat": "216.92",
+    "bcRat": "18.86"
+  },
+  "supply|41450|0514|0003": {
+    "22.09": {
+      "supply_area": 57.36,
+      "pyeong": 17
+    },
+    "30.0": {
+      "supply_area": 79.44,
+      "pyeong": 24
+    }
+  },
+  "bldmeta|41450|0514|0003": {
+    "_empty": true
+  },
+  "supply|41450|0446|0000": {
+    "74.72": {
+      "supply_area": 101.91,
+      "pyeong": 31
+    },
+    "84.88": {
+      "supply_area": 115.77,
+      "pyeong": 35
+    },
+    "84.89": {
+      "supply_area": 115.78,
+      "pyeong": 35
+    },
+    "84.95": {
+      "supply_area": 115.86,
+      "pyeong": 35
+    },
+    "74.73": {
+      "supply_area": 101.92,
+      "pyeong": 31
+    }
+  },
+  "bldmeta|41450|0446|0000": {
+    "vlRat": "216.44",
+    "bcRat": "19.63"
+  },
+  "supply|41450|0501|0000": {
+    "77.986": {
+      "supply_area": 103.95,
+      "pyeong": 31
+    },
+    "84.985": {
+      "supply_area": 111.34,
+      "pyeong": 34
+    },
+    "77.958": {
+      "supply_area": 102.15,
+      "pyeong": 31
+    }
+  },
+  "bldmeta|41450|0501|0000": {
+    "vlRat": "219.68",
+    "bcRat": "17.31"
+  },
+  "supply|41450|0672|0000": {
+    "84.98": {
+      "supply_area": 114.23,
+      "pyeong": 35
+    },
+    "75.48": {
+      "supply_area": 101.46,
+      "pyeong": 31
+    }
+  },
+  "bldmeta|41450|0672|0000": {
+    "vlRat": "223.9",
+    "bcRat": "19"
+  },
+  "supply|41450|0673|0000": {
+    "101.985": {
+      "supply_area": 131.83,
+      "pyeong": 40
+    },
+    "101.097": {
+      "supply_area": 130.96,
+      "pyeong": 40
+    },
+    "101.938": {
+      "supply_area": 130.87,
+      "pyeong": 40
+    },
+    "101.931": {
+      "supply_area": 131.71,
+      "pyeong": 40
+    }
+  },
+  "bldmeta|41450|0673|0000": {
+    "vlRat": "179.46",
+    "bcRat": "15.62"
+  },
+  "supply|41450|0652|0000": {
+    "101.316": {
+      "supply_area": 133.18,
+      "pyeong": 40
+    },
+    "101.853": {
+      "supply_area": 135.05,
+      "pyeong": 41
+    },
+    "101.578": {
+      "supply_area": 134.34,
+      "pyeong": 41
+    },
+    "109.382": {
+      "supply_area": 143.69,
+      "pyeong": 43
+    },
+    "109.34": {
+      "supply_area": 144.44,
+      "pyeong": 44
+    },
+    "147.0": {
+      "supply_area": 190.58,
+      "pyeong": 58
+    }
+  },
+  "bldmeta|41450|0652|0000": {
+    "vlRat": "229.4",
+    "bcRat": "22.62"
+  },
+  "supply|41450|0662|0000": {
+    "98.75": {
+      "supply_area": 128.52,
+      "pyeong": 39
+    },
+    "95.428": {
+      "supply_area": 124.53,
+      "pyeong": 38
+    },
+    "98.799": {
+      "supply_area": 128.02,
+      "pyeong": 39
+    }
+  },
+  "bldmeta|41450|0662|0000": {
+    "vlRat": "209.93",
+    "bcRat": "18.05"
+  },
+  "supply|41450|0651|0000": {
+    "92.437": {
+      "supply_area": 116.23,
+      "pyeong": 35
+    },
+    "98.716": {
+      "supply_area": 126.27,
+      "pyeong": 38
+    },
+    "102.559": {
+      "supply_area": 130.14,
+      "pyeong": 39
+    }
+  },
+  "bldmeta|41450|0651|0000": {
+    "vlRat": "229.9681",
+    "bcRat": "18.3941"
+  },
+  "supply|41450|0671|0000": {
+    "95.99": {
+      "supply_area": 125.22,
+      "pyeong": 38
+    },
+    "101.987": {
+      "supply_area": 132.2,
+      "pyeong": 40
+    },
+    "95.987": {
+      "supply_area": 124.09,
+      "pyeong": 38
+    },
+    "95.984": {
+      "supply_area": 124.4,
+      "pyeong": 38
+    },
+    "95.991": {
+      "supply_area": 124.73,
+      "pyeong": 38
+    }
+  },
+  "bldmeta|41450|0671|0000": {
+    "vlRat": "218.19",
+    "bcRat": "19.77"
+  },
+  "supply|41450|0663|0000": {
+    "101.23": {
+      "supply_area": 132.22,
+      "pyeong": 40
+    },
+    "96.994": {
+      "supply_area": 124.69,
+      "pyeong": 38
+    },
+    "101.721": {
+      "supply_area": 132.17,
+      "pyeong": 40
+    },
+    "96.943": {
+      "supply_area": 125.57,
+      "pyeong": 38
+    }
+  },
+  "bldmeta|41450|0663|0000": {
+    "vlRat": "209.999",
+    "bcRat": "18.301"
+  },
+  "supply|41450|0635|0000": {
+    "108.812": {
+      "supply_area": 136.79,
+      "pyeong": 41
+    },
+    "101.811": {
+      "supply_area": 126.92,
+      "pyeong": 38
+    },
+    "101.548": {
+      "supply_area": 126.33,
+      "pyeong": 38
+    },
+    "95.873": {
+      "supply_area": 120.26,
+      "pyeong": 36
+    },
+    "131.888": {
+      "supply_area": 163.22,
+      "pyeong": 49
+    },
+    "95.968": {
+      "supply_area": 119.69,
+      "pyeong": 36
+    }
+  },
+  "bldmeta|41450|0635|0000": {
+    "vlRat": "199.976",
+    "bcRat": "17.69"
+  },
+  "supply|41450|0639|0000": {
+    "102.244": {
+      "supply_area": 129.77,
+      "pyeong": 39
+    },
+    "90.417": {
+      "supply_area": 115.28,
+      "pyeong": 35
+    },
+    "102.47": {
+      "supply_area": 131.49,
+      "pyeong": 40
+    },
+    "119.32": {
+      "supply_area": 151.17,
+      "pyeong": 46
+    }
+  },
+  "bldmeta|41450|0639|0000": {
+    "vlRat": "179.84",
+    "bcRat": "14.7"
+  },
+  "supply|41450|0641|0000": {
+    "101.931": {
+      "supply_area": 126.41,
+      "pyeong": 38
+    },
+    "101.751": {
+      "supply_area": 127.39,
+      "pyeong": 39
+    },
+    "130.543": {
+      "supply_area": 161.51,
+      "pyeong": 49
+    },
+    "101.705": {
+      "supply_area": 126.71,
+      "pyeong": 38
+    },
+    "145.87": {
+      "supply_area": 180.4,
+      "pyeong": 55
+    }
+  },
+  "bldmeta|41450|0641|0000": {
+    "vlRat": "169.99",
+    "bcRat": "18.16"
+  },
+  "supply|41450|0646|0000": {
+    "102.244": {
+      "supply_area": 131.61,
+      "pyeong": 40
+    },
+    "102.093": {
+      "supply_area": 131.45,
+      "pyeong": 40
+    },
+    "102.21": {
+      "supply_area": 132.57,
+      "pyeong": 40
+    },
+    "102.173": {
+      "supply_area": 133.44,
+      "pyeong": 40
+    },
+    "113.142": {
+      "supply_area": 145.63,
+      "pyeong": 44
+    },
+    "113.601": {
+      "supply_area": 146.52,
+      "pyeong": 44
+    },
+    "102.47": {
+      "supply_area": 133.33,
+      "pyeong": 40
+    }
+  },
+  "bldmeta|41450|0646|0000": {
+    "vlRat": "229.94",
+    "bcRat": "18.78"
+  },
+  "supply|41390|1790|0000": {
+    "59.99": {
+      "supply_area": 79.5,
+      "pyeong": 24
+    },
+    "26.88": {
+      "supply_area": 38.86,
+      "pyeong": 12
+    }
+  },
+  "bldmeta|41390|1790|0000": {
+    "vlRat": "0",
+    "bcRat": "0"
+  },
+  "supply|41390|1872|0004": {
+    "59.908": {
+      "supply_area": 78.85,
+      "pyeong": 24
+    },
+    "59.983": {
+      "supply_area": 73.11,
+      "pyeong": 22
+    }
+  },
+  "bldmeta|41390|1872|0004": {
+    "vlRat": "129.43",
+    "bcRat": "19.91"
+  },
+  "supply|41390|1873|0003": {
+    "47.455": {
+      "supply_area": 59.0,
+      "pyeong": 18
+    },
+    "59.935": {
+      "supply_area": 77.88,
+      "pyeong": 24
+    }
+  },
+  "bldmeta|41390|1873|0003": {
+    "vlRat": "119.3",
+    "bcRat": "25.34"
+  },
+  "supply|41390|1789|0000": {
+    "59.97": {
+      "supply_area": 79.02,
+      "pyeong": 24
+    },
+    "84.84": {
+      "supply_area": 110.42,
+      "pyeong": 33
+    }
+  },
+  "bldmeta|41390|1789|0000": {
+    "vlRat": "118.95",
+    "bcRat": "20.98"
+  },
+  "supply|41390|1862|0000": {
+    "59.03": {
+      "supply_area": 85.05,
+      "pyeong": 26
+    },
+    "46.95": {
+      "supply_area": 64.67,
+      "pyeong": 20
+    }
+  },
+  "supply|41390|1876|0001": {
+    "59.88": {
+      "supply_area": 83.29,
+      "pyeong": 25
+    },
+    "51.74": {
+      "supply_area": 68.89,
+      "pyeong": 21
+    },
+    "59.79": {
+      "supply_area": 83.64,
+      "pyeong": 25
+    }
+  },
+  "bldmeta|41390|1876|0001": {
+    "vlRat": "120.32",
+    "bcRat": "21.26"
+  },
+  "supply|41390|1844|0000": {
+    "59.56": {
+      "supply_area": 78.01,
+      "pyeong": 24
+    },
+    "59.66": {
+      "supply_area": 78.14,
+      "pyeong": 24
+    },
+    "59.59": {
+      "supply_area": 73.77,
+      "pyeong": 22
+    },
+    "84.84": {
+      "supply_area": 104.02,
+      "pyeong": 31
+    },
+    "59.62": {
+      "supply_area": 72.07,
+      "pyeong": 22
+    },
+    "84.64": {
+      "supply_area": 102.83,
+      "pyeong": 31
+    }
+  },
+  "bldmeta|41390|1844|0000": {
+    "vlRat": "117.76",
+    "bcRat": "19.39"
+  },
+  "supply|41390|1872|0006": {
+    "59.8": {
+      "supply_area": 78.08,
+      "pyeong": 24
+    },
+    "73.09": {
+      "supply_area": 92.69,
+      "pyeong": 28
+    },
+    "84.95": {
+      "supply_area": 102.15,
+      "pyeong": 31
+    }
+  },
+  "bldmeta|41390|1872|0006": {
+    "vlRat": "126.41",
+    "bcRat": "21.23"
+  },
+  "supply|41390|1875|0002": {
+    "84.87": {
+      "supply_area": 106.83,
+      "pyeong": 32
+    },
+    "59.91": {
+      "supply_area": 79.41,
+      "pyeong": 24
+    }
+  },
+  "bldmeta|41390|1875|0002": {
+    "vlRat": "139.66",
+    "bcRat": "19.96"
+  },
+  "supply|41390|1628|0000": {
+    "59.92": {
+      "supply_area": 76.01,
+      "pyeong": 23
+    },
+    "84.72": {
+      "supply_area": 107.48,
+      "pyeong": 33
+    },
+    "59.995": {
+      "supply_area": 76.11,
+      "pyeong": 23
+    },
+    "119.84": {
+      "supply_area": 152.03,
+      "pyeong": 46
+    }
+  },
+  "supply|41390|1851|0000": {
+    "51.228": {
+      "supply_area": 64.42,
+      "pyeong": 19
+    },
+    "59.901": {
+      "supply_area": 82.95,
+      "pyeong": 25
+    },
+    "59.903": {
+      "supply_area": 82.68,
+      "pyeong": 25
+    }
+  },
+  "bldmeta|41390|1851|0000": {
+    "vlRat": "107.85",
+    "bcRat": "20.85"
+  },
+  "supply|41390|1866|0006": {
+    "84.88": {
+      "supply_area": 108.98,
+      "pyeong": 33
+    },
+    "101.94": {
+      "supply_area": 118.39,
+      "pyeong": 36
+    },
+    "78.124": {
+      "supply_area": 98.37,
+      "pyeong": 30
+    },
+    "134.7": {
+      "supply_area": 163.46,
+      "pyeong": 49
+    },
+    "31.68": {
+      "supply_area": 46.11,
+      "pyeong": 14
+    }
+  },
+  "bldmeta|41390|1866|0006": {
+    "vlRat": "132",
+    "bcRat": "25.31"
+  },
+  "supply|41390|1786|0000": {
+    "59.97": {
+      "supply_area": 77.75,
+      "pyeong": 24
+    },
+    "50.03": {
+      "supply_area": 61.36,
+      "pyeong": 19
+    }
+  },
+  "bldmeta|41390|1786|0000": {
+    "vlRat": "113.87",
+    "bcRat": "23.27"
+  },
+  "supply|41390|1867|0003": {
+    "101.955": {
+      "supply_area": 129.59,
+      "pyeong": 39
+    },
+    "84.96": {
+      "supply_area": 104.2,
+      "pyeong": 32
+    },
+    "84.98": {
+      "supply_area": 111.08,
+      "pyeong": 34
+    },
+    "134.91": {
+      "supply_area": 167.04,
+      "pyeong": 51
+    }
+  },
+  "bldmeta|41390|1867|0003": {
+    "vlRat": "143",
+    "bcRat": "23.51"
+  },
+  "supply|41390|1843|0000": {
+    "59.66": {
+      "supply_area": 78.6,
+      "pyeong": 24
+    },
+    "84.84": {
+      "supply_area": 107.62,
+      "pyeong": 33
+    },
+    "59.56": {
+      "supply_area": 76.58,
+      "pyeong": 23
+    },
+    "59.59": {
+      "supply_area": 72.69,
+      "pyeong": 22
+    },
+    "59.62": {
+      "supply_area": 77.19,
+      "pyeong": 23
+    }
+  },
+  "bldmeta|41390|1843|0000": {
+    "vlRat": "119.34387",
+    "bcRat": "19.97"
+  },
+  "supply|41390|2737|0000": {
+    "59.988": {
+      "supply_area": 79.32,
+      "pyeong": 24
+    },
+    "84.913": {
+      "supply_area": 110.61,
+      "pyeong": 33
+    },
+    "84.272": {
+      "supply_area": 110.16,
+      "pyeong": 33
+    },
+    "84.953": {
+      "supply_area": 111.63,
+      "pyeong": 34
+    },
+    "60.087": {
+      "supply_area": 79.42,
+      "pyeong": 24
+    }
+  },
+  "bldmeta|41390|2737|0000": {
+    "vlRat": "199.97",
+    "bcRat": "14.03"
+  },
+  "supply|41390|1875|0001": {
+    "59.908": {
+      "supply_area": 78.78,
+      "pyeong": 24
+    },
+    "59.983": {
+      "supply_area": 73.37,
+      "pyeong": 22
+    }
+  },
+  "bldmeta|41390|1875|0001": {
+    "vlRat": "124.36",
+    "bcRat": "22.59"
+  },
+  "supply|41390|1940|0001": {
+    "84.883": {
+      "supply_area": 105.99,
+      "pyeong": 32
+    },
+    "59.78": {
+      "supply_area": 72.72,
+      "pyeong": 22
+    },
+    "84.9": {
+      "supply_area": 106.01,
+      "pyeong": 32
+    }
+  },
+  "bldmeta|41390|1940|0001": {
+    "vlRat": "115.832",
+    "bcRat": "21.94"
+  },
+  "supply|41390|1394|0000": {
+    "60.625": {
+      "supply_area": 102.41,
+      "pyeong": 31
+    },
+    "84.195": {
+      "supply_area": 123.07,
+      "pyeong": 37
+    },
+    "34.8": {
+      "supply_area": 58.31,
+      "pyeong": 18
+    }
+  },
+  "bldmeta|41390|1394|0000": {
+    "vlRat": "290.93",
+    "bcRat": "19.19"
+  },
+  "supply|41390|1871|0001": {
+    "84.93": {
+      "supply_area": 106.51,
+      "pyeong": 32
+    },
+    "84.98": {
+      "supply_area": 105.79,
+      "pyeong": 32
+    },
+    "84.92": {
+      "supply_area": 106.5,
+      "pyeong": 32
+    },
+    "87.94": {
+      "supply_area": 110.29,
+      "pyeong": 33
+    }
+  },
+  "bldmeta|41390|1871|0001": {
+    "vlRat": "125.02",
+    "bcRat": "24.5"
+  },
+  "supply|41390|1788|0001": {
+    "84.92": {
+      "supply_area": 110.1,
+      "pyeong": 33
+    },
+    "84.98": {
+      "supply_area": 110.18,
+      "pyeong": 33
+    },
+    "87.94": {
+      "supply_area": 114.04,
+      "pyeong": 34
+    }
+  },
+  "bldmeta|41390|1788|0001": {
+    "vlRat": "109.65",
+    "bcRat": "22.56"
+  },
+  "supply|41390|2711|0000": {
+    "84.966": {
+      "supply_area": 110.12,
+      "pyeong": 33
+    },
+    "84.922": {
+      "supply_area": 110.31,
+      "pyeong": 33
+    },
+    "59.708": {
+      "supply_area": 78.59,
+      "pyeong": 24
+    }
+  },
+  "bldmeta|41390|2711|0000": {
+    "vlRat": "199.955",
+    "bcRat": "16.90241"
+  },
+  "supply|41390|1874|0001": {
+    "115.0": {
+      "supply_area": 142.22,
+      "pyeong": 43
+    },
+    "95.16": {
+      "supply_area": 120.41,
+      "pyeong": 36
+    }
+  },
+  "bldmeta|41390|1874|0001": {
+    "vlRat": "159.41",
+    "bcRat": "138.46"
+  },
+  "supply|41390|1876|0003": {
+    "59.96": {
+      "supply_area": 78.86,
+      "pyeong": 24
+    },
+    "84.98": {
+      "supply_area": 105.93,
+      "pyeong": 32
+    },
+    "49.78": {
+      "supply_area": 60.24,
+      "pyeong": 18
+    }
+  },
+  "bldmeta|41390|1876|0003": {
+    "vlRat": "123.99439",
+    "bcRat": "21.28"
+  },
+  "supply|41390|1394|0002": {
+    "59.908": {
+      "supply_area": 78.3,
+      "pyeong": 24
+    },
+    "59.983": {
+      "supply_area": 73.1,
+      "pyeong": 22
+    }
+  },
+  "bldmeta|41390|1394|0002": {
+    "vlRat": "130.37",
+    "bcRat": "21.45"
+  },
+  "supply|41390|1886|0005": {
+    "84.96": {
+      "supply_area": 84.96,
+      "pyeong": 26
+    },
+    "59.96": {
+      "supply_area": 61.65,
+      "pyeong": 19
+    }
+  },
+  "bldmeta|41390|1886|0005": {
+    "vlRat": "130.927",
+    "bcRat": "23.34"
+  },
+  "supply|41390|1873|0002": {
+    "59.908": {
+      "supply_area": 78.78,
+      "pyeong": 24
+    },
+    "59.983": {
+      "supply_area": 73.37,
+      "pyeong": 22
+    }
+  },
+  "bldmeta|41390|1873|0002": {
+    "vlRat": "132.36",
+    "bcRat": "30.89"
+  },
+  "supply|41390|1787|0001": {
+    "59.94": {
+      "supply_area": 78.9,
+      "pyeong": 24
+    },
+    "59.95": {
+      "supply_area": 75.16,
+      "pyeong": 23
+    },
+    "59.98": {
+      "supply_area": 73.02,
+      "pyeong": 22
+    }
+  },
+  "bldmeta|41390|1787|0001": {
+    "vlRat": "121.58",
+    "bcRat": "21.79"
+  },
+  "supply|41390|1877|0003": {
+    "74.56": {
+      "supply_area": 85.48,
+      "pyeong": 26
+    },
+    "119.64": {
+      "supply_area": 132.7,
+      "pyeong": 40
+    },
+    "84.94": {
+      "supply_area": 84.94,
+      "pyeong": 26
+    }
+  },
+  "bldmeta|41390|1877|0003": {
+    "vlRat": "134.93042",
+    "bcRat": "24.404965"
+  },
+  "supply|41390|1863|0000": {
+    "59.903": {
+      "supply_area": 78.26,
+      "pyeong": 24
+    },
+    "51.228": {
+      "supply_area": 62.57,
+      "pyeong": 19
+    },
+    "84.91": {
+      "supply_area": 107.07,
+      "pyeong": 32
+    },
+    "72.89": {
+      "supply_area": 87.87,
+      "pyeong": 27
+    },
+    "59.901": {
+      "supply_area": 75.2,
+      "pyeong": 23
+    }
+  },
+  "bldmeta|41390|1863|0000": {
+    "vlRat": "118.776",
+    "bcRat": "19.759"
+  },
+  "supply|41390|1886|0004": {
+    "103.07": {
+      "supply_area": 103.73,
+      "pyeong": 31
+    },
+    "62.26": {
+      "supply_area": 68.37,
+      "pyeong": 21
+    },
+    "84.98": {
+      "supply_area": 84.98,
+      "pyeong": 26
+    },
+    "134.91": {
+      "supply_area": 134.91,
+      "pyeong": 41
+    }
+  },
+  "bldmeta|41390|1886|0004": {
+    "vlRat": "123.87",
+    "bcRat": "20.99"
+  },
+  "supply|41390|1878|0005": {
+    "84.75": {
+      "supply_area": 112.33,
+      "pyeong": 34
+    },
+    "99.48": {
+      "supply_area": 145.68,
+      "pyeong": 44
+    },
+    "89.77": {
+      "supply_area": 131.38,
+      "pyeong": 40
+    },
+    "117.34": {
+      "supply_area": 169.41,
+      "pyeong": 51
+    }
+  },
+  "bldmeta|41390|1878|0005": {
+    "vlRat": "144.35",
+    "bcRat": "20.98"
+  },
+  "supply|41390|2712|0000": {
+    "84.996": {
+      "supply_area": 111.02,
+      "pyeong": 34
+    },
+    "59.935": {
+      "supply_area": 82.46,
+      "pyeong": 25
+    },
+    "84.882": {
+      "supply_area": 110.82,
+      "pyeong": 34
+    },
+    "59.912": {
+      "supply_area": 83.01,
+      "pyeong": 25
+    },
+    "59.941": {
+      "supply_area": 83.03,
+      "pyeong": 25
+    }
+  },
+  "bldmeta|41390|2712|0000": {
+    "vlRat": "199.43",
+    "bcRat": "15.912"
+  },
+  "supply|41390|2732|0000": {
+    "74.895": {
+      "supply_area": 102.01,
+      "pyeong": 31
+    },
+    "59.792": {
+      "supply_area": 82.47,
+      "pyeong": 25
+    },
+    "59.589": {
+      "supply_area": 82.47,
+      "pyeong": 25
+    },
+    "84.74": {
+      "supply_area": 114.74,
+      "pyeong": 35
+    }
+  },
+  "bldmeta|41390|2732|0000": {
+    "vlRat": "199.96",
+    "bcRat": "14.7"
+  },
+  "bldmeta|41390|1942|0001": {
+    "vlRat": "119.52",
+    "bcRat": "20.98"
+  },
+  "bldmeta|41390|1785|0001": {
+    "vlRat": "129.54",
+    "bcRat": "21.41"
+  },
+  "bldmeta|41390|1865|0000": {
+    "vlRat": "119.85",
+    "bcRat": "19.874618"
+  },
+  "bldmeta|41390|1878|0004": {
+    "vlRat": "132.92",
+    "bcRat": "22.65"
+  },
+  "bldmeta|41390|1878|0008": {
+    "vlRat": "137.96",
+    "bcRat": "21.617316"
+  },
+  "bldmeta|41390|1877|0005": {
+    "vlRat": "112.67633",
+    "bcRat": "20.43"
+  },
+  "bldmeta|41390|1850|0000": {
+    "vlRat": "118.95",
+    "bcRat": "19.23"
+  },
+  "bldmeta|41390|1864|0000": {
+    "vlRat": "0",
+    "bcRat": "20.366074"
+  },
+  "bldmeta|41390|1629|0000": {
+    "vlRat": "116.36",
+    "bcRat": "18.62"
+  },
+  "bldmeta|41390|1875|0005": {
+    "vlRat": "171.3",
+    "bcRat": "23.95"
+  },
+  "bldmeta|41390|1876|0002": {
+    "vlRat": "138.78",
+    "bcRat": "20.74"
+  },
+  "bldmeta|41390|1871|0005": {
+    "vlRat": "146.7",
+    "bcRat": "21.98"
+  },
+  "bldmeta|41390|1870|0001": {
+    "vlRat": "132.66",
+    "bcRat": "25.638709"
+  },
+  "bldmeta|41390|1847|0000": {
+    "vlRat": "107.99",
+    "bcRat": "17.45"
+  },
+  "bldmeta|41390|1868|0000": {
+    "vlRat": "121.24",
+    "bcRat": "19.145487"
+  },
+  "bldmeta|41390|1942|0002": {
+    "vlRat": "107.7",
+    "bcRat": "18.9"
+  },
+  "bldmeta|41390|1877|0002": {
+    "vlRat": "129.42",
+    "bcRat": "20.83"
+  },
+  "bldmeta|41390|1877|0001": {
+    "vlRat": "119.98",
+    "bcRat": "19.76"
+  },
+  "bldmeta|41390|1846|0000": {
+    "vlRat": "119.91",
+    "bcRat": "21.154021"
+  },
+  "bldmeta|41390|1872|0005": {
+    "vlRat": "164.78",
+    "bcRat": "21.46"
+  },
+  "bldmeta|41390|1886|0003": {
+    "vlRat": "119.42",
+    "bcRat": "19.450809"
+  },
+  "bldmeta|41390|1848|0004": {
+    "vlRat": "117.87",
+    "bcRat": "22.3"
+  },
+  "bldmeta|41390|1867|0001": {
+    "vlRat": "148.74",
+    "bcRat": "21.6"
+  },
+  "bldmeta|41390|1874|0002": {
+    "vlRat": "158.91",
+    "bcRat": "20.39"
+  },
+  "bldmeta|41390|1849|0006": {
+    "vlRat": "127.89",
+    "bcRat": "24.15"
+  },
+  "bldmeta|41390|1788|0003": {
+    "vlRat": "150.1",
+    "bcRat": "21.08"
   }
 }
