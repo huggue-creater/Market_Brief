@@ -41735,8 +41735,8 @@ function renderDetail(){
   document.getElementById("detailSub").textContent=aptRows[0]?.region||"";
   const tags=[];
   if(m.buildYear)tags.push(`준공 ${m.buildYear}년 (${CUR_YEAR-m.buildYear}년차)`);
-  if(m.vlRat)tags.push(`용적률 ${m.vlRat}%`);
-  if(m.bcRat)tags.push(`건폐율 ${m.bcRat}%`);
+  if(m.vlRat&&+m.vlRat>0)tags.push(`용적률 ${Math.round(+m.vlRat)}%`);
+  if(m.bcRat&&+m.bcRat>0)tags.push(`건폐율 ${Math.round(+m.bcRat)}%`);
   document.getElementById("detailMeta").innerHTML=tags.map(t=>`<span>${t}</span>`).join("");
   const pc={};
   for(const r of aptRows)if(!r.canceled)pc[r.pyeong]=(pc[r.pyeong]||0)+1;

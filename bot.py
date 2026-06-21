@@ -686,9 +686,9 @@ def _supply_pyeong(exclu_str: str, bun: str, ji: str,
     return to_pyeong(exclu_str)
 
 
-def _fetch_bld_meta(lawd: str, bjdong: str, bun: str, ji: str) -> dict:
-    """단지 용적률/건폐율 조회 (총괄표제부, bonbun 기준)."""
-    resp = http_get(BUILD_INFO_URL, params={
+def _bld_api_get(endpoint: str, lawd: str, bjdong: str, bun: str, ji: str) -> dict:
+    """건축물대장 API 공통 조회. vlRat/bcRat 추출 반환."""
+    resp = http_get(f"{BUILD_HUB_URL}/{endpoint}", params={
         "serviceKey": DATA_GO_KR_KEY,
         "sigunguCd":  lawd,
         "bjdongCd":   bjdong,
@@ -707,8 +707,16 @@ def _fetch_bld_meta(lawd: str, bjdong: str, bun: str, ji: str) -> dict:
         d = {c.tag: (c.text or "").strip() for c in items[0]}
         return {"vlRat": d.get("vlRat", ""), "bcRat": d.get("bcRat", "")}
     except Exception as exc:
-        log.warning("_fetch_bld_meta %s/%s/%s/%s: %s", lawd, bjdong, bun, ji, exc)
+        log.warning("_bld_api_get %s %s/%s/%s/%s: %s", endpoint, lawd, bjdong, bun, ji, exc)
         return {}
+
+
+def _fetch_bld_meta(lawd: str, bjdong: str, bun: str, ji: str) -> dict:
+    """단지 용적률/건폐율 조회 (총괄표제부 우선, 없으면 표제부 fallback)."""
+    result = _bld_api_get("getBrRecapTitleInfo", lawd, bjdong, bun, ji)
+    if not result:
+        result = _bld_api_get("getBrTitleInfo", lawd, bjdong, bun, ji)
+    return result
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -792,17 +800,22 @@ def generate_search_json(ym_list: list):
                     ji   = t.get("bubun",  "").strip()
                     vlRat, bcRat = "", ""
                     if bun and bjdong:
-                        ck = f"bldmeta|{region['lawd']}|{bun.zfill(4)}|{(ji or '0').zfill(4)}"
+                        ck  = f"bldmeta2|{region['lawd']}|{bun.zfill(4)}|{(ji or '0').zfill(4)}"
+                        ckl = f"bldmeta|{region['lawd']}|{bun.zfill(4)}|{(ji or '0').zfill(4)}"
                         if ck not in building_cache:
-                            log.info("  건물메타 조회: %s (bun=%s)", apt, bun)
-                            data = _fetch_bld_meta(region["lawd"], bjdong, bun, ji)
-                            building_cache[ck] = data if data else {"_empty": True}
-                            meta_changed[0] = True
-                            time.sleep(0.2)
+                            old = building_cache.get(ckl, {})
+                            if old and not old.get("_empty"):
+                                building_cache[ck] = old          # 유효 구캐시 재활용
+                            else:
+                                log.info("  건물메타 조회: %s (bun=%s)", apt, bun)
+                                data = _fetch_bld_meta(region["lawd"], bjdong, bun, ji)
+                                building_cache[ck] = data if data else {"_empty": True}
+                                meta_changed[0] = True
+                                time.sleep(0.2)
                         m = building_cache.get(ck, {})
                         if not m.get("_empty"):
-                            vlRat = m.get("vlRat", "")
-                            bcRat = m.get("bcRat", "")
+                            vlRat = "" if m.get("vlRat", "") in ("", "0") else m.get("vlRat", "")
+                            bcRat = "" if m.get("bcRat", "") in ("", "0") else m.get("bcRat", "")
                     meta_map[apt] = {
                         "buildYear": int(by) if by.isdigit() else None,
                         "vlRat":     vlRat,
