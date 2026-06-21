@@ -41434,7 +41434,7 @@ function renderCompare(){
     }));
 
     const visibleSeries=series.filter(s=>!cmpHiddenApts.has(s.apt));
-    bodyHtml+=`<div class="cmp-chart-wrap"><h3>${aptRegion} · ${comparePyeong}평 거래 추이</h3>${renderCmpMultiChart(visibleSeries.length?visibleSeries:series)}<div class="cmp-legend">${series.map(s=>{const hidden=cmpHiddenApts.has(s.apt);return`<div class="cmp-legend-item${hidden?" cmp-hidden":""}" data-legend-apt="${s.apt.replace(/"/g,"&quot;")}"><div class="cmp-legend-dot" style="background:${s.color};opacity:${hidden?.2:s.isSelected?1:.6}"></div><span style="${hidden?"color:var(--line);text-decoration:line-through":s.isSelected?"font-weight:700":"color:var(--mut)"}">${s.apt}</span></div>`;}).join("")}</div></div>`;
+    bodyHtml+=`<div class="cmp-chart-wrap"><h3>${aptRegion} · ${comparePyeong}평 거래 추이</h3>${renderCmpMultiChart(visibleSeries.length?visibleSeries:series)}<div class="cmp-legend">${series.map(s=>{const hidden=cmpHiddenApts.has(s.apt);return`<div class="cmp-legend-item${hidden?" cmp-hidden":""}" data-legend-apt="${s.apt.replace(/"/g,"&quot;")}"><div class="cmp-legend-dot" style="background:${s.color};opacity:${hidden?.35:s.isSelected?1:.6}"></div><span style="${hidden?"color:#B0A898;text-decoration:line-through":s.isSelected?"font-weight:700":"color:var(--mut)"}">${s.apt}</span></div>`;}).join("")}</div></div>`;
 
     bodyHtml+='<div class="cmp-list">';
     for(let i=0;i<stats.length;i++){
