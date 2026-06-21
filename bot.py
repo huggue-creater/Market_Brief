@@ -686,6 +686,31 @@ def _supply_pyeong(exclu_str: str, bun: str, ji: str,
     return to_pyeong(exclu_str)
 
 
+def _fetch_bld_meta(lawd: str, bjdong: str, bun: str, ji: str) -> dict:
+    """단지 용적률/건폐율 조회 (총괄표제부, bonbun 기준)."""
+    resp = http_get(BUILD_INFO_URL, params={
+        "serviceKey": DATA_GO_KR_KEY,
+        "sigunguCd":  lawd,
+        "bjdongCd":   bjdong,
+        "bun":        bun.zfill(4),
+        "ji":         (ji or "0").zfill(4),
+        "numOfRows":  1,
+        "pageNo":     1,
+    })
+    if not resp:
+        return {}
+    try:
+        root  = ElementTree.fromstring(resp.text)
+        items = root.findall(".//item")
+        if not items:
+            return {}
+        d = {c.tag: (c.text or "").strip() for c in items[0]}
+        return {"vlRat": d.get("vlRat", ""), "bcRat": d.get("bcRat", "")}
+    except Exception as exc:
+        log.warning("_fetch_bld_meta %s/%s/%s/%s: %s", lawd, bjdong, bun, ji, exc)
+        return {}
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # Feature 4 — 검색 JSON 생성
 # ══════════════════════════════════════════════════════════════════════════════
@@ -706,6 +731,7 @@ def generate_search_json(ym_list: list):
 
     building_cache = update_building_cache()
     fetch_count    = [0]
+    meta_changed   = [False]
     all_deals: list = []
     meta_map:  dict = {}  # aptNm → {buildYear, vlRat, bcRat}
 
@@ -761,19 +787,33 @@ def generate_search_json(ym_list: list):
 
                 # 단지 메타 (최초 1회만 저장)
                 if apt and apt not in meta_map:
-                    by = t.get("buildYear", "")
-                    bld = dong_bld.get(apt, {})
+                    by   = t.get("buildYear", "")
+                    bun  = t.get("bonbun", "").strip()
+                    ji   = t.get("bubun",  "").strip()
+                    vlRat, bcRat = "", ""
+                    if bun and bjdong:
+                        ck = f"bldmeta|{region['lawd']}|{bun.zfill(4)}|{(ji or '0').zfill(4)}"
+                        if ck not in building_cache:
+                            log.info("  건물메타 조회: %s (bun=%s)", apt, bun)
+                            data = _fetch_bld_meta(region["lawd"], bjdong, bun, ji)
+                            building_cache[ck] = data if data else {"_empty": True}
+                            meta_changed[0] = True
+                            time.sleep(0.2)
+                        m = building_cache.get(ck, {})
+                        if not m.get("_empty"):
+                            vlRat = m.get("vlRat", "")
+                            bcRat = m.get("bcRat", "")
                     meta_map[apt] = {
                         "buildYear": int(by) if by.isdigit() else None,
-                        "vlRat":     bld.get("vlRat", ""),
-                        "bcRat":     bld.get("bcRat", ""),
+                        "vlRat":     vlRat,
+                        "bcRat":     bcRat,
                     }
 
             log.info("  %s: %d건", name, len(trades))
         except Exception as exc:
             log.error("  %s 오류: %s", name, exc)
 
-    if fetch_count[0] > 0:
+    if fetch_count[0] > 0 or meta_changed[0]:
         save_json(CACHE_FILE, building_cache)
 
     total = len(all_deals)
