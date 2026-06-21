@@ -41335,6 +41335,25 @@ function openCompare(){
   render();
 }
 
+function _cmpUpdateResults(){
+  const aptNames=[...new Set(DATA.map(r=>r.apt))].sort();
+  const results=cmpSearchQ.length>=1?aptNames.filter(n=>n.includes(cmpSearchQ)).slice(0,8):[];
+  let html='';
+  if(results.length){
+    html='<div class="cmp-results">';
+    for(const n of results){
+      const r0=DATA.find(r=>r.apt===n);
+      html+=`<div class="cmp-result-item" data-apt="${n.replace(/"/g,'&quot;')}"><div class="cmp-result-name">${n}</div><div class="cmp-result-sub">${r0?r0.region:""}</div></div>`;
+    }
+    html+='</div>';
+  }else if(cmpSearchQ.length>=1){
+    html='<div class="dy-empty" style="margin-top:8px">검색 결과 없음</div>';
+  }
+  const list=document.getElementById("cmpResultsList");
+  if(list)list.innerHTML=html;
+  document.querySelectorAll(".cmp-result-item").forEach(el=>el.addEventListener("click",()=>{cmpSelectedApt=el.dataset.apt;comparePyeong=null;renderCompare();}));
+}
+
 function renderCompare(){
   document.getElementById("listView").style.display="none";
   document.getElementById("detailView").style.display="none";
@@ -41346,23 +41365,14 @@ function renderCompare(){
     document.getElementById("cmpSub").textContent="단지를 검색해 비교를 시작하세요";
     document.getElementById("cmpDongChips").innerHTML="";
     document.getElementById("cmpPyeongBtns").innerHTML="";
-    const aptNames=[...new Set(DATA.map(r=>r.apt))].sort();
-    const results=cmpSearchQ.length>=1?aptNames.filter(n=>n.includes(cmpSearchQ)).slice(0,8):[];
-    let html=`<div class="cmp-search-wrap"><span class="cmp-search-icon">⌕</span><input class="cmp-search-input" id="cmpSearchEl" placeholder="단지명 검색..." value="${cmpSearchQ.replace(/"/g,'&quot;')}"/></div>`;
-    if(results.length){
-      html+='<div class="cmp-results">';
-      for(const n of results){
-        const r0=DATA.find(r=>r.apt===n);
-        html+=`<div class="cmp-result-item" data-apt="${n.replace(/"/g,'&quot;')}"><div class="cmp-result-name">${n}</div><div class="cmp-result-sub">${r0?r0.region:""}</div></div>`;
-      }
-      html+='</div>';
-    }else if(cmpSearchQ.length>=1){
-      html+='<div class="dy-empty" style="margin-top:8px">검색 결과 없음</div>';
-    }
-    document.getElementById("cmpBody").innerHTML=html;
+    document.getElementById("cmpBody").innerHTML=`<div class="cmp-search-wrap"><span class="cmp-search-icon">⌕</span><input class="cmp-search-input" id="cmpSearchEl" placeholder="단지명 검색..."/></div><div id="cmpResultsList"></div>`;
     const el=document.getElementById("cmpSearchEl");
-    if(el){el.focus();el.addEventListener("input",()=>{cmpSearchQ=el.value.trim();renderCompare();});}
-    document.querySelectorAll(".cmp-result-item").forEach(el=>el.addEventListener("click",()=>{cmpSelectedApt=el.dataset.apt;comparePyeong=null;renderCompare();}));
+    let composing=false;
+    el.addEventListener("compositionstart",()=>{composing=true;});
+    el.addEventListener("compositionend",()=>{composing=false;cmpSearchQ=el.value.trim();_cmpUpdateResults();});
+    el.addEventListener("input",()=>{if(!composing){cmpSearchQ=el.value.trim();_cmpUpdateResults();}});
+    el.focus();
+    _cmpUpdateResults();
     return;
   }
 
