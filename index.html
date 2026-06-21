@@ -128,7 +128,9 @@ body{background:var(--paper);color:var(--ink);font-family:'Pretendard',system-ui
 .cmp-chart-wrap{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px;}
 .cmp-chart-wrap h3{font-size:13px;font-weight:700;margin-bottom:8px;}
 .cmp-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
-.cmp-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;}
+.cmp-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;cursor:pointer;padding:3px 5px;border-radius:5px;transition:.12s;}
+.cmp-legend-item:hover{background:#EEE8DC;}
+.cmp-legend-item.cmp-hidden{opacity:.6;}
 .cmp-legend-dot{width:9px;height:9px;border-radius:50%;flex:none;}
 .cmp-list{display:flex;flex-direction:column;gap:8px;}
 .cmp-row{display:grid;grid-template-columns:28px 1fr 130px 112px;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 15px;}
@@ -41114,7 +41116,7 @@ const won = m => {
 let DATA=[], META={};
 let q="", city="전체", selectedDongs=[], dongPanelOpen=false, openId=null;
 let view="list", detailApt=null, detailPyeong=null;
-let cmpSearchQ="", cmpSelectedApt=null, comparePyeong=null;
+let cmpSearchQ="", cmpSelectedApt=null, comparePyeong=null, cmpHiddenApts=new Set();
 let CITIES=[], DONGS_BY_CITY={};
 
 function prepare(deals){
@@ -41351,7 +41353,7 @@ function _cmpUpdateResults(){
   }
   const list=document.getElementById("cmpResultsList");
   if(list)list.innerHTML=html;
-  document.querySelectorAll(".cmp-result-item").forEach(el=>el.addEventListener("click",()=>{cmpSelectedApt=el.dataset.apt;comparePyeong=null;renderCompare();}));
+  document.querySelectorAll(".cmp-result-item").forEach(el=>el.addEventListener("click",()=>{cmpSelectedApt=el.dataset.apt;comparePyeong=null;cmpHiddenApts=new Set();renderCompare();}));
 }
 
 function renderCompare(){
@@ -41400,7 +41402,7 @@ function renderCompare(){
     let diffStr="";
     if(nextP&&avgByPyeong[nextP]&&avgByPyeong[p]){
       const d=avgByPyeong[nextP]-avgByPyeong[p];
-      diffStr=`${d>=0?"+":"−"}${won(Math.abs(d))} → ${nextP}평`;
+      diffStr=`${d>=0?"+":"−"}${won(Math.abs(d))} ▷${nextP}평`;
     }
     return`<div class="cmp-pyeong-card${on?" on":""}" data-p="${p}"><div class="cp-size">${p}평</div><div class="cp-count">${pyeongCounts[p]}건</div><div class="cp-avg">${won(avgByPyeong[p])}</div>${diffStr?`<div class="cp-diff">${diffStr}</div>`:""}</div>`;
   }).join("")}</div>`;
@@ -41431,14 +41433,15 @@ function renderCompare(){
       isSelected:s.apt===cmpSelectedApt
     }));
 
-    bodyHtml+=`<div class="cmp-chart-wrap"><h3>${aptRegion} · ${comparePyeong}평 거래 추이</h3>${renderCmpMultiChart(series)}<div class="cmp-legend">${series.map(s=>`<div class="cmp-legend-item"><div class="cmp-legend-dot" style="background:${s.color};opacity:${s.isSelected?1:.6}"></div><span style="${s.isSelected?"font-weight:700":"color:var(--mut)"}">${s.apt}</span></div>`).join("")}</div></div>`;
+    const visibleSeries=series.filter(s=>!cmpHiddenApts.has(s.apt));
+    bodyHtml+=`<div class="cmp-chart-wrap"><h3>${aptRegion} · ${comparePyeong}평 거래 추이</h3>${renderCmpMultiChart(visibleSeries.length?visibleSeries:series)}<div class="cmp-legend">${series.map(s=>{const hidden=cmpHiddenApts.has(s.apt);return`<div class="cmp-legend-item${hidden?" cmp-hidden":""}" data-legend-apt="${s.apt.replace(/"/g,"&quot;")}"><div class="cmp-legend-dot" style="background:${s.color};opacity:${hidden?.2:s.isSelected?1:.6}"></div><span style="${hidden?"color:var(--line);text-decoration:line-through":s.isSelected?"font-weight:700":"color:var(--mut)"}">${s.apt}</span></div>`;}).join("")}</div></div>`;
 
     bodyHtml+='<div class="cmp-list">';
     for(let i=0;i<stats.length;i++){
       const s=stats[i];
       const isHL=s.apt===cmpSelectedApt;
       const color=isHL?"#B23A2E":CMP_COLORS[i%CMP_COLORS.length];
-      const diffHtml=s.upDiff?` · <span class="cmp-up-diff-inline">→${s.upDiff.pyeong}평 ${s.upDiff.diff>=0?"+":"−"}${won(Math.abs(s.upDiff.diff))}</span>`:"";
+      const diffHtml=s.upDiff?` · <span class="cmp-up-diff-inline">▷${s.upDiff.pyeong}평 ${s.upDiff.diff>=0?"+":"−"}${won(Math.abs(s.upDiff.diff))}</span>`:"";
       bodyHtml+=`<div class="cmp-row${isHL?" highlight":""}"><div class="cmp-rank" style="color:${color}">${i+1}</div><div class="cmp-info"><div class="cmp-apt-name" data-apt="${s.apt.replace(/"/g,"&quot;")}">${s.apt}</div><div class="cmp-apt-sub">${s.count}건${diffHtml}</div></div><div class="cmp-spark">${sparkline(s.rows,{w:130,h:58,color})}</div><div class="cmp-price"><div class="cmp-amt" style="color:${color}">${won(s.latest.amount)}</div><div class="cmp-date">${s.latest.date.slice(2,7)}</div></div></div>`;
     }
     bodyHtml+='</div>';
@@ -41446,8 +41449,9 @@ function renderCompare(){
     bodyHtml='<div class="dy-empty">데이터가 없습니다.</div>';
   }
   document.getElementById("cmpBody").innerHTML=bodyHtml;
-  document.querySelectorAll("#cmpPyeongBtns .cmp-pyeong-card").forEach(b=>b.addEventListener("click",()=>{comparePyeong=+b.dataset.p;renderCompare();}));
+  document.querySelectorAll("#cmpPyeongBtns .cmp-pyeong-card").forEach(b=>b.addEventListener("click",()=>{comparePyeong=+b.dataset.p;cmpHiddenApts=new Set();renderCompare();}));
   document.querySelectorAll("#cmpBody .cmp-apt-name").forEach(el=>el.addEventListener("click",()=>openDetail(el.dataset.apt)));
+  document.querySelectorAll(".cmp-legend-item").forEach(el=>el.addEventListener("click",()=>{const a=el.dataset.legendApt;if(cmpHiddenApts.has(a))cmpHiddenApts.delete(a);else cmpHiddenApts.add(a);renderCompare();}));
 }
 
 function openDetail(apt){detailApt=apt;detailPyeong=null;view="detail";render();}
