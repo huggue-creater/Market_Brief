@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""공급면적 API 탐색 v7
-- 덕풍동 bjdongCd 자동 탐색
-- getBrExposPubuseAreaInfo 올바른 코드로 재시도
-- 망월동으로도 먼저 기준 확인
-"""
+"""상현동 풍산아파트 공급면적 기준 평형 계산 테스트"""
 import os, time
 import requests
 from xml.etree import ElementTree
@@ -15,152 +11,149 @@ TRADE_URL = "http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSv
 def xml_items(text):
     try:
         root = ElementTree.fromstring(text)
-        items = root.findall(".//item")
-        total = root.findtext(".//totalCount") or "0"
-        code  = root.findtext(".//resultCode") or ""
-        return items, total, code, root
+        return root.findall(".//item")
     except:
-        return [], "0", "??", None
+        return []
 
-def hub(ep, params, label=""):
-    t0 = time.time()
-    r = requests.get(f"{HUB}/{ep}", params={"serviceKey": KEY, "pageNo": 1, **params}, timeout=15)
-    items, total, code, root = xml_items(r.text)
-    print(f"  [{label or ep}] {time.time()-t0:.2f}s  HTTP {r.status_code}  code={code}  total={total}  parsed={len(items)}")
-    if not items and r.status_code == 200:
-        print(f"  raw: {r.text[:200]}")
-    return items
-
-# ─── STEP 0. 망월동(10900) + bun=1170 으로 기준선 확인 ────────────────────────
-print("=" * 60)
-print("STEP 0. 망원동(10900) getBrExposPubuseAreaInfo 기준 확인")
-print("=" * 60)
-items = hub("getBrExposPubuseAreaInfo", {
-    "sigunguCd": "41450", "bjdongCd": "10900",
-    "bun": "1170", "ji": "0000", "numOfRows": 50,
-}, "망월동-1170")
-if items:
-    for i in items[:5]:
-        d = {c.tag: (c.text or "").strip() for c in i}
-        print(f"  {d}")
-
-time.sleep(0.4)
-
-# ─── STEP 1. 덕풍동 bjdongCd 탐색 ─────────────────────────────────────────────
-print("\n" + "=" * 60)
-print("STEP 1. 덕풍동 bjdongCd 탐색 (getBrRecapTitleInfo)")
-print("=" * 60)
-# 하남시 법정동 코드 후보: 10400~12000 범위 시도
-# 알려진: 망월동=10900 → 덕풍동은 인접 코드 중 하나
-CANDIDATES = ["10700", "10800", "10600", "10500", "10300", "11000", "11100", "11200"]
-dukpung_bjdong = None
-for bjd in CANDIDATES:
-    r = requests.get(f"{HUB}/getBrRecapTitleInfo", params={
-        "serviceKey": KEY, "sigunguCd": "41450", "bjdongCd": bjd,
-        "bun": "0823", "ji": "0000", "numOfRows": 3, "pageNo": 1
+# ─── 1. 상현동 풍산아파트 bonbun 확인 ─────────────────────────────────────────
+print("=== STEP 1. 상현동 풍산아파트 bonbun/전용면적 확인 ===")
+bonbuns = {}
+for ym in ["202606", "202605", "202604", "202603", "202602", "202601",
+           "202512", "202511", "202510", "202509"]:
+    r = requests.get(TRADE_URL, params={
+        "serviceKey": KEY, "LAWD_CD": "41465",
+        "DEAL_YMD": ym, "numOfRows": 100, "pageNo": 1,
     }, timeout=15)
-    items, total, code, _ = xml_items(r.text)
+    for item in xml_items(r.text):
+        apt   = (item.findtext("aptNm")      or "").strip()
+        umd   = (item.findtext("umdNm")      or "").strip()
+        exclu = (item.findtext("excluUseAr") or "").strip()
+        bun   = (item.findtext("bonbun")     or "").strip()
+        ji    = (item.findtext("bubun")      or "").strip()
+        if "풍산" in apt and umd == "상현동":
+            key = (bun, ji)
+            if key not in bonbuns:
+                bonbuns[key] = {"apt": apt, "bonbun": bun, "bubun": ji, "areas": set()}
+            bonbuns[key]["areas"].add(exclu)
+    if bonbuns:
+        break
+    time.sleep(0.2)
+
+if not bonbuns:
+    print("  최근 거래 없음 — 더 많은 월 검색")
+    for ym in ["202508","202507","202506","202505","202504","202503"]:
+        r = requests.get(TRADE_URL, params={
+            "serviceKey": KEY, "LAWD_CD": "41465",
+            "DEAL_YMD": ym, "numOfRows": 100, "pageNo": 1,
+        }, timeout=15)
+        for item in xml_items(r.text):
+            apt   = (item.findtext("aptNm")      or "").strip()
+            umd   = (item.findtext("umdNm")      or "").strip()
+            exclu = (item.findtext("excluUseAr") or "").strip()
+            bun   = (item.findtext("bonbun")     or "").strip()
+            ji    = (item.findtext("bubun")      or "").strip()
+            if "풍산" in apt and umd == "상현동":
+                key = (bun, ji)
+                if key not in bonbuns:
+                    bonbuns[key] = {"apt": apt, "bonbun": bun, "bubun": ji, "areas": set()}
+                bonbuns[key]["areas"].add(exclu)
+        if bonbuns:
+            break
+        time.sleep(0.2)
+
+for k, v in bonbuns.items():
+    print(f"  {v['apt']}  bonbun={v['bonbun']} bubun={v['bubun']}  전용면적: {sorted(v['areas'])}")
+
+assert bonbuns, "풍산아파트 데이터를 찾지 못했습니다"
+main = list(bonbuns.values())[0]
+BUN = main["bonbun"].zfill(4)
+JI  = main["bubun"].zfill(4)
+print(f"\n  사용: bonbun={BUN} ji={JI}")
+
+# ─── 2. 상현동 bjdongCd 탐색 ──────────────────────────────────────────────────
+print("\n=== STEP 2. 상현동 bjdongCd 탐색 ===")
+SANGHYEON_BJDONG = None
+for bjd in ["11000","10700","10800","10900","10600","10500","11100","11200","10400","10300","10200","10100"]:
+    r = requests.get(f"{HUB}/getBrRecapTitleInfo", params={
+        "serviceKey": KEY, "sigunguCd": "41465", "bjdongCd": bjd,
+        "bun": BUN, "ji": JI, "numOfRows": 1, "pageNo": 1,
+    }, timeout=15)
+    items = xml_items(r.text)
     if items:
         plat = items[0].findtext("platPlc") or ""
-        print(f"  bjdong={bjd}  total={total}  platPlc={plat}")
-        if "덕풍" in plat:
-            dukpung_bjdong = bjd
-            print(f"  *** 덕풍동 bjdong={bjd} 확인! ***")
-    else:
-        print(f"  bjdong={bjd}  total={total}  (결과없음)")
-    time.sleep(0.25)
+        print(f"  bjdong={bjd}  platPlc={plat}  ← 발견!")
+        SANGHYEON_BJDONG = bjd
+        break
+    time.sleep(0.2)
 
-if not dukpung_bjdong:
-    print("\n  → 후보 중 없음. bjdong 없이 전체 검색 시도")
-    r = requests.get(f"{HUB}/getBrRecapTitleInfo", params={
-        "serviceKey": KEY, "sigunguCd": "41450",
-        "numOfRows": 100, "pageNo": 1
+assert SANGHYEON_BJDONG, "bjdongCd를 찾지 못했습니다"
+
+# ─── 3. getBrExposPubuseAreaInfo — 전체 호 면적 조회 ────────────────────────
+print(f"\n=== STEP 3. getBrExposPubuseAreaInfo (bjdong={SANGHYEON_BJDONG}) ===")
+
+all_items = []
+page = 1
+while True:
+    r = requests.get(f"{HUB}/getBrExposPubuseAreaInfo", params={
+        "serviceKey": KEY,
+        "sigunguCd": "41465",
+        "bjdongCd":  SANGHYEON_BJDONG,
+        "bun": BUN, "ji": JI,
+        "numOfRows": 1000, "pageNo": page,
     }, timeout=15)
-    items, total, code, _ = xml_items(r.text)
-    print(f"  sigungu 전체 검색: total={total}  parsed={len(items)}")
-    dongs = set()
-    for i in items:
-        p = i.findtext("platPlc") or ""
-        bjd = i.findtext("bjdongCd") or ""
-        for tok in p.split():
-            if "동" in tok or "읍" in tok:
-                dongs.add((bjd, tok))
-    print(f"  발견된 동: {sorted(dongs)[:20]}")
+    items = xml_items(r.text)
+    all_items.extend(items)
+    try:
+        root = ElementTree.fromstring(r.text)
+        total = int(root.findtext(".//totalCount") or 0)
+    except:
+        total = 0
+    print(f"  page={page}  total={total}  parsed so far={len(all_items)}")
+    if len(all_items) >= total or not items:
+        break
+    page += 1
+    time.sleep(0.3)
 
-time.sleep(0.4)
+# ─── 4. 평형별 공급면적 계산 ────────────────────────────────────────────────────
+print(f"\n=== STEP 4. 평형별 공급면적 계산 ===")
+# ho별로 grouping: (dongNm, hoNm) → {전유: float, 주거공용: float}
+from collections import defaultdict
 
-# ─── STEP 2. getBrExposPubuseAreaInfo — 올바른 bjdong으로 재시도 ─────────────
-print("\n" + "=" * 60)
-print("STEP 2. getBrExposPubuseAreaInfo (덕풍동 bjdong)")
-print("=" * 60)
-bjd = dukpung_bjdong or "10700"
-print(f"  사용 bjdong={bjd}")
+ho_areas = defaultdict(lambda: {"전유": 0.0, "주거공용": 0.0})
+for item in all_items:
+    d = {c.tag: (c.text or "").strip() for c in item}
+    key = (d.get("dongNm",""), d.get("hoNm",""))
+    area = float(d.get("area", 0) or 0)
+    expos = d.get("exposPubuseGbCd","")
+    attach = d.get("mainAtchGbCd","")
+    purps = d.get("mainPurpsCdNm","")
+    if purps != "아파트" and expos == "1":
+        continue  # 아파트가 아닌 전유부 제외 (상가 등)
+    if expos == "1":
+        ho_areas[key]["전유"] += area
+    elif expos == "2" and attach == "0":
+        ho_areas[key]["주거공용"] += area
 
-items = hub("getBrExposPubuseAreaInfo", {
-    "sigunguCd": "41450", "bjdongCd": bjd,
-    "bun": "0823", "ji": "0000", "numOfRows": 200,
-}, f"ExposPubuseArea-{bjd}")
+# 전용면적별로 공급면적 집계
+exclu_to_supply = defaultdict(list)
+for (dong, ho), v in ho_areas.items():
+    exclu = round(v["전유"], 2)
+    supply = round(v["전유"] + v["주거공용"], 2)
+    if exclu > 0:
+        exclu_to_supply[exclu].append(supply)
 
-if items:
-    print(f"\n  [필드 목록]: {[c.tag for c in items[0]]}")
-    print(f"\n  [상위 20건]")
-    for i in items[:20]:
-        d = {c.tag: (c.text or "").strip() for c in i}
-        print(f"  {d}")
-else:
-    # 여러 bjdong 후보 모두 시도
-    print("  → 0건. 다른 bjdong 코드로도 시도")
-    for bjd2 in ["10700", "10800", "10600", "10500", "11000"]:
-        if bjd2 == bjd:
-            continue
-        items2 = hub("getBrExposPubuseAreaInfo", {
-            "sigunguCd": "41450", "bjdongCd": bjd2,
-            "bun": "0823", "ji": "0000", "numOfRows": 5,
-        }, f"ExposPubuse-{bjd2}")
-        if items2:
-            print(f"  *** bjdong={bjd2} 로 결과 나옴! ***")
-            for i in items2[:3]:
-                print(f"  {{{', '.join(f'{c.tag}={c.text}' for c in i)}}}")
-            break
-        time.sleep(0.25)
+# 대표값 계산 (전용면적 기준 그룹)
+print(f"\n{'전용면적':>12}  {'공급면적(대표)':>14}  {'공급평형':>8}  {'호수':>4}  {'전용평형(기존방식)':>16}")
+print("-" * 70)
 
-time.sleep(0.4)
+pyeong_results = {}
+for exclu in sorted(exclu_to_supply.keys()):
+    supplies = exclu_to_supply[exclu]
+    rep_supply = round(sum(supplies) / len(supplies), 2)
+    supply_pyeong = round(rep_supply * 0.3025)
+    old_pyeong = round(exclu * 1.34 / 3.3058)
+    print(f"  {exclu:>8.3f}㎡  {rep_supply:>10.2f}㎡  {supply_pyeong:>6}평  {len(supplies):>4}호  (기존 {old_pyeong}평)")
+    pyeong_results[exclu] = supply_pyeong
 
-# ─── STEP 3. getBrFlrOulnInfo — 층별개요에서 전용면적 힌트 ──────────────────
-print("\n" + "=" * 60)
-print("STEP 3. getBrFlrOulnInfo (층별개요) — 호별 면적 조합 가능 여부")
-print("=" * 60)
-bjd_main = dukpung_bjdong or "10700"
-items = hub("getBrFlrOulnInfo", {
-    "sigunguCd": "41450", "bjdongCd": bjd_main,
-    "bun": "0823", "ji": "0000", "numOfRows": 50,
-}, f"FlrOuln-{bjd_main}")
-if items:
-    print(f"  필드: {[c.tag for c in items[0]]}")
-    for i in items[:5]:
-        d = {c.tag: (c.text or "").strip() for c in i}
-        print(f"  {d}")
-
-time.sleep(0.4)
-
-# ─── STEP 4. 공동주택 가격공시 서비스 — 별도 면적 정보 확인 ───────────────────
-print("\n" + "=" * 60)
-print("STEP 4. 개별공동주택가격 서비스 (1611000)")
-print("=" * 60)
-# 개별공동주택가격 서비스: 국토부 1611000 계열
-PRICE_URL = "http://apis.data.go.kr/1611000/nsdi/IndvCombHousingPriceService/wfsGetIndvCombHousingPriceAttr"
-r = requests.get(PRICE_URL, params={
-    "serviceKey": KEY,
-    "pnu": "4145010700",
-    "numOfRows": 10,
-    "pageNo": 1,
-}, timeout=15)
-items, total, code, _ = xml_items(r.text)
-print(f"  HTTP {r.status_code}  total={total}")
-if r.status_code != 200:
-    print(f"  응답: {r.text[:200]}")
-elif items:
-    for i in items[:2]:
-        print(f"  {{{', '.join(f'{c.tag}={c.text}' for c in i)}}}")
-
+print(f"\n  → 공급면적 기준 평형: {sorted(set(pyeong_results.values()))}평형")
 print("\n=== 완료 ===")
