@@ -797,18 +797,28 @@ def generate_search_json(ym_list: list):
                     ji   = t.get("bubun",  "").strip()
                     vlRat, bcRat = "", ""
                     if bun and bjdong:
-                        ck  = f"bldmeta2|{region['lawd']}|{bun.zfill(4)}|{(ji or '0').zfill(4)}"
-                        ckl = f"bldmeta|{region['lawd']}|{bun.zfill(4)}|{(ji or '0').zfill(4)}"
+                        ck  = f"bldmeta3|{region['lawd']}|{bun.zfill(4)}|{(ji or '0').zfill(4)}"
+                        ck2 = f"bldmeta2|{region['lawd']}|{bun.zfill(4)}|{(ji or '0').zfill(4)}"
                         if ck not in building_cache:
-                            old = building_cache.get(ckl, {})
-                            if old and not old.get("_empty"):
-                                building_cache[ck] = old          # 유효 구캐시 재활용
-                            else:
+                            prev = building_cache.get(ck2)
+                            if prev is None:
                                 log.info("  건물메타 조회: %s (bun=%s)", apt, bun)
                                 data = _fetch_bld_meta(region["lawd"], bjdong, bun, ji)
                                 building_cache[ck] = data if data else {"_empty": True}
                                 meta_changed[0] = True
                                 time.sleep(0.2)
+                            elif prev.get("_empty"):
+                                building_cache[ck] = prev          # 총괄표제부 없음 확인, 재활용
+                            else:
+                                vl = prev.get("vlRat", "")
+                                if vl and float(vl) >= 450:        # 표제부 오염값 — 재조회
+                                    log.info("  건물메타 재조회(비정상 %.0f%%): %s", float(vl), apt)
+                                    data = _fetch_bld_meta(region["lawd"], bjdong, bun, ji)
+                                    building_cache[ck] = data if data else {"_empty": True}
+                                    meta_changed[0] = True
+                                    time.sleep(0.2)
+                                else:
+                                    building_cache[ck] = prev      # 정상값 재활용
                         m = building_cache.get(ck, {})
                         if not m.get("_empty"):
                             vlRat = "" if m.get("vlRat", "") in ("", "0") else m.get("vlRat", "")
