@@ -1,0 +1,22 @@
+name: Find bjdong codes
+
+on:
+  workflow_dispatch:
+
+jobs:
+  find:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - run: pip install requests
+
+      - name: Find bjdong codes for 선동/미사동/위례동
+        env:
+          DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
+        run: python find_bjdong.py
