@@ -712,11 +712,8 @@ def _bld_api_get(endpoint: str, lawd: str, bjdong: str, bun: str, ji: str) -> di
 
 
 def _fetch_bld_meta(lawd: str, bjdong: str, bun: str, ji: str) -> dict:
-    """단지 용적률/건폐율 조회 (총괄표제부 우선, 없으면 표제부 fallback)."""
-    result = _bld_api_get("getBrRecapTitleInfo", lawd, bjdong, bun, ji)
-    if not result:
-        result = _bld_api_get("getBrTitleInfo", lawd, bjdong, bun, ji)
-    return result
+    """단지 용적률/건폐율 조회 (총괄표제부만 사용 — 표제부 vlRat은 신뢰 불가)."""
+    return _bld_api_get("getBrRecapTitleInfo", lawd, bjdong, bun, ji)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
