@@ -821,8 +821,10 @@ def generate_search_json(ym_list: list):
                                     building_cache[ck] = prev      # 정상값 재활용
                         m = building_cache.get(ck, {})
                         if not m.get("_empty"):
-                            vlRat = "" if m.get("vlRat", "") in ("", "0") else m.get("vlRat", "")
-                            bcRat = "" if m.get("bcRat", "") in ("", "0") else m.get("bcRat", "")
+                            vr = m.get("vlRat", "")
+                            br = m.get("bcRat", "")
+                            vlRat = vr if (vr and vr not in ("0",) and 0 < float(vr) < 600) else ""
+                            bcRat = br if (br and br not in ("0",) and 0 < float(br) < 100) else ""
                     meta_map[apt] = {
                         "buildYear": int(by) if by.isdigit() else None,
                         "vlRat":     vlRat,
