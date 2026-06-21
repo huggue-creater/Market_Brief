@@ -41402,7 +41402,7 @@ function renderCompare(){
     let diffStr="";
     if(nextP&&avgByPyeong[nextP]&&avgByPyeong[p]){
       const d=avgByPyeong[nextP]-avgByPyeong[p];
-      diffStr=`${nextP}평과 ${won(Math.abs(d))} 차이`;
+      diffStr=`[${nextP}평] ${d>=0?"+":"−"}${won(Math.abs(d))} 차이`;
     }
     return`<div class="cmp-pyeong-card${on?" on":""}" data-p="${p}"><div class="cp-size">${p}평</div><div class="cp-count">${pyeongCounts[p]}건</div><div class="cp-avg">${won(avgByPyeong[p])}</div>${diffStr?`<div class="cp-diff">${diffStr}</div>`:""}</div>`;
   }).join("")}</div>`;
@@ -41441,7 +41441,7 @@ function renderCompare(){
       const s=stats[i];
       const isHL=s.apt===cmpSelectedApt;
       const color=isHL?"#B23A2E":CMP_COLORS[i%CMP_COLORS.length];
-      const diffHtml=s.upDiff?` · <span class="cmp-up-diff-inline">${s.upDiff.pyeong}평과 ${won(Math.abs(s.upDiff.diff))} 차이</span>`:"";
+      const diffHtml=s.upDiff?` · <span class="cmp-up-diff-inline">[${s.upDiff.pyeong}평] ${s.upDiff.diff>=0?"+":"−"}${won(Math.abs(s.upDiff.diff))} 차이</span>`:"";
       bodyHtml+=`<div class="cmp-row${isHL?" highlight":""}"><div class="cmp-rank" style="color:${color}">${i+1}</div><div class="cmp-info"><div class="cmp-apt-name" data-apt="${s.apt.replace(/"/g,"&quot;")}">${s.apt}</div><div class="cmp-apt-sub">${s.count}건${diffHtml}</div></div><div class="cmp-spark">${sparkline(s.rows,{w:130,h:58,color})}</div><div class="cmp-price"><div class="cmp-amt" style="color:${color}">${won(s.latest.amount)}</div><div class="cmp-date">${s.latest.date.slice(2,7)}</div></div></div>`;
     }
     bodyHtml+='</div>';
