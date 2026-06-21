@@ -106,17 +106,42 @@ body{background:var(--paper);color:var(--ink);font-family:'Pretendard',system-ui
 .tag.cx{background:#E8E4DC;color:#857C6C;}
 .cmp-btn{margin-left:auto;flex:none;padding:7px 13px;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
 .cmp-btn:hover{border-color:#D8CDB8;background:#F3EEE3;}
+.cmp-search-wrap{position:relative;margin-bottom:10px;}
+.cmp-search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:17px;color:var(--mut);}
+.cmp-search-input{width:100%;padding:11px 36px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:15px;outline:none;color:var(--ink);}
+.cmp-search-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,90,143,.12);}
+.cmp-results{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:4px;box-shadow:0 4px 14px rgba(60,40,20,.1);}
+.cmp-result-item{padding:11px 15px;cursor:pointer;border-bottom:1px solid var(--line);}
+.cmp-result-item:last-child{border-bottom:none;}
+.cmp-result-item:hover{background:#F3EEE3;}
+.cmp-result-name{font-size:14px;font-weight:600;}
+.cmp-result-sub{font-size:11.5px;color:var(--mut);margin-top:2px;}
+.cmp-pyeong-cards{display:flex;gap:8px;flex-wrap:wrap;}
+.cmp-pyeong-card{flex:1;min-width:72px;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;text-align:center;transition:.13s;}
+.cmp-pyeong-card:hover{border-color:#C8BFA8;}
+.cmp-pyeong-card.on{border-color:var(--seal);background:#FEF5F4;}
+.cp-size{font-size:15px;font-weight:800;}
+.cmp-pyeong-card.on .cp-size{color:var(--seal);}
+.cp-count{font-size:10.5px;color:var(--mut);margin-top:2px;}
+.cp-avg{font-size:12px;font-weight:700;margin-top:5px;}
+.cp-diff{font-size:10.5px;color:#6B8E4E;margin-top:3px;font-weight:600;}
+.cmp-chart-wrap{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px;}
+.cmp-chart-wrap h3{font-size:13px;font-weight:700;margin-bottom:8px;}
+.cmp-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.cmp-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;}
+.cmp-legend-dot{width:9px;height:9px;border-radius:50%;flex:none;}
 .cmp-list{display:flex;flex-direction:column;gap:8px;}
-.cmp-row{display:grid;grid-template-columns:28px 1fr 130px 110px;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 15px;}
+.cmp-row{display:grid;grid-template-columns:28px 1fr 130px 112px;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 15px;}
 .cmp-row:hover{border-color:#D8CDB8;box-shadow:0 3px 12px rgba(90,70,30,.07);}
-.cmp-rank{font-size:18px;font-weight:800;color:var(--mut);text-align:center;}
-.cmp-row:first-child .cmp-rank{color:var(--seal);}
-.cmp-apt-name{font-size:14px;font-weight:700;cursor:pointer;text-decoration:underline;text-decoration-color:transparent;transition:text-decoration-color .12s;}
-.cmp-apt-name:hover{text-decoration-color:var(--blue);color:var(--blue);}
-.cmp-apt-sub{font-size:11.5px;color:var(--mut);margin-top:3px;}
+.cmp-row.highlight{border-color:var(--seal);background:#FEF9F8;}
+.cmp-rank{font-size:17px;font-weight:800;color:var(--mut);text-align:center;}
+.cmp-apt-name{font-size:14px;font-weight:700;cursor:pointer;}
+.cmp-apt-name:hover{color:var(--blue);text-decoration:underline;}
+.cmp-apt-sub{font-size:11.5px;color:var(--mut);margin-top:2px;}
+.cmp-up-diff-inline{color:#6B8E4E;font-weight:600;}
 .cmp-price{text-align:right;}
-.cmp-amt{font-size:15px;font-weight:800;color:var(--seal);}
-.cmp-date{font-size:11px;color:var(--mut);margin-top:3px;}
+.cmp-amt{font-size:15px;font-weight:800;}
+.cmp-date{font-size:11px;color:var(--mut);margin-top:2px;}
 </style>
 </head>
 <body>
@@ -41089,7 +41114,7 @@ const won = m => {
 let DATA=[], META={};
 let q="", city="전체", selectedDongs=[], dongPanelOpen=false, openId=null;
 let view="list", detailApt=null, detailPyeong=null;
-let compareDong=null, comparePyeong=null;
+let cmpSearchQ="", cmpSelectedApt=null, comparePyeong=null;
 let CITIES=[], DONGS_BY_CITY={};
 
 function prepare(deals){
@@ -41262,13 +41287,50 @@ function renderList(){
   }));
 }
 
+const CMP_COLORS=["#2F5A8F","#6B8E4E","#3D7A8A","#7A5295","#C47D2F","#5C7A3E","#8B4B6E","#4A7A8A"];
+
+function renderCmpMultiChart(series){
+  const W=640,H=220,pL=64,pR=14,pT=12,pB=28;
+  const allPts=series.flatMap(s=>s.pts);
+  if(!allPts.length)return'';
+  let mn=Infinity,mx=-Infinity;
+  for(const p of allPts){if(p.amount<mn)mn=p.amount;if(p.amount>mx)mx=p.amount;}
+  if(mn===mx){mn*=.95;mx*=1.05;}
+  const pa=(mx-mn)*.1;mn-=pa;mx+=pa;
+  let t0=Infinity,t1=-Infinity;
+  for(const p of allPts){const t=+new Date(p.date+"T00:00:00");if(t<t0)t0=t;if(t>t1)t1=t;}
+  if(t0===t1){t0-=30*86400000;t1+=30*86400000;}
+  const xS=t=>pL+(t-t0)/(t1-t0)*(W-pL-pR);
+  const yS=a=>H-pB-(a-mn)/(mx-mn)*(H-pT-pB);
+  let out='';
+  for(let i=0;i<=4;i++){
+    const a=mn+(mx-mn)*i/4,y=yS(a);
+    out+=`<line x1="${pL}" y1="${y.toFixed(1)}" x2="${W-pR}" y2="${y.toFixed(1)}" stroke="#E7E0D2" stroke-width="1"/>`;
+    out+=`<text x="${pL-6}" y="${(y+4).toFixed(1)}" text-anchor="end" font-size="10" fill="#8A8378">${won(Math.round(a))}</text>`;
+  }
+  const months=new Set();
+  for(const p of allPts)months.add(p.date.slice(0,7));
+  for(const m of [...months].sort()){
+    const t=+new Date(m+"-15T00:00:00");
+    if(t>=t0&&t<=t1)out+=`<text x="${xS(t).toFixed(1)}" y="${H-2}" text-anchor="middle" font-size="9" fill="#8A8378">${m.slice(2,7)}</text>`;
+  }
+  const sorted=[...series].sort((a,b)=>a.isSelected?1:-1);
+  for(const s of sorted){
+    if(!s.pts.length)continue;
+    const pts=s.pts.slice().sort((a,b)=>a.date.localeCompare(b.date));
+    const path=pts.map((p,i)=>{const x=xS(+new Date(p.date+"T00:00:00")),y=yS(p.amount);return(i===0?"M":"L")+x.toFixed(1)+" "+y.toFixed(1);}).join(" ");
+    const sw=s.isSelected?2.8:1.6,op=s.isSelected?1:.5;
+    out+=`<path d="${path}" fill="none" stroke="${s.color}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" opacity="${op}"/>`;
+    const last=pts[pts.length-1];
+    out+=`<circle cx="${xS(+new Date(last.date+"T00:00:00")).toFixed(1)}" cy="${yS(last.amount).toFixed(1)}" r="${s.isSelected?4:2.5}" fill="${s.color}" opacity="${op}"/>`;
+  }
+  return`<svg width="100%" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="display:block">${out}</svg>`;
+}
+
 function openCompare(){
   view="compare";
-  if(compareDong===null){
-    if(selectedDongs.length===1)compareDong=selectedDongs[0];
-    else if(city!=="전체"&&(DONGS_BY_CITY[city]||[]).length)compareDong=DONGS_BY_CITY[city][0];
-    else compareDong=(DONGS_BY_CITY[CITIES[0]]||[])[0]||null;
-  }
+  cmpSearchQ="";
+  cmpSelectedApt=null;
   comparePyeong=null;
   render();
 }
@@ -41278,48 +41340,99 @@ function renderCompare(){
   document.getElementById("detailView").style.display="none";
   document.getElementById("compareView").style.display="";
 
-  const allDongs=CITIES.flatMap(c=>DONGS_BY_CITY[c]||[]);
-  if(!compareDong&&allDongs.length)compareDong=allDongs[0];
+  if(!cmpSelectedApt){
+    document.getElementById("cmpBack").textContent="← 목록으로";
+    document.getElementById("cmpBack").onclick=()=>{view="list";render();};
+    document.getElementById("cmpSub").textContent="단지를 검색해 비교를 시작하세요";
+    document.getElementById("cmpDongChips").innerHTML="";
+    document.getElementById("cmpPyeongBtns").innerHTML="";
+    const aptNames=[...new Set(DATA.map(r=>r.apt))].sort();
+    const results=cmpSearchQ.length>=1?aptNames.filter(n=>n.includes(cmpSearchQ)).slice(0,8):[];
+    let html=`<div class="cmp-search-wrap"><span class="cmp-search-icon">⌕</span><input class="cmp-search-input" id="cmpSearchEl" placeholder="단지명 검색..." value="${cmpSearchQ.replace(/"/g,'&quot;')}"/></div>`;
+    if(results.length){
+      html+='<div class="cmp-results">';
+      for(const n of results){
+        const r0=DATA.find(r=>r.apt===n);
+        html+=`<div class="cmp-result-item" data-apt="${n.replace(/"/g,'&quot;')}"><div class="cmp-result-name">${n}</div><div class="cmp-result-sub">${r0?r0.region:""}</div></div>`;
+      }
+      html+='</div>';
+    }else if(cmpSearchQ.length>=1){
+      html+='<div class="dy-empty" style="margin-top:8px">검색 결과 없음</div>';
+    }
+    document.getElementById("cmpBody").innerHTML=html;
+    const el=document.getElementById("cmpSearchEl");
+    if(el){el.focus();el.addEventListener("input",()=>{cmpSearchQ=el.value.trim();renderCompare();});}
+    document.querySelectorAll(".cmp-result-item").forEach(el=>el.addEventListener("click",()=>{cmpSelectedApt=el.dataset.apt;comparePyeong=null;renderCompare();}));
+    return;
+  }
 
-  const sn=r=>r.split(" ").slice(1).join(" ");
-  document.getElementById("cmpDongChips").innerHTML=allDongs.map(d=>
-    `<button class="rc${d===compareDong?" on":""}" data-dong="${d}">${sn(d)}</button>`
-  ).join("");
-
-  const dongDeals=DATA.filter(r=>r.region===compareDong&&!r.canceled);
-  const pyeongs=[...new Set(dongDeals.map(r=>r.pyeong))].sort((a,b)=>a-b);
+  // Phase B: apt selected
+  const aptRegion=(DATA.find(r=>r.apt===cmpSelectedApt)||{}).region||"";
+  const aptDeals=DATA.filter(r=>r.apt===cmpSelectedApt&&!r.canceled);
+  const pyeongCounts={};
+  for(const r of aptDeals)(pyeongCounts[r.pyeong]=(pyeongCounts[r.pyeong]||0)+1);
+  const pyeongs=Object.keys(pyeongCounts).map(Number).sort((a,b)=>a-b);
   if(comparePyeong===null||!pyeongs.includes(comparePyeong))comparePyeong=pyeongs[0]||null;
+  const avgByPyeong={};
+  for(const p of pyeongs){
+    const rows=aptDeals.filter(r=>r.pyeong===p);
+    if(rows.length)avgByPyeong[p]=Math.round(rows.reduce((s,r)=>s+r.amount,0)/rows.length);
+  }
 
-  document.getElementById("cmpSub").textContent=compareDong||"";
-  document.getElementById("cmpPyeongBtns").innerHTML=pyeongs.map(p=>
-    `<button class="pb${p===comparePyeong?" on":""}" data-p="${p}">${p}평</button>`
-  ).join("");
+  document.getElementById("cmpBack").textContent="← 다시 검색";
+  document.getElementById("cmpBack").onclick=()=>{cmpSelectedApt=null;cmpSearchQ="";renderCompare();};
+  document.getElementById("cmpSub").textContent=`${cmpSelectedApt} · ${aptRegion}`;
+  document.getElementById("cmpDongChips").innerHTML="";
+
+  document.getElementById("cmpPyeongBtns").innerHTML=`<div class="cmp-pyeong-cards">${pyeongs.map(p=>{
+    const on=p===comparePyeong;
+    const nextP=pyeongs.find(x=>x>p);
+    const diffStr=(nextP&&avgByPyeong[nextP]&&avgByPyeong[p])?`+${won(avgByPyeong[nextP]-avgByPyeong[p])} ▲${nextP}평`:"";
+    return`<div class="cmp-pyeong-card${on?" on":""}" data-p="${p}"><div class="cp-size">${p}평</div><div class="cp-count">${pyeongCounts[p]}건</div><div class="cp-avg">${won(avgByPyeong[p])}</div>${diffStr?`<div class="cp-diff">${diffStr}</div>`:""}</div>`;
+  }).join("")}</div>`;
 
   let bodyHtml="";
   if(comparePyeong!==null){
-    const filtered=dongDeals.filter(r=>r.pyeong===comparePyeong);
-    const apts=[...new Set(filtered.map(r=>r.apt))];
+    const dongDeals=DATA.filter(r=>r.region===aptRegion&&r.pyeong===comparePyeong&&!r.canceled);
+    const apts=[...new Set(dongDeals.map(r=>r.apt))];
     const stats=apts.map(apt=>{
-      const rows=filtered.filter(r=>r.apt===apt).sort((a,b)=>b.date.localeCompare(a.date));
-      const latest=rows[0];
-      const maxAmt=Math.max(...rows.map(r=>r.amount));
-      const allForSpark=DATA.filter(r=>r.apt===apt&&r.pyeong===comparePyeong&&!r.canceled).sort((a,b)=>a.date.localeCompare(b.date));
-      return{apt,latest,maxAmt,count:rows.length,spark:allForSpark};
+      const rows=dongDeals.filter(r=>r.apt===apt).sort((a,b)=>b.date.localeCompare(a.date));
+      const aptAll=DATA.filter(r=>r.apt===apt&&!r.canceled);
+      const aptPyeongs=[...new Set(aptAll.map(r=>r.pyeong))].map(Number).sort((a,b)=>a-b);
+      const nextP=aptPyeongs.find(x=>x>comparePyeong);
+      let upDiff=null;
+      if(nextP){
+        const curAvg=Math.round(rows.reduce((s,r)=>s+r.amount,0)/rows.length);
+        const nextRows=aptAll.filter(r=>r.pyeong===nextP);
+        const nextAvg=Math.round(nextRows.reduce((s,r)=>s+r.amount,0)/nextRows.length);
+        upDiff={pyeong:nextP,diff:nextAvg-curAvg};
+      }
+      return{apt,latest:rows[0],count:rows.length,rows,upDiff};
     }).sort((a,b)=>b.latest.amount-a.latest.amount);
-    bodyHtml='<div class="cmp-list">';
+
+    const series=stats.map((s,i)=>({
+      apt:s.apt,
+      pts:s.rows.slice().sort((a,b)=>a.date.localeCompare(b.date)),
+      color:s.apt===cmpSelectedApt?"#B23A2E":CMP_COLORS[i%CMP_COLORS.length],
+      isSelected:s.apt===cmpSelectedApt
+    }));
+
+    bodyHtml+=`<div class="cmp-chart-wrap"><h3>${aptRegion} · ${comparePyeong}평 거래 추이</h3>${renderCmpMultiChart(series)}<div class="cmp-legend">${series.map(s=>`<div class="cmp-legend-item"><div class="cmp-legend-dot" style="background:${s.color};opacity:${s.isSelected?1:.6}"></div><span style="${s.isSelected?"font-weight:700":"color:var(--mut)"}">${s.apt}</span></div>`).join("")}</div></div>`;
+
+    bodyHtml+='<div class="cmp-list">';
     for(let i=0;i<stats.length;i++){
       const s=stats[i];
-      bodyHtml+=`<div class="cmp-row"><div class="cmp-rank">${i+1}</div><div class="cmp-info"><div class="cmp-apt-name" data-apt="${s.apt.replace(/"/g,"&quot;")}">${s.apt}</div><div class="cmp-apt-sub">${s.count}건 · 최고 ${won(s.maxAmt)}</div></div><div class="cmp-spark">${sparkline(s.spark,{w:130,h:58})}</div><div class="cmp-price"><div class="cmp-amt">${won(s.latest.amount)}</div><div class="cmp-date">${s.latest.date.slice(2,7)}</div></div></div>`;
+      const isHL=s.apt===cmpSelectedApt;
+      const color=isHL?"#B23A2E":CMP_COLORS[i%CMP_COLORS.length];
+      const diffHtml=s.upDiff?` · <span class="cmp-up-diff-inline">▲${s.upDiff.pyeong}평 +${won(s.upDiff.diff)}</span>`:"";
+      bodyHtml+=`<div class="cmp-row${isHL?" highlight":""}"><div class="cmp-rank" style="color:${color}">${i+1}</div><div class="cmp-info"><div class="cmp-apt-name" data-apt="${s.apt.replace(/"/g,"&quot;")}">${s.apt}</div><div class="cmp-apt-sub">${s.count}건${diffHtml}</div></div><div class="cmp-spark">${sparkline(s.rows,{w:130,h:58,color})}</div><div class="cmp-price"><div class="cmp-amt" style="color:${color}">${won(s.latest.amount)}</div><div class="cmp-date">${s.latest.date.slice(2,7)}</div></div></div>`;
     }
     bodyHtml+='</div>';
   }else{
-    bodyHtml='<div class="dy-empty">해당 동의 데이터가 없습니다.</div>';
+    bodyHtml='<div class="dy-empty">데이터가 없습니다.</div>';
   }
   document.getElementById("cmpBody").innerHTML=bodyHtml;
-
-  document.getElementById("cmpBack").onclick=()=>{view="list";render();};
-  document.querySelectorAll("#cmpDongChips .rc").forEach(b=>b.addEventListener("click",()=>{compareDong=b.dataset.dong;comparePyeong=null;render();}));
-  document.querySelectorAll("#cmpPyeongBtns .pb").forEach(b=>b.addEventListener("click",()=>{comparePyeong=+b.dataset.p;render();}));
+  document.querySelectorAll("#cmpPyeongBtns .cmp-pyeong-card").forEach(b=>b.addEventListener("click",()=>{comparePyeong=+b.dataset.p;renderCompare();}));
   document.querySelectorAll("#cmpBody .cmp-apt-name").forEach(el=>el.addEventListener("click",()=>openDetail(el.dataset.apt)));
 }
 
