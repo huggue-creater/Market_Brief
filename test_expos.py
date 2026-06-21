@@ -9,7 +9,8 @@ import os, time
 import requests
 from xml.etree import ElementTree
 
-KEY = os.environ["DATA_GO_KR_KEY"]
+TRADE_KEY = os.environ["DATA_GO_KR_KEY"]
+BUILD_KEY = os.environ.get("BUILD_API_KEY", TRADE_KEY)
 
 APT_TRADE_URL = "http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"
 BASE = "http://apis.data.go.kr/1613000/BldRgstService_v2"
@@ -27,7 +28,7 @@ def get(url, params, label=""):
 # ─── STEP 1. 실거래가 API ─────────────────────────────────────────────────────
 print("\n═══ STEP 1. 실거래가 API (망월동 202606) ════════════════")
 r, _ = get(APT_TRADE_URL, {
-    "serviceKey": KEY, "LAWD_CD": "41450",
+    "serviceKey": TRADE_KEY, "LAWD_CD": "41450",
     "DEAL_YMD": "202606", "numOfRows": 50, "pageNo": 1,
 }, "실거래가")
 
@@ -71,7 +72,7 @@ print(f"\n═══ STEP 2. 엔드포인트별 테스트 [{apt}] bun={bonbun} ji
 for ep, label in endpoints:
     print(f"\n  ── {label} ({ep}) ──")
     r, elapsed = get(f"{BASE}/{ep}", {
-        "serviceKey": KEY,
+        "serviceKey": BUILD_KEY,
         "sigunguCd":  SIGUNGU,
         "bjdongCd":   BJDONG,
         "bun":        bonbun,
@@ -111,7 +112,7 @@ for ep, label in endpoints:
 # ─── STEP 3. sigunguCd+bjdongCd만으로도 시도 (bun/ji 없이) ──────────────────
 print(f"\n═══ STEP 3. getBrExposInfo (bun/ji 없이, dong 전체) ════")
 r, elapsed = get(f"{BASE}/getBrExposInfo", {
-    "serviceKey": KEY,
+    "serviceKey": BUILD_KEY,
     "sigunguCd":  SIGUNGU,
     "bjdongCd":   BJDONG,
     "numOfRows":  10,

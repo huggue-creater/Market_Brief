@@ -15,4 +15,5 @@ jobs:
       - name: Run test
         env:
           DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
+          BUILD_API_KEY: ${{ secrets.BUILD_API_KEY }}
         run: python test_expos.py
