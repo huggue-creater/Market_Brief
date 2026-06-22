@@ -41678,7 +41678,7 @@ function renderCompare(){
 
   let bodyHtml="";
   if(comparePyeong!==null){
-    const dongDeals=DATA.filter(r=>r.region===aptRegion&&r.pyeong===comparePyeong&&!r.canceled);
+    const dongDeals=DATA.filter(r=>r.region===aptRegion&&Math.abs(r.pyeong-comparePyeong)<=1&&!r.canceled);
     const apts=[...new Set(dongDeals.map(r=>r.apt))];
     const stats=apts.map(apt=>{
       const rows=dongDeals.filter(r=>r.apt===apt).sort((a,b)=>b.date.localeCompare(a.date));
@@ -41703,7 +41703,7 @@ function renderCompare(){
     }));
 
     const visibleSeries=series.filter(s=>!cmpHiddenApts.has(s.apt));
-    bodyHtml+=`<div class="cmp-chart-wrap"><h3>${aptRegion} · ${comparePyeong}평 거래 추이</h3>${renderCmpMultiChart(visibleSeries.length?visibleSeries:series)}<div class="cmp-legend">${series.map(s=>{const hidden=cmpHiddenApts.has(s.apt);return`<div class="cmp-legend-item${hidden?" cmp-hidden":""}" data-legend-apt="${s.apt.replace(/"/g,"&quot;")}"><div class="cmp-legend-dot" style="background:${s.color};opacity:${hidden?.35:s.isSelected?1:.6}"></div><span style="${hidden?"color:#B0A898;text-decoration:line-through":s.isSelected?"font-weight:700":"color:var(--mut)"}">${s.apt}</span></div>`;}).join("")}</div></div>`;
+    bodyHtml+=`<div class="cmp-chart-wrap"><h3>${aptRegion} · ${comparePyeong}평 (±1평) 거래 추이</h3>${renderCmpMultiChart(visibleSeries.length?visibleSeries:series)}<div class="cmp-legend">${series.map(s=>{const hidden=cmpHiddenApts.has(s.apt);return`<div class="cmp-legend-item${hidden?" cmp-hidden":""}" data-legend-apt="${s.apt.replace(/"/g,"&quot;")}"><div class="cmp-legend-dot" style="background:${s.color};opacity:${hidden?.35:s.isSelected?1:.6}"></div><span style="${hidden?"color:#B0A898;text-decoration:line-through":s.isSelected?"font-weight:700":"color:var(--mut)"}">${s.apt}</span></div>`;}).join("")}</div></div>`;
 
     bodyHtml+='<div class="cmp-list">';
     for(let i=0;i<stats.length;i++){
