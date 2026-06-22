@@ -41653,7 +41653,7 @@ function renderCompare(){
   const pyeongCounts={};
   for(const r of aptDeals)(pyeongCounts[r.pyeong]=(pyeongCounts[r.pyeong]||0)+1);
   const pyeongs=Object.keys(pyeongCounts).map(Number).sort((a,b)=>a-b);
-  if(comparePyeong===null||!pyeongs.includes(comparePyeong))comparePyeong=pyeongs[0]||null;
+  if(comparePyeong===null||!pyeongs.includes(comparePyeong))comparePyeong=pyeongs.reduce((a,b)=>pyeongCounts[a]>=pyeongCounts[b]?a:b,pyeongs[0])||null;
   const avgByPyeong={};
   for(const p of pyeongs){
     const rows=aptDeals.filter(r=>r.pyeong===p);
