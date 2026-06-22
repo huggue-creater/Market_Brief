@@ -1,10 +1,9 @@
 name: Market Brief
 
 on:
-  # 06:20 KST (GitHub Actions가 KST로 해석함)
-  # Mon-Fri KST = 1-5
+  # 06:20 KST Mon-Fri = 21:20 UTC Sun-Thu (GitHub Actions는 UTC 기준)
   schedule:
-    - cron: "20 06 * * 1-5"
+    - cron: "20 21 * * 0-4"
 
   # 수동 트리거 (테스트용)
   workflow_dispatch:

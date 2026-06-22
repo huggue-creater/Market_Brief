@@ -863,8 +863,15 @@ def is_holiday_or_weekend(dt: datetime.date) -> bool:
     return dt in holidays.country_holidays("KR", years=dt.year)
 
 
+KST = datetime.timezone(datetime.timedelta(hours=9))
+
+
+def today_kst() -> datetime.date:
+    return datetime.datetime.now(KST).date()
+
+
 def check_dup_run() -> bool:
-    today = datetime.date.today().isoformat()
+    today = today_kst().isoformat()
     if LAST_RUN_FILE.exists() and LAST_RUN_FILE.read_text().strip() == today:
         return True
     LAST_RUN_FILE.write_text(today)
@@ -878,8 +885,8 @@ def main():
                         help="검색 JSON 재생성만 실행 (Telegram 없음, 주말/중복 체크 없음)")
     args = parser.parse_args()
 
-    today = datetime.date.today()
-    log.info("=== Market Brief 시작: %s ===", today)
+    today = today_kst()
+    log.info("=== Market Brief 시작: %s (KST) ===", today)
 
     if args.json_only:
         log.info("--json-only 모드: 검색 JSON 재생성만 실행")
