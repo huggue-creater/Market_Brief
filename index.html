@@ -116,14 +116,14 @@ body{background:var(--paper);color:var(--ink);font-family:'Pretendard',system-ui
 .cmp-result-item:hover{background:#F3EEE3;}
 .cmp-result-name{font-size:14px;font-weight:600;}
 .cmp-result-sub{font-size:11.5px;color:var(--mut);margin-top:2px;}
-.cmp-pyeong-cards{display:flex;gap:8px;flex-wrap:wrap;}
-.cmp-pyeong-card{flex:1;min-width:90px;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;text-align:center;transition:.13s;}
+.cmp-pyeong-cards{display:flex;gap:6px;}
+.cmp-pyeong-card{flex:1;min-width:0;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px 8px;cursor:pointer;text-align:center;transition:.13s;}
 .cmp-pyeong-card:hover{border-color:#C8BFA8;}
 .cmp-pyeong-card.on{border-color:var(--seal);background:#FEF5F4;}
 .cp-size{font-size:15px;font-weight:800;}
 .cmp-pyeong-card.on .cp-size{color:var(--seal);}
 .cp-count{font-size:10.5px;color:var(--mut);margin-top:2px;}
-.cp-avg{font-size:12px;font-weight:700;margin-top:5px;}
+.cp-avg{font-size:12px;font-weight:700;margin-top:5px;word-break:keep-all;}
 .cp-diff{font-size:10.5px;color:#6B8E4E;margin-top:3px;font-weight:600;word-break:keep-all;}
 .cmp-dong-chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 4px;}
 .cmp-dong-chip{padding:5px 13px;border:1px solid var(--line);background:#fff;color:var(--mut);border-radius:16px;font-size:12px;cursor:pointer;transition:.13s;}
@@ -41678,7 +41678,9 @@ function renderCompare(){
       const d=avgByPyeong[nextP]-avgByPyeong[p];
       diffStr=`[${nextP}평]<br>${d>=0?"+":"−"}${won(Math.abs(d))}`;
     }
-    return`<div class="cmp-pyeong-card${on?" on":""}" data-p="${p}"><div class="cp-size">${p}평</div><div class="cp-count">${pyeongCounts[p]}건</div><div class="cp-avg">${won(avgByPyeong[p])}</div>${diffStr?`<div class="cp-diff">${diffStr}</div>`:""}</div>`;
+    const avg=avgByPyeong[p],ae=Math.floor(avg/10000),ar=avg%10000;
+    const avgHtml=ae&&ar?`${ae}억<wbr>${ar.toLocaleString()}만원`:won(avg);
+    return`<div class="cmp-pyeong-card${on?" on":""}" data-p="${p}"><div class="cp-size">${p}평</div><div class="cp-count">${pyeongCounts[p]}건</div><div class="cp-avg">${avgHtml}</div>${diffStr?`<div class="cp-diff">${diffStr}</div>`:""}</div>`;
   }).join("")}</div>`;
 
   let bodyHtml="";
