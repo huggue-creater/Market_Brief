@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-21 15:47:02",
+  "generated_at": "2026-06-22 05:14:43",
   "months": [
     "202606",
     "202605",
@@ -54,7 +54,7 @@
       "floor": "15",
       "amount": 119000,
       "date": "2026-06-15",
-      "reported_date": "2026-06-15",
+      "reported_date": "2026-06-22",
       "direct": false,
       "canceled": false
     },
@@ -78,7 +78,7 @@
       "floor": "8",
       "amount": 122500,
       "date": "2026-06-11",
-      "reported_date": "2026-06-11",
+      "reported_date": "2026-06-22",
       "direct": false,
       "canceled": false
     },
@@ -462,7 +462,7 @@
       "floor": "6",
       "amount": 106000,
       "date": "2026-05-23",
-      "reported_date": "2026-05-23",
+      "reported_date": "2026-06-22",
       "direct": false,
       "canceled": false
     },
@@ -3930,7 +3930,7 @@
       "floor": "8",
       "amount": 62000,
       "date": "2026-06-09",
-      "reported_date": "2026-06-09",
+      "reported_date": "2026-06-22",
       "direct": false,
       "canceled": false
     },
@@ -3966,7 +3966,7 @@
       "floor": "26",
       "amount": 134500,
       "date": "2026-06-07",
-      "reported_date": "2026-06-07",
+      "reported_date": "2026-06-22",
       "direct": false,
       "canceled": false
     },
@@ -4026,7 +4026,7 @@
       "floor": "18",
       "amount": 105000,
       "date": "2026-06-05",
-      "reported_date": "2026-06-05",
+      "reported_date": "2026-06-22",
       "direct": false,
       "canceled": false
     },
@@ -4146,7 +4146,7 @@
       "floor": "4",
       "amount": 85000,
       "date": "2026-06-03",
-      "reported_date": "2026-06-03",
+      "reported_date": "2026-06-22",
       "direct": false,
       "canceled": false
     },
@@ -4206,7 +4206,7 @@
       "floor": "13",
       "amount": 92000,
       "date": "2026-05-30",
-      "reported_date": "2026-05-30",
+      "reported_date": "2026-06-22",
       "direct": false,
       "canceled": false
     },
@@ -4362,7 +4362,7 @@
       "floor": "23",
       "amount": 130000,
       "date": "2026-05-26",
-      "reported_date": "2026-05-26",
+      "reported_date": "2026-06-22",
       "direct": false,
       "canceled": false
     },
@@ -12714,7 +12714,7 @@
       "floor": "15",
       "amount": 42000,
       "date": "2026-06-15",
-      "reported_date": "2026-06-15",
+      "reported_date": "2026-06-22",
       "direct": false,
       "canceled": false
     },
@@ -12954,7 +12954,7 @@
       "floor": "9",
       "amount": 42000,
       "date": "2026-05-30",
-      "reported_date": "2026-05-30",
+      "reported_date": "2026-06-22",
       "direct": false,
       "canceled": false
     },
@@ -40322,7 +40322,7 @@
     "유천": {
       "buildYear": 1993,
       "vlRat": "110.74",
-      "bcRat": "120.63"
+      "bcRat": ""
     },
     "연수주공2차": {
       "buildYear": 1992,
@@ -40371,8 +40371,8 @@
     },
     "우주": {
       "buildYear": 1992,
-      "vlRat": "762.55",
-      "bcRat": "192.93"
+      "vlRat": "",
+      "bcRat": ""
     },
     "솔밭마을아파트": {
       "buildYear": 1993,
@@ -40401,8 +40401,8 @@
     },
     "태경": {
       "buildYear": 1992,
-      "vlRat": "762.55",
-      "bcRat": "192.93"
+      "vlRat": "",
+      "bcRat": ""
     },
     "대우1": {
       "buildYear": 1992,
@@ -40411,8 +40411,8 @@
     },
     "인향": {
       "buildYear": 1992,
-      "vlRat": "762.55",
-      "bcRat": "192.93"
+      "vlRat": "",
+      "bcRat": ""
     },
     "동남": {
       "buildYear": 1994,
@@ -40982,7 +40982,7 @@
     "신한미지엔": {
       "buildYear": 1997,
       "vlRat": "159.41",
-      "bcRat": "138.46"
+      "bcRat": ""
     },
     "부성파스텔": {
       "buildYear": 1997,
