@@ -182,7 +182,10 @@ body{background:var(--paper);color:var(--ink);font-family:'Pretendard',system-ui
 </div>
 
 <div class="dy" id="detailView" style="display:none">
-  <button class="detail-back" id="detailBack">← 목록으로</button>
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+    <button class="detail-back" id="detailBack" style="margin-bottom:0">← 목록으로</button>
+    <button class="cmp-btn" id="detailCmpBtn">단지 비교</button>
+  </div>
   <div class="detail-head">
     <h2 id="detailTitle"></h2>
     <div class="dsub" id="detailSub"></div>
@@ -41757,6 +41760,7 @@ function renderDetail(){
   document.getElementById("pyeongBtns").innerHTML=pl.map(p=>`<button class="pb${p===detailPyeong?" on":""}" data-p="${p}">${p}평 (${pc[p]||0}건)</button>`).join("");
   document.querySelectorAll(".pb").forEach(b=>b.addEventListener("click",()=>{detailPyeong=+b.dataset.p;renderDetail();}));
   document.getElementById("detailBack").onclick=()=>{view="list";render();};
+  document.getElementById("detailCmpBtn").onclick=()=>{cmpSelectedApt=detailApt;comparePyeong=null;cmpHiddenApts=new Set();cmpSelectedDongs=new Set();view="compare";render();};
   const pts=aptRows.filter(r=>r.pyeong===detailPyeong&&!r.canceled).sort((a,b)=>a.date.localeCompare(b.date));
   document.getElementById("chartTitle").textContent=`${detailPyeong}평 (전용 ${pts[0]?.area||""}㎡) 거래 추이`;
   document.getElementById("chartSub").textContent=`${pts.length}건`;
