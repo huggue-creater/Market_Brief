@@ -1,11 +1,10 @@
 name: Market Brief
 
 on:
-  # 06:20 KST (UTC+9) = 21:20 UTC 전날
-  # Mon KST = Sun UTC(0), Tue=Mon(1), Wed=Tue(2), Thu=Wed(3), Fri=Thu(4)
-  # Sat KST = Fri UTC(5) → 실행되지만 bot.py 공휴일/주말 체크로 스킵
+  # 06:20 KST (GitHub Actions가 KST로 해석함)
+  # Mon-Fri KST = 1-5
   schedule:
-    - cron: "20 21 * * 0-4"
+    - cron: "20 06 * * 1-5"
 
   # 수동 트리거 (테스트용)
   workflow_dispatch:
