@@ -125,6 +125,9 @@ body{background:var(--paper);color:var(--ink);font-family:'Pretendard',system-ui
 .cp-count{font-size:10.5px;color:var(--mut);margin-top:2px;}
 .cp-avg{font-size:12px;font-weight:700;margin-top:5px;}
 .cp-diff{font-size:10.5px;color:#6B8E4E;margin-top:3px;font-weight:600;word-break:keep-all;}
+.cmp-dong-chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 4px;}
+.cmp-dong-chip{padding:5px 13px;border:1px solid var(--line);background:#fff;color:var(--mut);border-radius:16px;font-size:12px;cursor:pointer;transition:.13s;}
+.cmp-dong-chip.on{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:700;}
 .cmp-chart-wrap{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px;}
 .cmp-chart-wrap h3{font-size:13px;font-weight:700;margin-bottom:8px;}
 .cmp-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
@@ -173,8 +176,8 @@ body{background:var(--paper);color:var(--ink);font-family:'Pretendard',system-ui
     <h2>단지 비교</h2>
     <div class="dsub" id="cmpSub"></div>
   </div>
-  <div class="dy-chips" id="cmpDongChips"></div>
   <div class="pyeong-btns" id="cmpPyeongBtns"></div>
+  <div id="cmpDongChips"></div>
   <div id="cmpBody"></div>
 </div>
 
@@ -41385,7 +41388,7 @@ const won = m => {
 let DATA=[], META={};
 let q="", city="전체", selectedDongs=[], dongPanelOpen=false, openId=null;
 let view="list", detailApt=null, detailPyeong=null;
-let cmpSearchQ="", cmpSelectedApt=null, comparePyeong=null, cmpHiddenApts=new Set();
+let cmpSearchQ="", cmpSelectedApt=null, comparePyeong=null, cmpHiddenApts=new Set(), cmpSelectedDongs=new Set();
 let CITIES=[], DONGS_BY_CITY={};
 
 function prepare(deals){
@@ -41622,7 +41625,7 @@ function _cmpUpdateResults(){
   }
   const list=document.getElementById("cmpResultsList");
   if(list)list.innerHTML=html;
-  document.querySelectorAll(".cmp-result-item").forEach(el=>el.addEventListener("click",()=>{cmpSelectedApt=el.dataset.apt;comparePyeong=null;cmpHiddenApts=new Set();renderCompare();}));
+  document.querySelectorAll(".cmp-result-item").forEach(el=>el.addEventListener("click",()=>{cmpSelectedApt=el.dataset.apt;comparePyeong=null;cmpHiddenApts=new Set();cmpSelectedDongs=new Set();renderCompare();}));
 }
 
 function renderCompare(){
@@ -41649,6 +41652,7 @@ function renderCompare(){
 
   // Phase B: apt selected
   const aptRegion=(DATA.find(r=>r.apt===cmpSelectedApt)||{}).region||"";
+  const aptCity=aptRegion.split(" ")[0];
   const aptDeals=DATA.filter(r=>r.apt===cmpSelectedApt&&!r.canceled);
   const pyeongCounts={};
   for(const r of aptDeals)(pyeongCounts[r.pyeong]=(pyeongCounts[r.pyeong]||0)+1);
@@ -41663,7 +41667,8 @@ function renderCompare(){
   document.getElementById("cmpBack").textContent="← 다시 검색";
   document.getElementById("cmpBack").onclick=()=>{cmpSelectedApt=null;cmpSearchQ="";renderCompare();};
   document.getElementById("cmpSub").textContent=`${cmpSelectedApt} · ${aptRegion}`;
-  document.getElementById("cmpDongChips").innerHTML="";
+  const allCityDongs=[...new Set(DATA.filter(r=>r.region.startsWith(aptCity+" ")).map(r=>r.region))].sort();
+  document.getElementById("cmpDongChips").innerHTML=allCityDongs.length>1?`<div class="cmp-dong-chips">${allCityDongs.map(d=>{const label=d.split(" ")[1];const on=cmpSelectedDongs.has(d);return`<button class="cmp-dong-chip${on?" on":""}" data-dong="${d}">${label}</button>`;}).join("")}</div>`:"";
 
   document.getElementById("cmpPyeongBtns").innerHTML=`<div class="cmp-pyeong-cards">${pyeongs.map(p=>{
     const on=p===comparePyeong;
@@ -41671,14 +41676,16 @@ function renderCompare(){
     let diffStr="";
     if(nextP&&avgByPyeong[nextP]&&avgByPyeong[p]){
       const d=avgByPyeong[nextP]-avgByPyeong[p];
-      diffStr=`[${nextP}평] ${d>=0?"+":"−"}${won(Math.abs(d))}`;
+      diffStr=`[${nextP}평]<br>${d>=0?"+":"−"}${won(Math.abs(d))}`;
     }
     return`<div class="cmp-pyeong-card${on?" on":""}" data-p="${p}"><div class="cp-size">${p}평</div><div class="cp-count">${pyeongCounts[p]}건</div><div class="cp-avg">${won(avgByPyeong[p])}</div>${diffStr?`<div class="cp-diff">${diffStr}</div>`:""}</div>`;
   }).join("")}</div>`;
 
   let bodyHtml="";
   if(comparePyeong!==null){
-    const dongDeals=DATA.filter(r=>r.region===aptRegion&&Math.abs(r.pyeong-comparePyeong)<=1&&!r.canceled);
+    const cityDeals=DATA.filter(r=>r.region.startsWith(aptCity+" ")&&!r.canceled);
+    const filteredByDong=cmpSelectedDongs.size>0?cityDeals.filter(r=>cmpSelectedDongs.has(r.region)):cityDeals;
+    const dongDeals=filteredByDong.filter(r=>Math.abs(r.pyeong-comparePyeong)<=1);
     const apts=[...new Set(dongDeals.map(r=>r.apt))];
     const stats=apts.map(apt=>{
       const rows=dongDeals.filter(r=>r.apt===apt).sort((a,b)=>b.date.localeCompare(a.date));
@@ -41704,7 +41711,8 @@ function renderCompare(){
     }));
 
     const visibleSeries=series.filter(s=>!cmpHiddenApts.has(s.apt));
-    bodyHtml+=`<div class="cmp-chart-wrap"><h3>${aptRegion} · ${comparePyeong}평 (±1평) 거래 추이</h3>${renderCmpMultiChart(visibleSeries.length?visibleSeries:series)}<div class="cmp-legend">${series.map(s=>{const hidden=cmpHiddenApts.has(s.apt);return`<div class="cmp-legend-item${hidden?" cmp-hidden":""}" data-legend-apt="${s.apt.replace(/"/g,"&quot;")}"><div class="cmp-legend-dot" style="background:${s.color};opacity:${hidden?.35:s.isSelected?1:.6}"></div><span style="${hidden?"color:#B0A898;text-decoration:line-through":s.isSelected?"font-weight:700":"color:var(--mut)"}">${s.apt}</span></div>`;}).join("")}</div></div>`;
+    const regionLabel=cmpSelectedDongs.size>0?[...cmpSelectedDongs].map(d=>d.split(" ")[1]).join("·"):aptCity+" 전체";
+    bodyHtml+=`<div class="cmp-chart-wrap"><h3>${regionLabel} · ${comparePyeong}평 (±1평) 거래 추이</h3>${renderCmpMultiChart(visibleSeries.length?visibleSeries:series)}<div class="cmp-legend">${series.map(s=>{const hidden=cmpHiddenApts.has(s.apt);return`<div class="cmp-legend-item${hidden?" cmp-hidden":""}" data-legend-apt="${s.apt.replace(/"/g,"&quot;")}"><div class="cmp-legend-dot" style="background:${s.color};opacity:${hidden?.35:s.isSelected?1:.6}"></div><span style="${hidden?"color:#B0A898;text-decoration:line-through":s.isSelected?"font-weight:700":"color:var(--mut)"}">${s.apt}</span></div>`;}).join("")}</div></div>`;
 
     bodyHtml+='<div class="cmp-list">';
     for(let i=0;i<stats.length;i++){
@@ -41719,6 +41727,7 @@ function renderCompare(){
     bodyHtml='<div class="dy-empty">데이터가 없습니다.</div>';
   }
   document.getElementById("cmpBody").innerHTML=bodyHtml;
+  document.querySelectorAll("#cmpDongChips .cmp-dong-chip").forEach(b=>b.addEventListener("click",()=>{const d=b.dataset.dong;if(cmpSelectedDongs.has(d))cmpSelectedDongs.delete(d);else cmpSelectedDongs.add(d);cmpHiddenApts=new Set();renderCompare();}));
   document.querySelectorAll("#cmpPyeongBtns .cmp-pyeong-card").forEach(b=>b.addEventListener("click",()=>{comparePyeong=+b.dataset.p;cmpHiddenApts=new Set();renderCompare();}));
   document.querySelectorAll("#cmpBody .cmp-apt-name").forEach(el=>el.addEventListener("click",()=>openDetail(el.dataset.apt)));
   document.querySelectorAll(".cmp-legend-item").forEach(el=>el.addEventListener("click",()=>{const a=el.dataset.legendApt;if(cmpHiddenApts.has(a))cmpHiddenApts.delete(a);else cmpHiddenApts.add(a);renderCompare();}));
