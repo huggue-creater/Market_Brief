@@ -41870,11 +41870,12 @@ function renderList(){
     const genDate=SEARCH_DATA.generated_at?SEARCH_DATA.generated_at.split(" ")[0]:"";
     const [gy,gm,gd]=genDate?genDate.split("-"):["","",""];
     const genFmt=genDate?`${gy}년 ${+gm}월 ${+gd}일`:"";
-    const highCount=rows.filter(r=>r.isHigh&&!r.canceled).length;
+    const newRows=rows.filter(r=>r.reported_date===genDate);
+    const highCount=newRows.filter(r=>r.isHigh&&!r.canceled).length;
     let noticeHtml="";
     if(city!=="전체"){
       const locLabel=selectedDongs.length===0?city:selectedDongs.length===1?`${city} ${sn(selectedDongs[0])}`:`${city} ${sn(selectedDongs[0])} 외 ${selectedDongs.length-1}곳`;
-      noticeHtml=`<div class="dy-notice"><div class="dy-notice-title">${locLabel} 일별 실거래 현황입니다.</div><div class="dy-notice-sub">${genFmt} 기준 총 ${rows.length.toLocaleString()}건 거래 신고${highCount>0?` · 신고가 ${highCount}건`:""}</div></div>`;
+      noticeHtml=`<div class="dy-notice"><div class="dy-notice-title">${locLabel} 일별 실거래 현황입니다.</div><div class="dy-notice-sub">${genFmt} 기준 총 ${newRows.length.toLocaleString()}건 신규 신고${highCount>0?` · 신고가 ${highCount}건`:""}</div></div>`;
     }
     document.getElementById("notice").innerHTML=noticeHtml;
   }
