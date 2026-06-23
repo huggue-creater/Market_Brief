@@ -93,6 +93,13 @@ body{background:var(--paper);color:var(--ink);font-family:'Pretendard',system-ui
 .pyeong-btns{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0;}
 .pyeong-btns button{padding:7px 13px;border:1px solid var(--line);background:#fff;color:var(--mut);border-radius:20px;font-size:13px;cursor:pointer;}
 .pyeong-btns button.on{background:var(--seal);border-color:var(--seal);color:#fff;font-weight:700;}
+.area-drop-wrap{position:relative;margin:-4px 0 14px;}
+.area-drop-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border:1px solid var(--seal);background:#fff;color:var(--seal);border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.area-drop-panel{display:none;position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);padding:6px;z-index:100;min-width:160px;}
+.area-drop-panel.open{display:block;}
+.area-drop-item{padding:7px 10px;border-radius:7px;font-size:13px;cursor:pointer;color:var(--ink);}
+.area-drop-item:hover{background:var(--paper);}
+.area-drop-item.on{font-weight:700;color:var(--seal);}
 .chart-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px;}
 .chart-card h3{font-size:13px;font-weight:700;margin-bottom:2px;}
 .chart-card .chart-sub{font-size:11px;color:var(--mut);margin-bottom:8px;}
@@ -196,6 +203,7 @@ body{background:var(--paper);color:var(--ink);font-family:'Pretendard',system-ui
     <div class="detail-meta" id="detailMeta"></div>
   </div>
   <div class="pyeong-btns" id="pyeongBtns"></div>
+  <div id="areaDrop"></div>
   <div class="chart-card">
     <h3 id="chartTitle"></h3>
     <div class="chart-sub" id="chartSub"></div>
@@ -41742,7 +41750,7 @@ const won = m => {
 
 let DATA=[], META={};
 let q="", city="전체", selectedDongs=[], dongPanelOpen=false, openId=null;
-let view="list", detailApt=null, detailPyeong=null;
+let view="list", detailApt=null, detailPyeong=null, detailArea=null, areaDropOpen=false;
 let cmpSearchQ="", cmpSelectedApt=null, comparePyeong=null, cmpHiddenApts=new Set(), cmpSelectedDongs=new Set();
 let CITIES=[], DONGS_BY_CITY={};
 
@@ -42105,7 +42113,7 @@ function renderCompare(){
   document.querySelectorAll(".cmp-legend-item").forEach(el=>el.addEventListener("click",()=>{const a=el.dataset.legendApt;if(cmpHiddenApts.has(a))cmpHiddenApts.delete(a);else cmpHiddenApts.add(a);renderCompare();}));
 }
 
-function openDetail(apt){detailApt=apt;detailPyeong=null;view="detail";render();}
+function openDetail(apt){detailApt=apt;detailPyeong=null;detailArea=null;areaDropOpen=false;view="detail";render();}
 
 function renderDetail(){
   document.getElementById("listView").style.display="none";
@@ -42125,14 +42133,34 @@ function renderDetail(){
   const pl=Object.keys(pc).map(Number).sort((a,b)=>a-b);
   if(detailPyeong===null||!pl.includes(detailPyeong))detailPyeong=pl.slice().sort((a,b)=>pc[b]-pc[a])[0];
   document.getElementById("pyeongBtns").innerHTML=pl.map(p=>`<button class="pb${p===detailPyeong?" on":""}" data-p="${p}">${p}평 (${pc[p]||0}건)</button>`).join("");
-  document.querySelectorAll(".pb").forEach(b=>b.addEventListener("click",()=>{detailPyeong=+b.dataset.p;renderDetail();}));
+  document.querySelectorAll(".pb").forEach(b=>b.addEventListener("click",()=>{detailPyeong=+b.dataset.p;detailArea=null;areaDropOpen=false;renderDetail();}));
   document.getElementById("detailBack").onclick=()=>{view="list";render();};
   document.getElementById("detailCmpBtn").onclick=()=>{cmpSelectedApt=detailApt;comparePyeong=null;cmpHiddenApts=new Set();cmpSelectedDongs=new Set();view="compare";render();};
-  const pts=aptRows.filter(r=>r.pyeong===detailPyeong&&!r.canceled).sort((a,b)=>a.date.localeCompare(b.date));
-  document.getElementById("chartTitle").textContent=`${detailPyeong}평 (전용 ${pts[0]?.area||""}㎡) 거래 추이`;
+
+  // 전용면적 서브 드롭다운
+  const areas=[...new Set(aptRows.filter(r=>r.pyeong===detailPyeong&&!r.canceled).map(r=>r.area))].sort((a,b)=>a-b);
+  if(detailArea!==null&&!areas.includes(detailArea))detailArea=null;
+  if(areas.length>1){
+    const lbl=detailArea===null?`${detailPyeong}평 전체`:`전용 ${detailArea}㎡`;
+    const items=`<div class="area-drop-item${detailArea===null?" on":""}" data-area="__all__">전체</div>`+
+      areas.map(a=>`<div class="area-drop-item${detailArea===a?" on":""}" data-area="${a}">전용 ${a}㎡</div>`).join("");
+    document.getElementById("areaDrop").innerHTML=`<div class="area-drop-wrap"><button class="area-drop-btn" id="areaDropBtn">${lbl} ▾</button><div class="area-drop-panel${areaDropOpen?" open":""}" id="areaDropPanel">${items}</div></div>`;
+    document.getElementById("areaDropBtn").addEventListener("click",e=>{e.stopPropagation();areaDropOpen=!areaDropOpen;renderDetail();});
+    document.querySelectorAll(".area-drop-item").forEach(el=>el.addEventListener("click",e=>{
+      e.stopPropagation();const a=el.dataset.area;
+      detailArea=a==="__all__"?null:parseFloat(a);areaDropOpen=false;renderDetail();
+    }));
+  }else{
+    document.getElementById("areaDrop").innerHTML="";
+  }
+
+  const areaFilter=r=>detailArea===null||r.area===detailArea;
+  const pts=aptRows.filter(r=>r.pyeong===detailPyeong&&!r.canceled&&areaFilter(r)).sort((a,b)=>a.date.localeCompare(b.date));
+  const areaLabel=detailArea!==null?`전용 ${detailArea}㎡`:areas.length===1?`전용 ${areas[0]}㎡`:`${areas.length}개 면적 전체`;
+  document.getElementById("chartTitle").textContent=`${detailPyeong}평 (${areaLabel}) 거래 추이`;
   document.getElementById("chartSub").textContent=`${pts.length}건`;
   renderChart(pts);
-  renderHistTable(aptRows.filter(r=>r.pyeong===detailPyeong).sort((a,b)=>b.date.localeCompare(a.date)));
+  renderHistTable(aptRows.filter(r=>r.pyeong===detailPyeong&&areaFilter(r)).sort((a,b)=>b.date.localeCompare(a.date)));
 }
 
 function renderChart(pts){
@@ -42177,7 +42205,12 @@ const searchEl=document.getElementById("searchInput");
 const clearBtn=document.getElementById("clearBtn");
 searchEl.addEventListener("input",()=>{q=searchEl.value.trim();clearBtn.style.display=q?"":"none";openId=null;render();});
 clearBtn.addEventListener("click",()=>{q="";searchEl.value="";clearBtn.style.display="none";render();});
-document.addEventListener("click",()=>{if(dongPanelOpen){dongPanelOpen=false;render();}});
+document.addEventListener("click",()=>{
+  let changed=false;
+  if(dongPanelOpen){dongPanelOpen=false;changed=true;}
+  if(areaDropOpen){areaDropOpen=false;changed=true;}
+  if(changed)render();
+});
 document.getElementById("cmpBtn").addEventListener("click",openCompare);
 
 init();
