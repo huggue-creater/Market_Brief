@@ -156,7 +156,7 @@ def send_telegram_chunked(text: str) -> bool:
 
 
 def get_ym_list(months_back: int) -> list:
-    today = datetime.date.today()
+    today = today_kst()
     result = []
     for i in range(months_back):
         y, m = today.year, today.month - i
@@ -414,7 +414,7 @@ def _build_telegram_apt_msg(region: dict, new_trades: list,
                              supply_cache: dict, fetch_count: list) -> str:
     city = region["city"]
     name = region["name"]
-    today = datetime.date.today().strftime("%Y-%m-%d")
+    today = today_kst().strftime("%Y-%m-%d")
 
     # 기존(알려진) 비취소 거래의 가격·날짜 이력 구축
     # unit_history: (apt, area) → [(price_int, short_date_str, trade)]  (날짜순)
@@ -493,7 +493,7 @@ def run_apartment_alerts(ym_list: list):
     reported_dates = load_json(REPORTED_DATES_FILE, {})
     bld_cache      = load_json(CACHE_FILE, {})
     fetch_count    = [0]
-    today_str      = datetime.date.today().isoformat()
+    today_str      = today_kst().isoformat()
 
     for region in [r for r in REGIONS if r["telegram"]]:
         name = region["name"]
@@ -842,7 +842,7 @@ def generate_search_json(ym_list: list):
         return
 
     save_json(SEARCH_JSON_FILE, {
-        "generated_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "generated_at": datetime.datetime.now(KST).strftime("%Y-%m-%d %H:%M:%S"),
         "months":       ym_list,
         "total":        total,
         "deals":        all_deals,
@@ -868,11 +868,14 @@ def today_kst() -> datetime.date:
     return datetime.datetime.now(KST).date()
 
 
-def check_dup_run() -> bool:
-    today = today_kst().isoformat()
-    if LAST_RUN_FILE.exists() and LAST_RUN_FILE.read_text().strip() == today:
-        return True
-    LAST_RUN_FILE.write_text(today)
+def check_dup_run(today: datetime.date) -> bool:
+    key = today.isoformat()
+    try:
+        if LAST_RUN_FILE.read_text().strip() == key:
+            return True
+    except FileNotFoundError:
+        pass
+    LAST_RUN_FILE.write_text(key)
     return False
 
 
@@ -901,7 +904,7 @@ def main():
         log.info("공휴일/주말 — 스킵")
         sys.exit(0)
 
-    if check_dup_run():
+    if check_dup_run(today):
         log.info("오늘 이미 실행됨 — 스킵")
         sys.exit(0)
 
