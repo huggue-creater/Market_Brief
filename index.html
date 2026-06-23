@@ -41748,7 +41748,7 @@ let CITIES=[], DONGS_BY_CITY={};
 
 function prepare(deals){
   const g={};
-  for(const r of deals)(g[r.apt+"|"+r.pyeong]=g[r.apt+"|"+r.pyeong]||[]).push(r);
+  for(const r of deals)(g[r.apt+"|"+r.area]=g[r.apt+"|"+r.area]||[]).push(r);
   for(const k in g){
     const arr=g[k].slice().sort((a,b)=>a.date.localeCompare(b.date));
     let peak=-Infinity;
