@@ -35,6 +35,9 @@ body{background:var(--paper);color:var(--ink);font-family:'Pretendard',system-ui
 .rc-dong-item.on{font-weight:700;color:var(--blue);}
 .rc-dong-all{border-bottom:1px solid var(--line);margin-bottom:4px;padding-bottom:9px;}
 .dy-cnt{margin-left:auto;font-size:12.5px;color:var(--mut);}
+.dy-notice{background:#fff;border-left:4px solid var(--seal);border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:16px;}
+.dy-notice-title{font-size:15px;font-weight:700;color:var(--ink);line-height:1.5;}
+.dy-notice-sub{font-size:13px;color:var(--mut);margin-top:3px;line-height:1.5;}
 .dy-timeline{position:relative;}
 .dy-day{display:grid;grid-template-columns:58px 1fr;gap:14px;position:relative;padding-bottom:18px;}
 .dy-day:not(:last-child)::before{content:"";position:absolute;left:28px;top:54px;bottom:0;width:2px;background:var(--line);}
@@ -166,6 +169,7 @@ body{background:var(--paper);color:var(--ink);font-family:'Pretendard',system-ui
     <button id="clearBtn">✕</button>
   </div>
   <div class="dy-chips" id="chips"></div>
+  <div id="notice"></div>
   <div id="timeline"></div>
   <div class="dy-f" id="footer"></div>
 </div>
@@ -41860,6 +41864,20 @@ function renderList(){
   }
 
   document.getElementById("chips").innerHTML=cityBtns+dongSel+`<span class="dy-cnt">${rows.length.toLocaleString()}건</span>`;
+
+  {
+    const sn=r=>r.split(" ").slice(1).join(" ");
+    const genDate=SEARCH_DATA.generated_at?SEARCH_DATA.generated_at.split(" ")[0]:"";
+    const [gy,gm,gd]=genDate?genDate.split("-"):["","",""];
+    const genFmt=genDate?`${gy}년 ${+gm}월 ${+gd}일`:"";
+    const highCount=rows.filter(r=>r.isHigh&&!r.canceled).length;
+    let noticeHtml="";
+    if(city!=="전체"){
+      const locLabel=selectedDongs.length===0?city:selectedDongs.length===1?`${city} ${sn(selectedDongs[0])}`:`${city} ${sn(selectedDongs[0])} 외 ${selectedDongs.length-1}곳`;
+      noticeHtml=`<div class="dy-notice"><div class="dy-notice-title">${locLabel} 일별 실거래 현황입니다.</div><div class="dy-notice-sub">${genFmt} 기준 총 ${rows.length.toLocaleString()}건 거래 신고${highCount>0?` · 신고가 ${highCount}건`:""}</div></div>`;
+    }
+    document.getElementById("notice").innerHTML=noticeHtml;
+  }
 
   let html="";
   if(days.length===0){
