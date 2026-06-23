@@ -41878,7 +41878,8 @@ function renderList(){
     const genDate=SEARCH_DATA.generated_at?SEARCH_DATA.generated_at.split(" ")[0]:"";
     const [gy,gm,gd]=genDate?genDate.split("-"):["","",""];
     const genFmt=genDate?`${gy}년 ${+gm}월 ${+gd}일`:"";
-    const newRows=rows.filter(r=>r.reported_date===genDate);
+    const regionRows=DATA.filter(r=>city==="전체"?true:selectedDongs.length>0?selectedDongs.includes(r.region):r.region.startsWith(city+" "));
+    const newRows=regionRows.filter(r=>r.reported_date===genDate);
     const highCount=newRows.filter(r=>r.isHigh&&!r.canceled).length;
     let noticeHtml="";
     if(city!=="전체"){
