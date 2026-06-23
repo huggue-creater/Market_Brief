@@ -769,7 +769,7 @@ def generate_search_json(ym_list: list):
                 reported_date = (
                     reported_dates.get(trade_id(t)) or
                     existing_reported.get(deal_key) or
-                    deal_date
+                    today_str
                 )
 
                 bjdong = region.get("bjdong") or ""
