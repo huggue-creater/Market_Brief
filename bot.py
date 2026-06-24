@@ -904,7 +904,11 @@ def main():
         log.info("공휴일/주말 — 스킵")
         sys.exit(0)
 
-    if check_dup_run(today):
+    force = os.environ.get("FORCE_RUN", "false").lower() == "true"
+    if force:
+        log.info("FORCE_RUN=true — dup 체크 건너뜀")
+        LAST_RUN_FILE.write_text(today.isoformat())
+    elif check_dup_run(today):
         log.info("오늘 이미 실행됨 — 스킵")
         sys.exit(0)
 

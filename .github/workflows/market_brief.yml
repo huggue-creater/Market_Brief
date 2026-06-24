@@ -37,6 +37,8 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
           DATA_GO_KR_KEY:     ${{ secrets.DATA_GO_KR_KEY }}
+          # workflow_dispatch이면 dup 체크 건너뜀 — 수동 실행은 항상 동작
+          FORCE_RUN: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
         run: python bot.py
 
       - name: Inject search data into index.html
