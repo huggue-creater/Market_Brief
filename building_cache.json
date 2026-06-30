@@ -7718,5 +7718,662 @@
   "bldmeta3|41450|0457|0000": {
     "vlRat": "199.94",
     "bcRat": "13.51"
+  },
+  "28185|10800": {},
+  "41430|10800": {
+    "청계동 11 종교시설 (대한불교조계종청계사)": {
+      "vlRat": "8.4736471",
+      "bcRat": "8.6763226"
+    },
+    "청계 충전소": {
+      "vlRat": "15.98",
+      "bcRat": "9.73"
+    },
+    "이룸렉스힐": {
+      "vlRat": "155.83",
+      "bcRat": "53.97"
+    },
+    "NOTTING HILL 2": {
+      "vlRat": "153.04",
+      "bcRat": "51.84"
+    },
+    "청계더힐": {
+      "vlRat": "144.12",
+      "bcRat": "49.2"
+    },
+    "청계 타운하우스": {
+      "vlRat": "146.56",
+      "bcRat": "48.99"
+    },
+    "청계그린타운": {
+      "vlRat": "156.33",
+      "bcRat": "52.21"
+    },
+    "451하우스": {
+      "vlRat": "128.51",
+      "bcRat": "56.69"
+    },
+    "BRICKS 627": {
+      "vlRat": "155.8",
+      "bcRat": "53.78"
+    },
+    "로체샤르빌 청계2차": {
+      "vlRat": "155.91",
+      "bcRat": "53.32"
+    },
+    "로체샤르빌 청계3차": {
+      "vlRat": "143.59",
+      "bcRat": "51.13"
+    },
+    "세인빌": {
+      "vlRat": "146.55",
+      "bcRat": "57.04"
+    },
+    "청계포레스트": {
+      "vlRat": "159.9",
+      "bcRat": "20.39"
+    },
+    "휴먼시아 청계마을": {
+      "vlRat": "184.38",
+      "bcRat": "22.38"
+    },
+    "청계통합정수장": {
+      "vlRat": "11.12",
+      "bcRat": "8.79"
+    }
+  },
+  "supply|28185|0003|0044": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0003|0044": {
+    "_empty": true
+  },
+  "supply|28185|0191|0004": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0191|0004": {
+    "_empty": true
+  },
+  "supply|28185|0319|0001": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0319|0001": {
+    "_empty": true
+  },
+  "supply|28185|0308|0001": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0308|0001": {
+    "_empty": true
+  },
+  "supply|28185|0191|0002": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0191|0002": {
+    "_empty": true
+  },
+  "supply|28185|0003|0010": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0003|0010": {
+    "_empty": true
+  },
+  "supply|28185|0020|0023": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0020|0023": {
+    "_empty": true
+  },
+  "supply|28185|0190|0004": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0190|0004": {
+    "_empty": true
+  },
+  "supply|28185|0312|0001": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0312|0001": {
+    "_empty": true
+  },
+  "supply|28185|0002|0012": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0002|0012": {
+    "_empty": true
+  },
+  "supply|28185|0103|0000": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0103|0000": {
+    "_empty": true
+  },
+  "supply|28185|0111|0000": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0111|0000": {
+    "_empty": true
+  },
+  "supply|28185|0112|0000": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0112|0000": {
+    "_empty": true
+  },
+  "supply|28185|0192|0008": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0192|0008": {
+    "_empty": true
+  },
+  "supply|28185|0100|0000": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0100|0000": {
+    "_empty": true
+  },
+  "supply|28185|0003|0040": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0003|0040": {
+    "_empty": true
+  },
+  "supply|28185|0030|0001": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0030|0001": {
+    "_empty": true
+  },
+  "supply|28185|0023|0004": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0023|0004": {
+    "_empty": true
+  },
+  "supply|28185|0010|0030": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0010|0030": {
+    "_empty": true
+  },
+  "supply|28185|0003|0038": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0003|0038": {
+    "_empty": true
+  },
+  "supply|28185|0018|0005": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0018|0005": {
+    "_empty": true
+  },
+  "supply|28185|0019|0005": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0019|0005": {
+    "_empty": true
+  },
+  "supply|28185|0030|0002": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0030|0002": {
+    "_empty": true
+  },
+  "supply|28185|0315|0001": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0315|0001": {
+    "_empty": true
+  },
+  "supply|28185|0023|0005": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0023|0005": {
+    "_empty": true
+  },
+  "supply|28185|0109|0000": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0109|0000": {
+    "_empty": true
+  },
+  "supply|28185|0396|0007": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0396|0007": {
+    "_empty": true
+  },
+  "supply|28185|0161|0003": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0161|0003": {
+    "_empty": true
+  },
+  "supply|28185|0311|0000": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0311|0000": {
+    "_empty": true
+  },
+  "supply|28185|0397|0005": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0397|0005": {
+    "_empty": true
+  },
+  "supply|28185|0003|0046": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0003|0046": {
+    "_empty": true
+  },
+  "supply|28185|0150|0000": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0150|0000": {
+    "_empty": true
+  },
+  "supply|28185|0015|0002": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0015|0002": {
+    "_empty": true
+  },
+  "supply|28185|0101|0000": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0101|0000": {
+    "_empty": true
+  },
+  "supply|28185|0105|0002": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0105|0002": {
+    "_empty": true
+  },
+  "supply|28185|0149|0000": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0149|0000": {
+    "_empty": true
+  },
+  "supply|28185|0004|0001": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0004|0001": {
+    "_empty": true
+  },
+  "supply|28185|0003|0013": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0003|0013": {
+    "_empty": true
+  },
+  "supply|28185|0155|0000": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0155|0000": {
+    "_empty": true
+  },
+  "supply|28185|0009|0006": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0009|0006": {
+    "_empty": true
+  },
+  "supply|28185|0017|0003": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0017|0003": {
+    "_empty": true
+  },
+  "supply|28185|0190|0002": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0190|0002": {
+    "_empty": true
+  },
+  "supply|28185|0019|0007": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0019|0007": {
+    "_empty": true
+  },
+  "supply|28185|0192|0001": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0192|0001": {
+    "_empty": true
+  },
+  "supply|28185|0020|0022": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0020|0022": {
+    "_empty": true
+  },
+  "supply|28185|0002|0007": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0002|0007": {
+    "_empty": true
+  },
+  "supply|28185|0397|0008": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0397|0008": {
+    "_empty": true
+  },
+  "supply|28185|0019|0003": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0019|0003": {
+    "_empty": true
+  },
+  "supply|28185|0020|0004": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0020|0004": {
+    "_empty": true
+  },
+  "supply|28185|0018|0006": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0018|0006": {
+    "_empty": true
+  },
+  "supply|28185|0033|0001": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0033|0001": {
+    "_empty": true
+  },
+  "supply|28185|0102|0000": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0102|0000": {
+    "_empty": true
+  },
+  "supply|28185|0016|0008": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0016|0008": {
+    "_empty": true
+  },
+  "supply|28185|0009|0029": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0009|0029": {
+    "_empty": true
+  },
+  "supply|28185|0009|0005": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0009|0005": {
+    "_empty": true
+  },
+  "supply|28185|0310|0001": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0310|0001": {
+    "_empty": true
+  },
+  "supply|28185|0397|0011": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0397|0011": {
+    "_empty": true
+  },
+  "supply|28185|0396|0011": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0396|0011": {
+    "_empty": true
+  },
+  "supply|28185|0015|0010": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0015|0010": {
+    "_empty": true
+  },
+  "supply|28185|0009|0031": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0009|0031": {
+    "_empty": true
+  },
+  "supply|28185|0016|0006": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0016|0006": {
+    "_empty": true
+  },
+  "supply|28185|0016|0007": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0016|0007": {
+    "_empty": true
+  },
+  "supply|28185|0019|0006": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0019|0006": {
+    "_empty": true
+  },
+  "supply|28185|0023|0003": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0023|0003": {
+    "_empty": true
+  },
+  "supply|28185|0157|0000": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0157|0000": {
+    "_empty": true
+  },
+  "supply|28185|0021|0059": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0021|0059": {
+    "_empty": true
+  },
+  "supply|28185|0396|0001": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0396|0001": {
+    "_empty": true
+  },
+  "supply|28185|0022|0022": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0022|0022": {
+    "_empty": true
+  },
+  "supply|28185|0016|0004": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0016|0004": {
+    "_empty": true
+  },
+  "supply|28185|0017|0005": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0017|0005": {
+    "_empty": true
+  },
+  "supply|28185|0018|0010": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0018|0010": {
+    "_empty": true
+  },
+  "supply|28185|0155|0001": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0155|0001": {
+    "_empty": true
+  },
+  "supply|28185|0092|0000": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0092|0000": {
+    "_empty": true
+  },
+  "supply|28185|0110|0000": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0110|0000": {
+    "_empty": true
+  },
+  "supply|28185|0002|0005": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0002|0005": {
+    "_empty": true
+  },
+  "supply|28185|0018|0007": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0018|0007": {
+    "_empty": true
+  },
+  "supply|28185|0022|0018": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0022|0018": {
+    "_empty": true
+  },
+  "supply|28185|0002|0009": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0002|0009": {
+    "_empty": true
+  },
+  "supply|28185|0030|0005": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0030|0005": {
+    "_empty": true
+  },
+  "supply|28185|0015|0011": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0015|0011": {
+    "_empty": true
+  },
+  "supply|28185|0021|0060": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0021|0060": {
+    "_empty": true
+  },
+  "supply|28185|0397|0002": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0397|0002": {
+    "_empty": true
+  },
+  "supply|28185|0021|0064": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0021|0064": {
+    "_empty": true
+  },
+  "supply|28185|0022|0021": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0022|0021": {
+    "_empty": true
+  },
+  "supply|28185|0114|0000": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0114|0000": {
+    "_empty": true
+  },
+  "supply|28185|0015|0012": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0015|0012": {
+    "_empty": true
+  },
+  "supply|28185|0021|0028": {
+    "_empty": true
+  },
+  "bldmeta3|28185|0021|0028": {
+    "_empty": true
+  },
+  "supply|41430|0846|0000": {
+    "_empty": true
+  },
+  "bldmeta3|41430|0846|0000": {
+    "_empty": true
+  },
+  "supply|41430|0844|0000": {
+    "_empty": true
+  },
+  "bldmeta3|41430|0844|0000": {
+    "_empty": true
+  },
+  "supply|41430|0414|0000": {
+    "_empty": true
+  },
+  "bldmeta3|41430|0414|0000": {
+    "_empty": true
+  },
+  "supply|41430|0842|0000": {
+    "_empty": true
+  },
+  "bldmeta3|41430|0842|0000": {
+    "_empty": true
+  },
+  "supply|41430|0771|0000": {
+    "_empty": true
+  },
+  "bldmeta3|41430|0771|0000": {
+    "_empty": true
+  },
+  "supply|41430|0795|0000": {
+    "_empty": true
+  },
+  "bldmeta3|41430|0795|0000": {
+    "_empty": true
+  },
+  "supply|41430|0774|0000": {
+    "_empty": true
+  },
+  "bldmeta3|41430|0774|0000": {
+    "_empty": true
+  },
+  "supply|41430|0790|0000": {
+    "_empty": true
+  },
+  "bldmeta3|41430|0790|0000": {
+    "_empty": true
+  },
+  "supply|41430|0799|0000": {
+    "_empty": true
+  },
+  "bldmeta3|41430|0799|0000": {
+    "_empty": true
+  },
+  "supply|41430|0401|0001": {
+    "_empty": true
+  },
+  "bldmeta3|41430|0401|0001": {
+    "_empty": true
+  },
+  "supply|41430|0843|0000": {
+    "_empty": true
+  },
+  "bldmeta3|41430|0843|0000": {
+    "_empty": true
+  },
+  "supply|41430|0643|0000": {
+    "_empty": true
+  },
+  "bldmeta3|41430|0643|0000": {
+    "_empty": true
   }
 }
