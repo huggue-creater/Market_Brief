@@ -768,11 +768,18 @@ def generate_search_json(ym_list: list):
                 d = t.get("dealDay",   "1").zfill(2)
                 deal_date = f"{y}-{m}-{d}"
                 deal_key  = f"{apt}|{deal_date}|{area:.4f}|{amount}|{t.get('floor', '')}"
+                tid = trade_id(t)
                 reported_date = (
-                    reported_dates.get(trade_id(t)) or
+                    reported_dates.get(tid) or
                     existing_reported.get(deal_key) or
                     deal_date
                 )
+                # existing_reported에 today_str이 잘못 들어간 경우 보정
+                # (신규 지역 첫 실행 때 과거 거래 전체에 today가 찍이는 버그)
+                if (reported_date == today_str
+                        and deal_date != today_str
+                        and not reported_dates.get(tid)):
+                    reported_date = deal_date
 
                 bjdong = region.get("bjdong") or ""
                 all_deals.append({
