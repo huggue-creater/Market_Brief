@@ -8379,5 +8379,26 @@
   "bldmeta3|41390|1862|0000": {
     "vlRat": "107.99",
     "bcRat": "20.26"
+  },
+  "supply|41450|0413|0007": {
+    "84.9": {
+      "supply_area": 119.71,
+      "pyeong": 36
+    },
+    "78.68": {
+      "supply_area": 110.9,
+      "pyeong": 34
+    },
+    "84.99": {
+      "supply_area": 119.8,
+      "pyeong": 36
+    },
+    "59.47": {
+      "supply_area": 83.83,
+      "pyeong": 25
+    }
+  },
+  "bldmeta3|41450|0413|0007": {
+    "_empty": true
   }
 }
