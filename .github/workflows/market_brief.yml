@@ -1,10 +1,10 @@
 name: Market Brief
 
 on:
-  # 06:20 KST Mon-Fri = 21:20 UTC Sun-Thu (GitHub Actions는 UTC 기준)
+  # 06:00 KST Mon-Fri = 21:00 UTC Sun-Thu (GitHub Actions는 UTC 기준)
   # 07:20 / 08:20 KST 백업: GitHub 스케줄 지연/미발화 대비, check_dup_run이 중복 방지
   schedule:
-    - cron: "20 21 * * 0-4"
+    - cron: "00 21 * * 0-4"
     - cron: "20 22 * * 0-4"
     - cron: "20 23 * * 0-4"
 
