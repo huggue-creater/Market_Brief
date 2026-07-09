@@ -69,7 +69,12 @@ REGIONS = [
     {"city": "용인", "name": "상현동", "lawd": "41465", "bjdong": "10700", "dong": "상현동", "telegram": True},
     {"city": "인천", "name": "연수동", "lawd": "28185", "bjdong": "10300", "dong": "연수동", "telegram": True},
     {"city": "인천", "name": "송도동", "lawd": "28185", "bjdong": "10800", "dong": "송도동", "telegram": True},
-    {"city": "의왕", "name": "내손동", "lawd": "41430", "bjdong": "10800", "dong": "내손동", "telegram": True},
+    # ── 검색 전용 (텔레그램 미발송) ──
+    {"city": "의왕", "name": "내손동", "lawd": "41430", "bjdong": "10800", "dong": "내손동", "telegram": False},
+    # ── 서울 강동구 ──
+    {"city": "강동", "name": "고덕동", "lawd": "11740", "bjdong": "10200", "dong": "고덕동", "telegram": False},
+    {"city": "강동", "name": "명일동", "lawd": "11740", "bjdong": "10100", "dong": "명일동", "telegram": False},
+    {"city": "강동", "name": "상일동", "lawd": "11740", "bjdong": "10300", "dong": "상일동", "telegram": False},
     # ── 하남 검색 전용 ──
     {"city": "하남", "name": "신장동", "lawd": "41450", "bjdong": "10600", "dong": "신장동", "telegram": False},
     {"city": "하남", "name": "창우동", "lawd": "41450", "bjdong": "10300", "dong": "창우동", "telegram": False},
