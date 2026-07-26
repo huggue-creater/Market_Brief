@@ -9796,5 +9796,34 @@
   },
   "bldmeta3|11740|0326|0009": {
     "_empty": true
+  },
+  "supply|11740|0343|0010": {
+    "73.87": {
+      "supply_area": 86.29,
+      "pyeong": 26
+    },
+    "83.43": {
+      "supply_area": 97.47,
+      "pyeong": 29
+    },
+    "68.56": {
+      "supply_area": 80.09,
+      "pyeong": 24
+    },
+    "78.78": {
+      "supply_area": 92.03,
+      "pyeong": 28
+    },
+    "59.91": {
+      "supply_area": 69.99,
+      "pyeong": 21
+    },
+    "54.27": {
+      "supply_area": 63.4,
+      "pyeong": 19
+    }
+  },
+  "bldmeta3|11740|0343|0010": {
+    "_empty": true
   }
 }
