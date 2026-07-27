@@ -61,6 +61,7 @@ CACHE_FILE          = Path("building_cache.json")
 SEARCH_JSON_FILE    = Path("search_data.json")
 REPORTED_DATES_FILE = Path("reported_dates.json")
 LAST_RUN_FILE       = Path("last_run.txt")
+NAVER_EVENTS_FILE   = Path("naver_events.json")   # 로컬 수집기(naver_collect.py)가 커밋
 
 # ── Region definitions ────────────────────────────────────────────────────────
 REGIONS = [
@@ -866,6 +867,76 @@ def generate_search_json(ym_list: list):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+# Feature 5 — 네이버 매물 변동 알림 (거래 예상 / 재등록 / 신규)
+# ══════════════════════════════════════════════════════════════════════════════
+
+MAX_NAVER_SOLD  = 25
+MAX_NAVER_REREG = 15
+MAX_NAVER_NEW   = 20
+
+
+def _fmt_dom(days: int) -> str:
+    return f"등록 {days}일차" if isinstance(days, int) and days >= 0 else ""
+
+
+def build_naver_message() -> Optional[str]:
+    """naver_events.json → 텔레그램 메시지. 오늘자 이벤트가 없으면 None(발송 생략)."""
+    events = load_json(NAVER_EVENTS_FILE, None)
+    if not events or events.get("firstRun"):
+        return None
+
+    # 로컬 수집이 오늘 돌지 않았으면(과거 이벤트) 재발송하지 않음
+    if events.get("date") != today_kst().isoformat():
+        log.info("네이버 이벤트가 오늘자가 아님(%s) — 발송 생략", events.get("date"))
+        return None
+
+    sold  = events.get("likelySold", [])
+    rereg = events.get("reregistered", [])
+    new   = events.get("newListings", [])
+    if not (sold or rereg or new):
+        return None
+
+    lines = [f"[네이버 매물 변동 - 하남]", f"{events['date']} 기준", ""]
+    c = events.get("counts", {})
+    lines.append(f"🔻 거래예상 {c.get('likelySold',0)} · "
+                 f"🔁 재등록 {c.get('reregistered',0)} · "
+                 f"🆕 신규 {c.get('new',0)}")
+
+    if sold:
+        lines.append("\n■ 거래 예상 (매물 내려감 = 추정 거래가)")
+        for s in sold[:MAX_NAVER_SOLD]:
+            dom = _fmt_dom(s.get("daysOnMarket"))
+            tail = f" · {dom}" if dom else ""
+            lines.append(f"🏠 {s['complexName']} {s['building']} {s['floor']}층")
+            lines.append(f"   {s['areaName']} {s['direction']} · "
+                         f"마지막호가 {s['lastPriceText']}{tail}")
+        if len(sold) > MAX_NAVER_SOLD:
+            lines.append(f"   …외 {len(sold)-MAX_NAVER_SOLD}건")
+
+    if rereg:
+        lines.append("\n■ 재등록 (호가 조정)")
+        for r in rereg[:MAX_NAVER_REREG]:
+            arrow = ""
+            if r["newPrice"] and r["oldPrice"]:
+                arrow = " ▲" if r["newPrice"] > r["oldPrice"] else (
+                    " ▼" if r["newPrice"] < r["oldPrice"] else " -")
+            lines.append(f"🔁 {r['complexName']} {r['building']} {r['areaName']} "
+                         f"{r['oldPriceText']} → {r['newPriceText']}{arrow}")
+        if len(rereg) > MAX_NAVER_REREG:
+            lines.append(f"   …외 {len(rereg)-MAX_NAVER_REREG}건")
+
+    if new:
+        lines.append("\n■ 신규 등록")
+        for n in new[:MAX_NAVER_NEW]:
+            lines.append(f"🆕 {n['complexName']} {n['building']} {n['areaName']} "
+                         f"{n['direction']} · {n['priceText']}")
+        if len(new) > MAX_NAVER_NEW:
+            lines.append(f"   …외 {len(new)-MAX_NAVER_NEW}건")
+
+    return "\n".join(lines)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 # Main
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -946,6 +1017,16 @@ def main():
         run_apartment_alerts(ym_list)
     except Exception as exc:
         log.error("아파트 알림 오류: %s", exc)
+
+    log.info("--- 네이버 매물 변동 ---")
+    try:
+        naver_msg = build_naver_message()
+        if naver_msg:
+            send_telegram_chunked(naver_msg)
+        else:
+            log.info("네이버 매물 변동 없음/스킵")
+    except Exception as exc:
+        log.error("네이버 매물 알림 오류: %s", exc)
 
     log.info("--- 검색 JSON ---")
     try:
