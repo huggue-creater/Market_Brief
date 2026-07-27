@@ -882,25 +882,42 @@ def _fmt_dom(days: int) -> str:
 def build_naver_message() -> Optional[str]:
     """naver_events.json → 텔레그램 메시지. 오늘자 이벤트가 없으면 None(발송 생략)."""
     events = load_json(NAVER_EVENTS_FILE, None)
-    if not events or events.get("firstRun"):
-        return None
+    today  = today_kst().isoformat()
 
-    # 로컬 수집이 오늘 돌지 않았으면(과거 이벤트) 재발송하지 않음
-    if events.get("date") != today_kst().isoformat():
-        log.info("네이버 이벤트가 오늘자가 아님(%s) — 발송 생략", events.get("date"))
-        return None
+    if not events:
+        return ("[네이버 매물 변동 - 하남]\n"
+                "⚠️ 수집 데이터가 없습니다 — 로컬 수집기 상태를 확인해 주세요.")
+
+    date = events.get("date", "?")
+
+    # 오늘 로컬 수집이 돌지 않음 (PC 꺼짐/절전 실패 등) → 상태 경고
+    if date != today:
+        return ("[네이버 매물 변동 - 하남]\n"
+                f"⚠️ 오늘({today}) 수집 기록이 없습니다. (마지막 수집 {date})\n"
+                "새벽에 PC가 켜져 있었는지/절전 상태였는지 확인해 주세요.")
+
+    # 첫 실행(기준 스냅샷)
+    if events.get("firstRun"):
+        total = events.get("counts", {}).get("total", 0)
+        return ("[네이버 매물 변동 - 하남]\n"
+                f"{date} 기준\n"
+                f"✅ 수집 완료 · 기준 스냅샷 {total:,}건 저장.\n"
+                "내일부터 거래예상·재등록·신규 변동이 표시됩니다.")
 
     sold  = events.get("likelySold", [])
     rereg = events.get("reregistered", [])
     new   = events.get("newListings", [])
-    if not (sold or rereg or new):
-        return None
 
-    lines = [f"[네이버 매물 변동 - 하남]", f"{events['date']} 기준", ""]
     c = events.get("counts", {})
-    lines.append(f"🔻 거래예상 {c.get('likelySold',0)} · "
+    lines = ["[네이버 매물 변동 - 하남]", f"{date} 기준", ""]
+    lines.append(f"✅ 수집 완료 · 🔻 거래예상 {c.get('likelySold',0)} · "
                  f"🔁 재등록 {c.get('reregistered',0)} · "
                  f"🆕 신규 {c.get('new',0)}")
+
+    # 변동이 하나도 없어도 '수집 완료'는 알림
+    if not (sold or rereg or new):
+        lines.append("\n오늘은 매물 변동이 없습니다.")
+        return "\n".join(lines)
 
     if sold:
         lines.append("\n■ 거래 예상 (매물 내려감 = 추정 거래가)")
