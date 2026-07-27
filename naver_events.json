@@ -1,13 +1,44 @@
 {
   "date": "2026-07-27",
-  "firstRun": true,
   "counts": {
-    "total": 3590,
-    "new": 0,
-    "reregistered": 0,
+    "total": 3591,
+    "new": 1,
+    "reregistered": 1,
     "likelySold": 0
   },
   "likelySold": [],
-  "reregistered": [],
-  "newListings": []
+  "reregistered": [
+    {
+      "dong": "선동",
+      "complexName": "미사강변리버뷰자이",
+      "building": "104동",
+      "floor": "고/29",
+      "direction": "남동향",
+      "areaName": "125C",
+      "oldPrice": 152000,
+      "oldPriceText": "15억 2,000",
+      "newPrice": 152000,
+      "newPriceText": "15억 2,000",
+      "newArticleNo": "2640400594",
+      "oldArticleNo": "2640089203"
+    }
+  ],
+  "newListings": [
+    {
+      "dong": "선동",
+      "complexNo": "111865",
+      "complexName": "리버스위트칸타빌",
+      "building": "105동",
+      "floor": "고/29",
+      "direction": "남동향",
+      "areaName": "118",
+      "area": 92,
+      "areaSupply": 118,
+      "priceText": "14억",
+      "price": 140000,
+      "confirmYmd": "20260727",
+      "feature": "방4개,인테리어,입주협의,로얄층,양창,9호선확정호재,주인거주,강추",
+      "realtor": "미사참공인중개사사무소"
+    }
+  ]
 }
