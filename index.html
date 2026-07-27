@@ -261,8 +261,10 @@ html,body{overflow-x:hidden;}
       <p id="naverSub">네이버 매물 변동 기준</p>
     </div>
   </div>
-  <div class="nv-intro">네이버에 올라와 있던 매물이 사라지면 실제 거래됐을 가능성이 높습니다(재등록 제외). <b>마지막 호가 = 추정 거래가</b>. 동·평형·향이 같은 매물이 다시 올라오면 '재등록'으로 분류합니다.</div>
+  <div class="nv-intro">네이버에 올라와 있던 매물이 사라지면 실제 거래됐을 가능성이 높습니다(재등록 제외). <b>마지막 호가 = 추정 거래가</b>(그래프의 <b style="color:var(--blue)">파란 점</b>). 동·평형·향이 같은 매물이 다시 올라오면 '재등록'으로 분류합니다.</div>
+  <div class="dy-chips" id="naverChips"></div>
   <div class="dy-chips" id="naverTabs"></div>
+  <div id="naverNotice"></div>
   <div id="naverBody"></div>
   <div class="dy-f" id="naverFooter"></div>
 </div>
@@ -273,7 +275,7 @@ const NAVER_DATA = {
   "date": "2026-07-27",
   "firstRun": true,
   "counts": {
-    "total": 3591,
+    "total": 3590,
     "new": 0,
     "reregistered": 0,
     "likelySold": 0
@@ -74916,29 +74918,70 @@ function render(){
   renderList();
 }
 
-let naverTab="sold";
-function openNaver(){ if(typeof NAVER_DATA==="undefined"||!NAVER_DATA){alert("매물 데이터가 아직 없습니다. 로컬 수집 후 갱신됩니다.");return;} view="naver"; naverTab="sold"; render(); }
-function setNaverTab(k){ naverTab=k; render(); }
-function nvCards(items, kind){
-  if(!items||!items.length) return '<div class="dy-empty">해당 항목이 없습니다.</div>';
-  return items.map(s=>{
-    if(kind==="sold"){
-      const dom=(typeof s.daysOnMarket==="number"&&s.daysOnMarket>=0)?` · 등록 ${s.daysOnMarket}일차`:"";
-      return `<div class="nv-card sold"><div class="nv-top"><span class="nv-apt">${s.complexName}</span><span class="nv-price">${s.lastPriceText}</span></div>`
-        +`<div class="nv-sub">${s.building||""} ${s.floor||""}층 · ${s.areaName||""} ${s.direction||""}</div>`
-        +`<div class="nv-meta">${s.dong}${dom} · 추정 거래가</div></div>`;
-    }
-    if(kind==="rereg"){
-      const up=s.newPrice>s.oldPrice?"▲":(s.newPrice<s.oldPrice?"▼":"–");
-      const cls=s.newPrice<s.oldPrice?"down":"";
-      return `<div class="nv-card"><div class="nv-top"><span class="nv-apt">${s.complexName}</span><span class="nv-price ${cls}">${s.oldPriceText} → ${s.newPriceText} ${up}</span></div>`
-        +`<div class="nv-sub">${s.building||""} · ${s.areaName||""} ${s.direction||""}</div>`
-        +`<div class="nv-meta">${s.dong} · 재등록(호가 조정)</div></div>`;
-    }
-    return `<div class="nv-card"><div class="nv-top"><span class="nv-apt">${s.complexName}</span><span class="nv-price">${s.priceText}</span></div>`
-      +`<div class="nv-sub">${s.building||""} · ${s.areaName||""} ${s.direction||""}</div>`
-      +`<div class="nv-meta">${s.dong} · 신규 등록</div></div>`;
-}).join("");
+let naverTab="sold", nvSelDongs=[], nvPanelOpen=false, nvOpenId=null;
+const NV_DONGS=["망월동","선동","신장동","풍산동","창우동","덕풍동"];
+function nvNorm(s){return (s||"").replace(/\s+/g,"").replace(/[A-Za-z]/g,"").replace(/\([^)]*\)/g,"");}
+function openNaver(){ if(typeof NAVER_DATA==="undefined"||!NAVER_DATA){alert("매물 데이터가 아직 없습니다. 로컬 수집 후 갱신됩니다.");return;} view="naver"; render(); }
+function setNaverTab(k){ naverTab=k; nvOpenId=null; render(); }
+function nvItemsRaw(){ const nv=NAVER_DATA||{}; if(naverTab==="rereg")return nv.reregistered||[]; if(naverTab==="new")return nv.newListings||[]; return nv.likelySold||[]; }
+function nvFilter(items){ return nvSelDongs.length===0?items:items.filter(x=>nvSelDongs.includes(x.dong)); }
+function nvHistory(complexName, area){
+  const key=nvNorm(complexName), ex=parseFloat(area);
+  if(!key||!ex||typeof DATA==="undefined") return [];
+  return DATA.filter(d=>!d.canceled && nvNorm(d.apt)===key && Math.abs(d.area-ex)<=1.5).sort((a,b)=>a.date.localeCompare(b.date));
+}
+function nvSpark(hist, predAmount, predDate){
+  const W=130,H=58,pL=26,pR=4,pT=7,pB=13,pw=W-pL-pR,ph=H-pT-pB;
+  const rp=hist.map(p=>({t:+new Date(p.date+"T00:00:00"),a:p.amount}));
+  const pt=(+new Date((predDate||"")+"T00:00:00"))||(rp.length?rp[rp.length-1].t+86400000:0);
+  const all=rp.concat(predAmount?[{t:pt,a:predAmount}]:[]);
+  if(all.length<2) return `<span class="spark-none" style="width:${W}px;height:${H}px;display:inline-block"></span>`;
+  let mn=Infinity,mx=-Infinity; for(const p of all){if(p.a<mn)mn=p.a;if(p.a>mx)mx=p.a;}
+  if(mn===mx){mn*=.97;mx*=1.03;} const pad=(mx-mn)*.08; mn-=pad; mx+=pad;
+  const t0=all[0].t,t1=all[all.length-1].t;
+  const xA=t=>t1===t0?pL+pw/2:pL+(t-t0)/(t1-t0)*pw, yA=a=>pT+ph-(a-mn)/(mx-mn)*ph;
+  const eok=v=>(v/10000).toFixed(v%10000===0?0:1).replace(/\.0$/,"");
+  const fmtM=t=>{const d=new Date(t);return(d.getMonth()+1)+"월";};
+  let out=`<svg class="spark-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`
+   +`<line x1="${pL}" y1="${pT}" x2="${W-pR}" y2="${pT}" stroke="#E7E0D2"/>`
+   +`<line x1="${pL}" y1="${pT+ph}" x2="${W-pR}" y2="${pT+ph}" stroke="#E7E0D2"/>`
+   +`<text x="2" y="${pT+3}" font-size="7.5" fill="#9A9286">${eok(mx)}억</text>`
+   +`<text x="2" y="${pT+ph+3}" font-size="7.5" fill="#9A9286">${eok(mn)}억</text>`
+   +`<text x="${pL}" y="${H-2}" font-size="7.5" fill="#9A9286">${fmtM(t0)}</text>`
+   +`<text x="${W-pR}" y="${H-2}" font-size="7.5" fill="#9A9286" text-anchor="end">${fmtM(t1)}</text>`;
+  if(rp.length>=2){const rpath=rp.map((p,i)=>(i?"L":"M")+xA(p.t).toFixed(1)+" "+yA(p.a).toFixed(1)).join(" ");out+=`<path d="${rpath}" fill="none" stroke="#B23A2E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>`;}
+  if(rp.length){const l=rp[rp.length-1];out+=`<circle cx="${xA(l.t).toFixed(1)}" cy="${yA(l.a).toFixed(1)}" r="2.6" fill="#B23A2E"/>`;}
+  if(predAmount){const px=xA(pt).toFixed(1),py=yA(predAmount).toFixed(1);
+    if(rp.length){const l=rp[rp.length-1];out+=`<line x1="${xA(l.t).toFixed(1)}" y1="${yA(l.a).toFixed(1)}" x2="${px}" y2="${py}" stroke="#2F5A8F" stroke-width="1.6" stroke-dasharray="3 2" opacity=".8"/>`;}
+    out+=`<circle cx="${px}" cy="${py}" r="3.4" fill="#2F5A8F" stroke="#fff" stroke-width="1.2"/>`;}
+  return out+`</svg>`;
+}
+function nvSoldCard(s){
+  const id="nv"+(s.articleNo||(s.complexName+s.building+s.areaName));
+  const isOpen=nvOpenId===id;
+  const hist=nvHistory(s.complexName,s.area);
+  const dom=(typeof s.daysOnMarket==="number"&&s.daysOnMarket>=0)?` · 등록 ${s.daysOnMarket}일차`:"";
+  let h=`<div class="dy-item${isOpen?" open":""}" data-nvid="${id}">`
+   +`<div class="dy-item-head"><div class="dy-item-l"><div class="dy-apt"><span>${s.complexName}</span><span class="dy-caret${isOpen?" up":""}">▾</span></div>`
+   +`<div class="dy-sub">하남 ${s.dong} · 전용 ${s.area}㎡ · ${s.areaName} · ${s.floor}층 · ${s.direction}</div>`
+   +`<div class="dy-sub">매물 사라짐 ${(s.date||"").slice(2)}${dom}</div></div>`
+   +`<div class="dy-item-mid">${nvSpark(hist,s.lastPrice,s.date)}</div>`
+   +`<div class="dy-item-r"><div class="dy-price" style="color:var(--blue)">${s.lastPriceText}</div><div class="dy-tags"><span class="t dr">거래예상</span></div></div></div>`;
+  if(isOpen){
+    h+=`<div class="dy-hist"><div class="dy-hist-h">${s.areaName} 실거래 이력 + 예상</div>`;
+    h+=`<div class="dy-hist-row"><span class="hd">${(s.date||"").slice(2)}</span><span class="hs" style="color:var(--blue)">예상 거래가(마지막 호가)</span><span class="hp" style="color:var(--blue)">${s.lastPriceText} ●</span></div>`;
+    if(hist.length){for(const x of hist.slice().reverse())h+=`<div class="dy-hist-row"><span class="hd">${x.date.slice(2)}</span><span class="hs">${x.floor}층${x.isHigh?" · 🔥신고가":""}</span><span class="hp">${won(x.amount)}</span></div>`;}
+    else h+=`<div class="dy-hist-none">이전 실거래 기록 없음 (예상가만 표시)</div>`;
+    h+=`</div>`;
+  }
+  return h+`</div>`;
+}
+function nvOtherCard(s,kind){
+  if(kind==="rereg"){const up=s.newPrice>s.oldPrice?"▲":(s.newPrice<s.oldPrice?"▼":"–");const cls=s.newPrice<s.oldPrice?"down":"";
+    return `<div class="nv-card"><div class="nv-top"><span class="nv-apt">${s.complexName}</span><span class="nv-price ${cls}">${s.oldPriceText} → ${s.newPriceText} ${up}</span></div>`
+     +`<div class="nv-sub">하남 ${s.dong} · ${s.building||""} · ${s.areaName||""} ${s.direction||""}</div><div class="nv-meta">재등록(호가 조정)</div></div>`;}
+  return `<div class="nv-card"><div class="nv-top"><span class="nv-apt">${s.complexName}</span><span class="nv-price">${s.priceText}</span></div>`
+   +`<div class="nv-sub">하남 ${s.dong} · ${s.building||""} · ${s.areaName||""} ${s.direction||""}</div><div class="nv-meta">신규 등록</div></div>`;
 }
 function renderNaver(){
   document.getElementById("listView").style.display="none";
@@ -74946,19 +74989,43 @@ function renderNaver(){
   document.getElementById("compareView").style.display="none";
   document.getElementById("naverView").style.display="";
   const nv=NAVER_DATA, sub=document.getElementById("naverSub");
-  const tabsEl=document.getElementById("naverTabs"), body=document.getElementById("naverBody");
+  const chipsEl=document.getElementById("naverChips"), tabsEl=document.getElementById("naverTabs");
+  const noticeEl=document.getElementById("naverNotice"), body=document.getElementById("naverBody");
   document.getElementById("naverFooter").textContent="네이버 부동산 매물 기준 · 로컬 수집";
-  if(!nv){ tabsEl.innerHTML=""; sub.textContent=""; body.innerHTML='<div class="dy-empty">매물 데이터가 아직 없습니다.</div>'; return; }
+  if(!nv){ chipsEl.innerHTML="";tabsEl.innerHTML="";noticeEl.innerHTML="";sub.textContent=""; body.innerHTML='<div class="dy-empty">매물 데이터가 아직 없습니다.</div>'; return; }
   sub.textContent=`${nv.date||""} 기준 · 하남 6개 동`;
-  const c=nv.counts||{};
-  if(nv.firstRun){ tabsEl.innerHTML=""; body.innerHTML=`<div class="dy-empty">기준 스냅샷 수집 완료 (현재 매물 ${c.total||0}건).<br>다음 수집부터 거래예상·재등록·신규 변동이 표시됩니다.</div>`; return; }
-  const tabs=[["sold",`거래예상 ${c.likelySold||0}`],["rereg",`재등록 ${c.reregistered||0}`],["new",`신규 ${c.new||0}`]];
+  const allOn=nvSelDongs.length===0;
+  const lbl=allOn?"하남 전체":nvSelDongs.length===1?nvSelDongs[0]:`${nvSelDongs[0]} 외 ${nvSelDongs.length-1}곳`;
+  const items=`<div class="rc-dong-item rc-dong-all${allOn?" on":""}" data-nvdong="__all__"><span class="box"></span><span>하남 전체</span></div>`
+    +NV_DONGS.map(d=>`<div class="rc-dong-item${nvSelDongs.includes(d)?" on":""}" data-nvdong="${d}"><span class="box"></span><span>${d}</span></div>`).join("");
+  chipsEl.innerHTML=`<button class="rc on">하남</button><div class="rc-dong-wrap"><button class="rc-dong-btn${nvPanelOpen?" open":""}" id="nvDongBtn">${lbl}<span class="rc-dong-arrow">▾</span></button><div class="rc-dong-panel${nvPanelOpen?" open":""}">${items}</div></div>`;
+  document.getElementById("nvDongBtn").onclick=e=>{e.stopPropagation();nvPanelOpen=!nvPanelOpen;renderNaver();};
+  chipsEl.querySelectorAll("[data-nvdong]").forEach(el=>el.onclick=e=>{e.stopPropagation();const d=el.dataset.nvdong;if(d==="__all__")nvSelDongs=[];else{const i=nvSelDongs.indexOf(d);i>=0?nvSelDongs.splice(i,1):nvSelDongs.push(d);}nvOpenId=null;renderNaver();});
+  if(nv.firstRun){ tabsEl.innerHTML="";noticeEl.innerHTML=""; body.innerHTML=`<div class="dy-empty">기준 스냅샷 수집 완료 (현재 매물 ${(nv.counts||{}).total||0}건).<br>다음 수집부터 거래예상·재등록·신규 변동이 표시됩니다.</div>`; return; }
+  const M={sold:"likelySold",rereg:"reregistered",new:"newListings"};
+  const cnt=k=>nvFilter(nv[M[k]]||[]).length;
+  const tabs=[["sold",`거래예상 ${cnt("sold")}`],["rereg",`재등록 ${cnt("rereg")}`],["new",`신규 ${cnt("new")}`]];
   tabsEl.innerHTML=tabs.map(([k,label])=>`<button class="${k===naverTab?'on':''}" onclick="setNaverTab('${k}')">${label}</button>`).join("");
-  let items, kind;
-  if(naverTab==="rereg"){items=nv.reregistered;kind="rereg";}
-  else if(naverTab==="new"){items=nv.newListings;kind="new";}
-  else {items=nv.likelySold;kind="sold";}
-  body.innerHTML=nvCards(items,kind);
+  const items2=nvFilter(nvItemsRaw());
+  const loc=allOn?"하남 전체":nvSelDongs.length===1?`하남 ${nvSelDongs[0]}`:`하남 ${nvSelDongs[0]} 외 ${nvSelDongs.length-1}곳`;
+  const tabName={sold:"거래 예상 매물",rereg:"재등록 매물",new:"신규 등록 매물"}[naverTab];
+  noticeEl.innerHTML=`<div class="dy-notice"><div class="dy-notice-title">${loc} ${tabName}입니다.</div><div class="dy-notice-sub">${nv.date||""} 기준 총 ${items2.length}건${naverTab==="sold"?" · 마지막 호가 = 추정 거래가":""}</div></div>`;
+  if(!items2.length){ body.innerHTML='<div class="dy-empty">해당 지역/항목에 매물이 없습니다.</div>'; return; }
+  if(naverTab==="sold"){
+    const g={}; for(const s of items2){const k=s.date||nv.date;(g[k]=g[k]||[]).push(s);}
+    const DOWk=["일","월","화","수","목","금","토"];
+    const days=Object.entries(g).map(([date,list])=>({date,list:list.slice().sort((a,b)=>(b.lastPrice||0)-(a.lastPrice||0))})).sort((a,b)=>b.date.localeCompare(a.date));
+    let html='<div class="dy-timeline">';
+    for(const d of days){const p=d.date.split("-");const dt=new Date(d.date+"T00:00:00");
+      html+=`<section class="dy-day"><div class="dy-date"><div class="dy-num">${+p[2]||""}</div><div class="dy-mon">${+p[1]||""}월</div><div class="dy-dow">${DOWk[dt.getDay()]||""}</div></div><div class="dy-items">`;
+      for(const s of d.list)html+=nvSoldCard(s);
+      html+=`</div></section>`;
+    }
+    body.innerHTML=html+'</div>';
+    body.querySelectorAll("[data-nvid] .dy-item-head").forEach(el=>el.onclick=()=>{const id=el.parentElement.dataset.nvid;nvOpenId=nvOpenId===id?null:id;renderNaver();});
+  } else {
+    body.innerHTML=items2.map(s=>nvOtherCard(s,naverTab)).join("");
+  }
 }
 
 function renderList(){
@@ -75332,6 +75399,7 @@ document.addEventListener("click",()=>{
 document.getElementById("cmpBtn").addEventListener("click",openCompare);
 document.getElementById("naverBtn").addEventListener("click",openNaver);
 document.getElementById("naverBack").addEventListener("click",()=>{view="list";render();});
+document.addEventListener("click",()=>{if(nvPanelOpen){nvPanelOpen=false;if(view==="naver")renderNaver();}});
 
 init();
 </script>

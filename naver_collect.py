@@ -130,7 +130,8 @@ def normalize(dong: str, cx: dict, a: dict) -> dict:
         "floor": a.get("floorInfo", ""),            # "4/26" / "중/30"
         "direction": a.get("direction", ""),        # 향
         "areaName": a.get("areaName", ""),          # 평형 타입 "84A"
-        "area": a.get("area1", ""),                 # 공급면적 ㎡
+        "area": a.get("area2", ""),                 # 전용면적 ㎡ (실거래 매칭·표시)
+        "areaSupply": a.get("area1", ""),           # 공급면적 ㎡
         "priceText": a.get("dealOrWarrantPrc", ""),
         "price": parse_price(a.get("dealOrWarrantPrc", "")),
         "confirmYmd": a.get("articleConfirmYmd", ""),
@@ -203,8 +204,9 @@ def analyze(prev_articles: dict, today: dict, today_str: str) -> dict:
                 "dong": r["dong"], "complexName": r["complexName"],
                 "building": r["building"], "floor": r["floor"],
                 "direction": r["direction"], "areaName": r["areaName"],
-                "area": r["area"], "lastPrice": r["price"],
-                "lastPriceText": r["priceText"], "confirmYmd": r["confirmYmd"],
+                "area": r["area"], "areaSupply": r.get("areaSupply", ""),
+                "lastPrice": r["price"], "lastPriceText": r["priceText"],
+                "confirmYmd": r["confirmYmd"], "date": today_str,
                 "firstSeen": first, "daysOnMarket": dom, "articleNo": rid,
             })
 
