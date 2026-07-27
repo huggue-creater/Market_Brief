@@ -1,0 +1,26 @@
+name: Naver Probe (feasibility test)
+
+# 수동 실행 전용 — 네이버 부동산 API가 Actions에서 뚫리는지 1회 테스트.
+# 커밋/발송 없음. 로그만 확인.
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install requests
+        run: pip install requests
+
+      - name: Run Naver access probe
+        run: python probe_actions.py
