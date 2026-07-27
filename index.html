@@ -116,6 +116,17 @@ body{background:var(--paper);color:var(--ink);font-family:'Pretendard',system-ui
 .tag.cx{background:#E8E4DC;color:#857C6C;}
 .cmp-btn{margin-left:auto;flex:none;padding:7px 13px;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
 .cmp-btn:hover{border-color:#D8CDB8;background:#F3EEE3;}
+.nv-btn{margin-left:8px;flex:none;padding:7px 13px;border:1px solid var(--seal);background:#fff;color:var(--seal);border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.nv-btn:hover{background:#FBEEEC;}
+.nv-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 15px;margin-bottom:9px;}
+.nv-card.sold{border-left:4px solid var(--seal);}
+.nv-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.nv-apt{font-size:15px;font-weight:700;}
+.nv-price{font-size:15px;font-weight:800;color:var(--seal);white-space:nowrap;}
+.nv-price.down{color:var(--blue);}
+.nv-sub{font-size:12.5px;color:var(--ink);margin-top:4px;}
+.nv-meta{font-size:11px;color:var(--mut);margin-top:4px;}
+.nv-intro{background:#fff;border-left:4px solid var(--blue);border-radius:0 8px 8px 0;padding:11px 15px;margin-bottom:14px;font-size:12.5px;color:#6f6a5d;line-height:1.6;}
 .cmp-search-wrap{position:relative;margin-bottom:10px;}
 .cmp-search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:17px;color:var(--mut);}
 .cmp-search-input{width:100%;padding:11px 36px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:15px;outline:none;color:var(--ink);}
@@ -194,6 +205,7 @@ html,body{overflow-x:hidden;}
       <p id="subtitle">갱신 중...</p>
     </div>
     <button class="cmp-btn" id="cmpBtn">단지 비교</button>
+    <button class="nv-btn" id="naverBtn">거래예상</button>
   </div>
   <div class="dy-search">
     <span>⌕</span>
@@ -240,7 +252,37 @@ html,body{overflow-x:hidden;}
   </table>
 </div>
 
+<div class="dy" id="naverView" style="display:none">
+  <button class="detail-back" id="naverBack">← 실거래로</button>
+  <div class="dy-h">
+    <div class="dy-seal" style="border-color:var(--seal);color:var(--seal)">거<br>래<br>예상</div>
+    <div>
+      <h1>거래 예상 매물</h1>
+      <p id="naverSub">네이버 매물 변동 기준</p>
+    </div>
+  </div>
+  <div class="nv-intro">네이버에 올라와 있던 매물이 사라지면 실제 거래됐을 가능성이 높습니다(재등록 제외). <b>마지막 호가 = 추정 거래가</b>. 동·평형·향이 같은 매물이 다시 올라오면 '재등록'으로 분류합니다.</div>
+  <div class="dy-chips" id="naverTabs"></div>
+  <div id="naverBody"></div>
+  <div class="dy-f" id="naverFooter"></div>
+</div>
+
 <script>
+// %%NAVER_DATA_START%%
+const NAVER_DATA = {
+  "date": "2026-07-27",
+  "firstRun": true,
+  "counts": {
+    "total": 3591,
+    "new": 0,
+    "reregistered": 0,
+    "likelySold": 0
+  },
+  "likelySold": [],
+  "reregistered": [],
+  "newListings": []
+};
+// %%NAVER_DATA_END%%
 // %%SEARCH_DATA_START%%
 const SEARCH_DATA = {
   "generated_at": "2026-07-27 05:44:33",
@@ -74870,7 +74912,53 @@ function sparkline(points,opts){
 function render(){
   if(view==="detail"){renderDetail();return;}
   if(view==="compare"){renderCompare();return;}
+  if(view==="naver"){renderNaver();return;}
   renderList();
+}
+
+let naverTab="sold";
+function openNaver(){ if(typeof NAVER_DATA==="undefined"||!NAVER_DATA){alert("매물 데이터가 아직 없습니다. 로컬 수집 후 갱신됩니다.");return;} view="naver"; naverTab="sold"; render(); }
+function setNaverTab(k){ naverTab=k; render(); }
+function nvCards(items, kind){
+  if(!items||!items.length) return '<div class="dy-empty">해당 항목이 없습니다.</div>';
+  return items.map(s=>{
+    if(kind==="sold"){
+      const dom=(typeof s.daysOnMarket==="number"&&s.daysOnMarket>=0)?` · 등록 ${s.daysOnMarket}일차`:"";
+      return `<div class="nv-card sold"><div class="nv-top"><span class="nv-apt">${s.complexName}</span><span class="nv-price">${s.lastPriceText}</span></div>`
+        +`<div class="nv-sub">${s.building||""} ${s.floor||""}층 · ${s.areaName||""} ${s.direction||""}</div>`
+        +`<div class="nv-meta">${s.dong}${dom} · 추정 거래가</div></div>`;
+    }
+    if(kind==="rereg"){
+      const up=s.newPrice>s.oldPrice?"▲":(s.newPrice<s.oldPrice?"▼":"–");
+      const cls=s.newPrice<s.oldPrice?"down":"";
+      return `<div class="nv-card"><div class="nv-top"><span class="nv-apt">${s.complexName}</span><span class="nv-price ${cls}">${s.oldPriceText} → ${s.newPriceText} ${up}</span></div>`
+        +`<div class="nv-sub">${s.building||""} · ${s.areaName||""} ${s.direction||""}</div>`
+        +`<div class="nv-meta">${s.dong} · 재등록(호가 조정)</div></div>`;
+    }
+    return `<div class="nv-card"><div class="nv-top"><span class="nv-apt">${s.complexName}</span><span class="nv-price">${s.priceText}</span></div>`
+      +`<div class="nv-sub">${s.building||""} · ${s.areaName||""} ${s.direction||""}</div>`
+      +`<div class="nv-meta">${s.dong} · 신규 등록</div></div>`;
+}).join("");
+}
+function renderNaver(){
+  document.getElementById("listView").style.display="none";
+  document.getElementById("detailView").style.display="none";
+  document.getElementById("compareView").style.display="none";
+  document.getElementById("naverView").style.display="";
+  const nv=NAVER_DATA, sub=document.getElementById("naverSub");
+  const tabsEl=document.getElementById("naverTabs"), body=document.getElementById("naverBody");
+  document.getElementById("naverFooter").textContent="네이버 부동산 매물 기준 · 로컬 수집";
+  if(!nv){ tabsEl.innerHTML=""; sub.textContent=""; body.innerHTML='<div class="dy-empty">매물 데이터가 아직 없습니다.</div>'; return; }
+  sub.textContent=`${nv.date||""} 기준 · 하남 6개 동`;
+  const c=nv.counts||{};
+  if(nv.firstRun){ tabsEl.innerHTML=""; body.innerHTML=`<div class="dy-empty">기준 스냅샷 수집 완료 (현재 매물 ${c.total||0}건).<br>다음 수집부터 거래예상·재등록·신규 변동이 표시됩니다.</div>`; return; }
+  const tabs=[["sold",`거래예상 ${c.likelySold||0}`],["rereg",`재등록 ${c.reregistered||0}`],["new",`신규 ${c.new||0}`]];
+  tabsEl.innerHTML=tabs.map(([k,label])=>`<button class="${k===naverTab?'on':''}" onclick="setNaverTab('${k}')">${label}</button>`).join("");
+  let items, kind;
+  if(naverTab==="rereg"){items=nv.reregistered;kind="rereg";}
+  else if(naverTab==="new"){items=nv.newListings;kind="new";}
+  else {items=nv.likelySold;kind="sold";}
+  body.innerHTML=nvCards(items,kind);
 }
 
 function renderList(){
@@ -75242,6 +75330,8 @@ document.addEventListener("click",()=>{
   if(changed)render();
 });
 document.getElementById("cmpBtn").addEventListener("click",openCompare);
+document.getElementById("naverBtn").addEventListener("click",openNaver);
+document.getElementById("naverBack").addEventListener("click",()=>{view="list";render();});
 
 init();
 </script>
