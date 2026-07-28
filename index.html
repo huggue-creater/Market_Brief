@@ -262,6 +262,11 @@ html,body{overflow-x:hidden;}
     </div>
   </div>
   <div class="nv-intro">네이버에 올라와 있던 매물이 사라지면 실제 거래됐을 가능성이 높습니다(재등록 제외). <b>마지막 호가 = 추정 거래가</b>(그래프의 <b style="color:var(--blue)">파란 점</b>). 동·평형·향이 같은 매물이 다시 올라오면 '재등록'으로 분류합니다.</div>
+  <div class="dy-search">
+    <span>⌕</span>
+    <input type="text" id="nvSearchInput" placeholder="단지명 검색...">
+    <button id="nvClearBtn">✕</button>
+  </div>
   <div class="dy-chips" id="naverChips"></div>
   <div class="dy-chips" id="naverTabs"></div>
   <div id="naverNotice"></div>
@@ -276,8 +281,8 @@ const NAVER_DATA = {
   "counts": {
     "total": 3544,
     "new": 6,
-    "reregistered": 71,
-    "likelySold": 53
+    "reregistered": 64,
+    "likelySold": 51
   },
   "likelySold": [
     {
@@ -585,40 +590,6 @@ const NAVER_DATA = {
       "firstSeen": "2026-07-27",
       "daysOnMarket": 1,
       "articleNo": "2634622445"
-    },
-    {
-      "dong": "신장동",
-      "complexName": "하남유니온시티에일린의뜰",
-      "building": "108동",
-      "floor": "저/23",
-      "direction": "남서향",
-      "areaName": "112A",
-      "area": 84,
-      "areaSupply": 112,
-      "lastPrice": 135000,
-      "lastPriceText": "13억 5,000",
-      "confirmYmd": "20260627",
-      "date": "2026-07-28",
-      "firstSeen": "2026-07-27",
-      "daysOnMarket": 1,
-      "articleNo": "2634609369"
-    },
-    {
-      "dong": "신장동",
-      "complexName": "하남유니온시티에일린의뜰",
-      "building": "108동",
-      "floor": "저/23",
-      "direction": "남서향",
-      "areaName": "112A",
-      "area": 84,
-      "areaSupply": 112,
-      "lastPrice": 135000,
-      "lastPriceText": "13억 5,000",
-      "confirmYmd": "20260627",
-      "date": "2026-07-28",
-      "firstSeen": "2026-07-27",
-      "daysOnMarket": 1,
-      "articleNo": "2634613134"
     },
     {
       "dong": "망월동",
@@ -1395,20 +1366,6 @@ const NAVER_DATA = {
     },
     {
       "dong": "망월동",
-      "complexName": "미사레스티아",
-      "building": "3101동",
-      "floor": "저/29",
-      "direction": "남동향",
-      "areaName": "113C",
-      "oldPrice": 123000,
-      "oldPriceText": "12억 3,000",
-      "newPrice": 123000,
-      "newPriceText": "12억 3,000",
-      "newArticleNo": "2640405531",
-      "oldArticleNo": "2640082848"
-    },
-    {
-      "dong": "망월동",
       "complexName": "미사강변한신휴플러스",
       "building": "1109동",
       "floor": "저/22",
@@ -1504,20 +1461,6 @@ const NAVER_DATA = {
       "newPriceText": "14억 7,000",
       "newArticleNo": "2640403771",
       "oldArticleNo": "2639841928"
-    },
-    {
-      "dong": "망월동",
-      "complexName": "미사레스티아",
-      "building": "3105동",
-      "floor": "중/29",
-      "direction": "남향",
-      "areaName": "113A",
-      "oldPrice": 125000,
-      "oldPriceText": "12억 5,000",
-      "newPrice": 125000,
-      "newPriceText": "12억 5,000",
-      "newArticleNo": "2640405590",
-      "oldArticleNo": "2640084703"
     },
     {
       "dong": "망월동",
@@ -1675,34 +1618,6 @@ const NAVER_DATA = {
     },
     {
       "dong": "선동",
-      "complexName": "리버나인",
-      "building": "904동",
-      "floor": "저/15",
-      "direction": "남향",
-      "areaName": "113B",
-      "oldPrice": 125000,
-      "oldPriceText": "12억 5,000",
-      "newPrice": 125000,
-      "newPriceText": "12억 5,000",
-      "newArticleNo": "2640406034",
-      "oldArticleNo": "2639947570"
-    },
-    {
-      "dong": "망월동",
-      "complexName": "미사레스티아",
-      "building": "3101동",
-      "floor": "중/29",
-      "direction": "남동향",
-      "areaName": "113C",
-      "oldPrice": 123000,
-      "oldPriceText": "12억 3,000",
-      "newPrice": 123000,
-      "newPriceText": "12억 3,000",
-      "newArticleNo": "2640406727",
-      "oldArticleNo": "2640083642"
-    },
-    {
-      "dong": "선동",
       "complexName": "미사강변푸르지오2차",
       "building": "108동",
       "floor": "17/28",
@@ -1742,20 +1657,6 @@ const NAVER_DATA = {
       "newPriceText": "16억",
       "newArticleNo": "2640403879",
       "oldArticleNo": "2639945350"
-    },
-    {
-      "dong": "풍산동",
-      "complexName": "미사강변센트럴자이",
-      "building": "104동",
-      "floor": "1/29",
-      "direction": "남서향",
-      "areaName": "130",
-      "oldPrice": 170000,
-      "oldPriceText": "17억",
-      "newPrice": 170000,
-      "newPriceText": "17억",
-      "newArticleNo": "2640403618",
-      "oldArticleNo": "2640083737"
     },
     {
       "dong": "망월동",
@@ -1854,20 +1755,6 @@ const NAVER_DATA = {
       "newPriceText": "11억 8,000",
       "newArticleNo": "2640406249",
       "oldArticleNo": "2640106547"
-    },
-    {
-      "dong": "망월동",
-      "complexName": "미사레스티아",
-      "building": "3106동",
-      "floor": "중/29",
-      "direction": "남서향",
-      "areaName": "113B",
-      "oldPrice": 125000,
-      "oldPriceText": "12억 5,000",
-      "newPrice": 125000,
-      "newPriceText": "12억 5,000",
-      "newArticleNo": "2640403464",
-      "oldArticleNo": "2640083914"
     },
     {
       "dong": "망월동",
@@ -1994,20 +1881,6 @@ const NAVER_DATA = {
       "newPriceText": "16억",
       "newArticleNo": "2640403774",
       "oldArticleNo": "2639865233"
-    },
-    {
-      "dong": "선동",
-      "complexName": "리버나인",
-      "building": "903동",
-      "floor": "중/18",
-      "direction": "남향",
-      "areaName": "113B",
-      "oldPrice": 125000,
-      "oldPriceText": "12억 5,000",
-      "newPrice": 125000,
-      "newPriceText": "12억 5,000",
-      "newArticleNo": "2640407148",
-      "oldArticleNo": "2639945168"
     },
     {
       "dong": "풍산동",
@@ -77523,13 +77396,17 @@ function render(){
   renderList();
 }
 
-let naverTab="sold", nvSelDongs=[], nvPanelOpen=false, nvOpenId=null;
+let naverTab="sold", nvSelDongs=[], nvPanelOpen=false, nvOpenId=null, nvQ="";
 const NV_DONGS=["망월동","선동","신장동","풍산동","창우동","덕풍동"];
 function nvNorm(s){return (s||"").replace(/\s+/g,"").replace(/[A-Za-z]/g,"").replace(/\([^)]*\)/g,"");}
 function openNaver(){ if(typeof NAVER_DATA==="undefined"||!NAVER_DATA){alert("매물 데이터가 아직 없습니다. 로컬 수집 후 갱신됩니다.");return;} view="naver"; render(); }
 function setNaverTab(k){ naverTab=k; nvOpenId=null; render(); }
 function nvItemsRaw(){ const nv=NAVER_DATA||{}; if(naverTab==="rereg")return nv.reregistered||[]; if(naverTab==="new")return nv.newListings||[]; return nv.likelySold||[]; }
-function nvFilter(items){ return nvSelDongs.length===0?items:items.filter(x=>nvSelDongs.includes(x.dong)); }
+function nvFilter(items){
+  let out=nvSelDongs.length===0?items:items.filter(x=>nvSelDongs.includes(x.dong));
+  if(nvQ) out=out.filter(x=>(x.complexName||"").includes(nvQ));
+  return out;
+}
 function nvHistory(complexName, area){
   const key=nvNorm(complexName), ex=parseFloat(area);
   if(!key||!ex||typeof DATA==="undefined") return [];
@@ -78001,6 +77878,10 @@ document.addEventListener("click",()=>{
   if(areaDropOpen){areaDropOpen=false;changed=true;}
   if(changed)render();
 });
+const nvSearchEl=document.getElementById("nvSearchInput");
+const nvClearBtn=document.getElementById("nvClearBtn");
+nvSearchEl.addEventListener("input",()=>{nvQ=nvSearchEl.value.trim();nvClearBtn.style.display=nvQ?"":"none";nvOpenId=null;renderNaver();});
+nvClearBtn.addEventListener("click",()=>{nvQ="";nvSearchEl.value="";nvClearBtn.style.display="none";renderNaver();});
 document.getElementById("cmpBtn").addEventListener("click",openCompare);
 document.getElementById("naverBtn").addEventListener("click",openNaver);
 document.getElementById("naverBack").addEventListener("click",()=>{view="list";render();});

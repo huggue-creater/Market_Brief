@@ -168,6 +168,23 @@ def match_key(a: dict) -> tuple:
     return (a["complexNo"], a["building"], a["areaName"], a["direction"])
 
 
+def dedup_units(items: list, complex_key: str, price_key: str,
+                 firstseen_key: str = None) -> list:
+    """공동중개로 같은 물건이 매물번호만 다르게 여러 건 잡히는 경우 하나로 합친다
+    (단지·동·층·평형·향·가격이 모두 같으면 동일 물건으로 본다).
+    firstseen_key가 있으면 그 중 가장 이른 first_seen을 가진 항목을 남긴다."""
+    best: dict = {}
+    for it in items:
+        uk = (it[complex_key], it["building"], it["floor"], it["areaName"],
+              it["direction"], it.get(price_key))
+        cur = best.get(uk)
+        if cur is None:
+            best[uk] = it
+        elif firstseen_key and it.get(firstseen_key, "") < cur.get(firstseen_key, ""):
+            best[uk] = it
+    return list(best.values())
+
+
 def analyze(prev_articles: dict, today: dict, today_str: str) -> dict:
     prev_ids = set(prev_articles)
     today_ids = set(today)
@@ -192,6 +209,7 @@ def analyze(prev_articles: dict, today: dict, today_str: str) -> dict:
             reregistered.append({
                 **{k: r[k] for k in ("dong", "complexName", "building",
                                      "floor", "direction", "areaName")},
+                "_complexNo": r["complexNo"],
                 "oldPrice": r["price"], "oldPriceText": r["priceText"],
                 "newPrice": n["price"], "newPriceText": n["priceText"],
                 "newArticleNo": cand, "oldArticleNo": rid,
@@ -202,6 +220,7 @@ def analyze(prev_articles: dict, today: dict, today_str: str) -> dict:
                    - datetime.date.fromisoformat(first)).days
             likely_sold.append({
                 "dong": r["dong"], "complexName": r["complexName"],
+                "_complexNo": r["complexNo"],
                 "building": r["building"], "floor": r["floor"],
                 "direction": r["direction"], "areaName": r["areaName"],
                 "area": r["area"], "areaSupply": r.get("areaSupply", ""),
@@ -211,6 +230,13 @@ def analyze(prev_articles: dict, today: dict, today_str: str) -> dict:
             })
 
     new_listings = [today[aid] for aid in added_ids if aid not in matched_added]
+
+    # 공동중개(같은 물건, 다른 매물번호) 중복 제거
+    likely_sold = dedup_units(likely_sold, "_complexNo", "lastPrice", "firstSeen")
+    reregistered = dedup_units(reregistered, "_complexNo", "newPrice")
+    new_listings = dedup_units(new_listings, "complexNo", "price")
+    for a in likely_sold + reregistered:
+        a.pop("_complexNo", None)
 
     return {
         "date": today_str,
