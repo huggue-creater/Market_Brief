@@ -39,14 +39,15 @@ KST = datetime.timezone(datetime.timedelta(hours=9))
 SNAPSHOT_FILE = Path("naver_snapshot.json")
 EVENTS_FILE   = Path("naver_events.json")
 
-# 하남 6개 동 (법정동코드 10자리 = lawd(5)+bjdong(5))
+# 수집 대상: 동 → (법정동코드 10자리 = lawd(5)+bjdong(5), 시 라벨)
 DONGS = {
-    "망월동": "4145010900",
-    "선동":   "4145011200",
-    "신장동": "4145010600",
-    "풍산동": "4145011000",
-    "창우동": "4145010300",
-    "덕풍동": "4145010800",
+    "망월동": ("4145010900", "하남"),
+    "선동":   ("4145011200", "하남"),
+    "신장동": ("4145010600", "하남"),
+    "풍산동": ("4145011000", "하남"),
+    "창우동": ("4145010300", "하남"),
+    "덕풍동": ("4145010800", "하남"),
+    "상현동": ("4146510300", "용인"),  # 용인시 수지구 상현동
 }
 
 TOKEN_SEED_COMPLEX = "105286"  # 토큰 추출용 아무 단지
@@ -121,9 +122,10 @@ def parse_price(s: str) -> int:
     return eok * 10000 + man
 
 
-def normalize(dong: str, cx: dict, a: dict) -> dict:
+def normalize(dong: str, city: str, cx: dict, a: dict) -> dict:
     return {
         "dong": dong,
+        "city": city,
         "complexNo": str(cx.get("complexNo", "")),
         "complexName": cx.get("complexName", ""),
         "building": a.get("buildingName", ""),      # 동
@@ -143,9 +145,9 @@ def normalize(dong: str, cx: dict, a: dict) -> dict:
 def collect_all(sess: cr.Session, token: str) -> dict:
     """{articleNo: detail} 전체."""
     articles = {}
-    for dong, cortar in DONGS.items():
+    for dong, (cortar, city) in DONGS.items():
         cxs = fetch_complexes(sess, token, cortar)
-        log.info("[%s] 단지 %d개", dong, len(cxs))
+        log.info("[%s %s] 단지 %d개", city, dong, len(cxs))
         for cx in cxs:
             cno = str(cx.get("complexNo", ""))
             if not cno:
@@ -154,7 +156,7 @@ def collect_all(sess: cr.Session, token: str) -> dict:
             for a in arts:
                 ano = str(a.get("articleNo", ""))
                 if ano:
-                    articles[ano] = normalize(dong, cx, a)
+                    articles[ano] = normalize(dong, city, cx, a)
             time.sleep(0.25)
     return articles
 
@@ -209,6 +211,7 @@ def analyze(prev_articles: dict, today: dict, today_str: str) -> dict:
             reregistered.append({
                 **{k: r[k] for k in ("dong", "complexName", "building",
                                      "floor", "direction", "areaName")},
+                "city": r.get("city", "하남"),
                 "_complexNo": r["complexNo"],
                 "oldPrice": r["price"], "oldPriceText": r["priceText"],
                 "newPrice": n["price"], "newPriceText": n["priceText"],
@@ -219,7 +222,8 @@ def analyze(prev_articles: dict, today: dict, today_str: str) -> dict:
             dom = (datetime.date.fromisoformat(today_str)
                    - datetime.date.fromisoformat(first)).days
             likely_sold.append({
-                "dong": r["dong"], "complexName": r["complexName"],
+                "dong": r["dong"], "city": r.get("city", "하남"),
+                "complexName": r["complexName"],
                 "_complexNo": r["complexNo"],
                 "building": r["building"], "floor": r["floor"],
                 "direction": r["direction"], "areaName": r["areaName"],
