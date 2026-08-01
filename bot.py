@@ -958,7 +958,8 @@ def build_naver_message() -> Optional[str]:
 # ══════════════════════════════════════════════════════════════════════════════
 
 def is_holiday_or_weekend(dt: datetime.date) -> bool:
-    if dt.weekday() >= 5:
+    # 일요일(6)만 스킵 — 토요일(5)은 발송 대상 (월~토 발송)
+    if dt.weekday() == 6:
         return True
     return dt in holidays.country_holidays("KR", years=dt.year)
 
