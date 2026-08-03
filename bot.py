@@ -45,9 +45,10 @@ YAHOO_URL2     = "https://query2.finance.yahoo.com/v8/finance/chart/{symbol}"
 
 MONTHS_BACK             = 6
 MAX_NEW_SUPPLY_PER_RUN  = 100
-RETRY_COUNT             = 4
-RETRY_DELAYS   = [2, 4, 8, 16]
+RETRY_COUNT             = 3
+RETRY_DELAYS   = [2, 4, 8]
 TELEGRAM_LIMIT = 3800
+DEFAULT_TIMEOUT = 10   # 개별 요청 타임아웃(초). data.go.kr 장애 시 무한정 매달리지 않게.
 
 YAHOO_HEADERS = {
     "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -101,7 +102,7 @@ DONG_TO_BJDONG = {
 # ══════════════════════════════════════════════════════════════════════════════
 
 def http_get(url: str, params: dict = None, headers: dict = None,
-             timeout: int = 15) -> Optional[requests.Response]:
+             timeout: int = DEFAULT_TIMEOUT) -> Optional[requests.Response]:
     for attempt in range(RETRY_COUNT):
         try:
             resp = requests.get(url, params=params, headers=headers, timeout=timeout)

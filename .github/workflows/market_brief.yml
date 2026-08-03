@@ -11,6 +11,13 @@ on:
   # 수동 트리거 (테스트용)
   workflow_dispatch:
 
+# 동시 실행 금지: 05:30 실행이 느려도 백업 크론(06:50/07:50)이 겹쳐 돌지 않게 직렬화.
+# 앞 실행이 끝난 뒤에야 다음이 시작 → last_run.txt(중복방지)를 확인하고 스킵할 수 있음.
+# cancel-in-progress: false → 진행 중 실행은 죽이지 않고 뒤 실행을 대기시킴.
+concurrency:
+  group: market-brief
+  cancel-in-progress: false
+
 jobs:
   brief:
     runs-on: ubuntu-latest
@@ -59,6 +66,10 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           # Stage only known state files (never accidentally stage secrets etc.)
           git add apt_state.json building_cache.json search_data.json index.html last_run.txt reported_dates.json 2>/dev/null || true
-          git diff --cached --quiet || \
-            git commit -m "chore: market brief $(date -u +'%Y-%m-%d')" && \
-            git push
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: market brief $(date -u +'%Y-%m-%d')"
+            # 로컬 수집기(naver_collect.py)가 그 사이 push했을 수 있으니 pull 후 push.
+            # 충돌 시 우리(Actions) 쪽 상태 파일을 우선.
+            git pull --no-rebase --no-edit -X ours || true
+            git push || { git pull --no-rebase --no-edit -X ours || true; git push; }
+          fi
