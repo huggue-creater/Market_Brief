@@ -18,7 +18,7 @@ REM Commit local collector output FIRST. This PC is the sole author of these
 REM two files, so on any merge conflict we keep OUR local version (-X ours).
 REM (Old flow used `pull --rebase --autostash`, which corrupted naver_events.json
 REM  with conflict markers whenever the remote had new commits.)
-git add naver_snapshot.json naver_events.json >> naver_run.log 2>&1
+git add naver_snapshot.json naver_events.json naver_sold_history.json >> naver_run.log 2>&1
 git diff --cached --quiet
 if errorlevel 1 (
   git commit -m "chore: naver listing snapshot %date%" >> naver_run.log 2>&1

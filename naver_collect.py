@@ -38,6 +38,8 @@ KST = datetime.timezone(datetime.timedelta(hours=9))
 
 SNAPSHOT_FILE = Path("naver_snapshot.json")
 EVENTS_FILE   = Path("naver_events.json")
+SOLD_HISTORY_FILE = Path("naver_sold_history.json")  # 거래예상 날짜별 누적(대시보드용)
+SOLD_HISTORY_DAYS = 30                                # 누적 보관 기간(일)
 
 # 수집 대상: 동 → (법정동코드 10자리 = lawd(5)+bjdong(5), 시 라벨)
 DONGS = {
@@ -268,6 +270,40 @@ def merge_snapshot(prev_articles: dict, today: dict, today_str: str) -> dict:
 
 # ══════════════════════════════════════════════════════════════════
 
+def accumulate_sold_history(today_sold: list, today_str: str) -> list:
+    """거래예상을 날짜별로 누적 보관(대시보드용). 텔레그램용 events["likelySold"]는
+    그날치 그대로 두고, 여기서 만든 누적 리스트만 대시보드가 소비한다.
+      - 같은 날 재실행: 그날(date==today_str) 항목을 교체 → 중복 방지·idempotent
+      - SOLD_HISTORY_DAYS 지난 항목은 정리
+    반환: 누적된 전체 리스트(최신 날짜 우선)."""
+    hist = []
+    if SOLD_HISTORY_FILE.exists():
+        try:
+            hist = json.loads(SOLD_HISTORY_FILE.read_text(encoding="utf-8")).get("items", [])
+        except Exception as exc:
+            log.warning("거래예상 이력 로드 실패(%s) — 새로 시작", exc)
+            hist = []
+
+    # 오늘 항목 제거 후 오늘치로 교체(재실행 idempotent)
+    hist = [x for x in hist if x.get("date") != today_str]
+    hist.extend(today_sold)
+
+    # 보관 기간 컷오프
+    cutoff = (datetime.date.fromisoformat(today_str)
+              - datetime.timedelta(days=SOLD_HISTORY_DAYS)).isoformat()
+    hist = [x for x in hist if x.get("date", "") >= cutoff]
+
+    # 최신 날짜 우선, 같은 날은 호가 높은 순
+    hist.sort(key=lambda x: (x.get("date", ""), x.get("lastPrice", 0)), reverse=True)
+
+    SOLD_HISTORY_FILE.write_text(
+        json.dumps({"updated_at": datetime.datetime.now(KST).strftime("%Y-%m-%d %H:%M:%S"),
+                    "days": SOLD_HISTORY_DAYS, "items": hist},
+                   ensure_ascii=False, indent=2),
+        encoding="utf-8")
+    return hist
+
+
 def main():
     today_str = datetime.datetime.now(KST).date().isoformat()
     log.info("=== 네이버 매물 수집 시작: %s ===", today_str)
@@ -298,6 +334,11 @@ def main():
         c = events["counts"]
         log.info("변동: 신규 %d · 재등록 %d · 거래예상 %d",
                  c["new"], c["reregistered"], c["likelySold"])
+
+    # 거래예상 날짜별 누적(대시보드 전용). 텔레그램은 events["likelySold"](그날치) 사용.
+    acc = accumulate_sold_history(events.get("likelySold", []), today_str)
+    events["likelySoldAcc"] = acc
+    log.info("거래예상 누적: %d건(%d일)", len(acc), SOLD_HISTORY_DAYS)
 
     snapshot = {
         "collected_at": datetime.datetime.now(KST).strftime("%Y-%m-%d %H:%M:%S"),
