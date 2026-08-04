@@ -34,8 +34,8 @@ TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID   = os.environ.get("TELEGRAM_CHAT_ID", "")
 DATA_GO_KR_KEY     = os.environ["DATA_GO_KR_KEY"]
 
-APT_TRADE_URL  = "http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"
-BUILD_HUB_URL  = "http://apis.data.go.kr/1613000/BldRgstHubService"
+APT_TRADE_URL  = "https://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"
+BUILD_HUB_URL  = "https://apis.data.go.kr/1613000/BldRgstHubService"
 BUILD_INFO_URL = f"{BUILD_HUB_URL}/getBrRecapTitleInfo"
 EXPOS_AREA_URL = f"{BUILD_HUB_URL}/getBrExposPubuseAreaInfo"
 UPBIT_URL      = "https://api.upbit.com/v1/ticker"

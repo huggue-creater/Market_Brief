@@ -4,8 +4,8 @@ import os, time, requests
 from xml.etree import ElementTree
 
 KEY  = os.environ["DATA_GO_KR_KEY"]
-HUB  = "http://apis.data.go.kr/1613000/BldRgstHubService"
-TRADE_URL = "http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"
+HUB  = "https://apis.data.go.kr/1613000/BldRgstHubService"
+TRADE_URL = "https://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"
 
 TARGETS = [
     {"dong": "미사동",  "lawd": "41450", "label": "하남시 미사동"},
