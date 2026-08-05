@@ -11,6 +11,7 @@ import os
 import sys
 import json
 import time
+import socket
 import logging
 import datetime
 from collections import defaultdict
@@ -100,6 +101,84 @@ DONG_TO_BJDONG = {
 # ══════════════════════════════════════════════════════════════════════════════
 # Utilities
 # ══════════════════════════════════════════════════════════════════════════════
+
+# ── data.go.kr 로드밸런싱 IP 헬스체크 ──────────────────────────────────────────
+# apis.data.go.kr은 여러 IP로 로드밸런싱되는데, 그중 일부가 죽어 있을 때가 있다
+# (예: 2026-08 61.41.153.2 다운, 27.101.236.63만 정상). DNS가 죽은 IP를 돌려주면
+# TCP 연결 자체가 타임아웃돼 실거래 수집이 통째로 실패한다(대시보드 미갱신·행).
+# 그래서 연결 직전에 A레코드를 전부 뽑아 실제로 붙는 IP를 골라 그 IP로 연결한다.
+# TCP 대상 IP만 바꿀 뿐 TLS SNI/Host·인증서 검증은 원래 도메인 그대로 유지된다.
+_PINNED_HOSTS      = {"apis.data.go.kr"}
+_IP_PROBE_TIMEOUT  = 3          # 죽은 IP를 빨리 건너뛰기 위한 짧은 연결 확인(초)
+_healthy_ip_cache: dict = {}    # host -> 살아있는 IP("" = 못 찾음, 기본 동작으로 폴백)
+
+# 해외(GitHub) 리졸버가 지역별 GSLB로 죽은 IP '하나만' 돌려줄 수 있어, 알려진 정상
+# IP를 후보에 항상 덧붙인다. 연결이 안 되면 헬스체크에서 자동 스킵되므로 나중에
+# data.go.kr이 IP를 바꿔도 무해하다(살아있는 것만 채택).
+_FALLBACK_IPS = {
+    "apis.data.go.kr": ["27.101.236.63", "61.41.153.2"],
+}
+
+
+def _resolve_ipv4(host: str, port: int):
+    ips = []
+    try:
+        infos = socket.getaddrinfo(host, port, socket.AF_INET, socket.SOCK_STREAM)
+    except socket.gaierror:
+        infos = []
+    for info in infos:
+        ip = info[4][0]
+        if ip not in ips:
+            ips.append(ip)
+    for ip in _FALLBACK_IPS.get(host, []):   # DNS가 빠뜨린 정상 IP 보강
+        if ip not in ips:
+            ips.append(ip)
+    return ips
+
+
+def _pick_healthy_ip(host: str, port: int):
+    for ip in _resolve_ipv4(host, port):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(_IP_PROBE_TIMEOUT)
+        try:
+            s.connect((ip, port))
+            return ip
+        except OSError:
+            log.warning("data.go.kr IP %s 연결 안 됨 — 다음 IP 시도", ip)
+        finally:
+            s.close()
+    return None
+
+
+def _install_healthy_ip_pinning():
+    """urllib3의 TCP 연결 함수를 감싸, _PINNED_HOSTS는 살아있는 IP로만 붙게 한다."""
+    try:
+        import urllib3.util.connection as u3conn
+    except Exception as exc:  # urllib3 내부 구조가 다르면 조용히 기본 동작 유지
+        log.warning("IP 핀닝 설치 실패(무시): %s", exc)
+        return
+    orig = u3conn.create_connection
+
+    def patched(address, *args, **kwargs):
+        host, port = address[0], address[1]
+        if host in _PINNED_HOSTS:
+            ip = _healthy_ip_cache.get(host)
+            if ip is None:
+                ip = _pick_healthy_ip(host, port) or ""
+                _healthy_ip_cache[host] = ip
+                if ip:
+                    log.info("data.go.kr 연결 IP 고정: %s → %s", host, ip)
+                else:
+                    log.warning("data.go.kr 살아있는 IP 없음 — 기본 해석으로 폴백")
+            if ip:
+                address = (ip,) + tuple(address[1:])
+        return orig(address, *args, **kwargs)
+
+    u3conn.create_connection = patched
+
+
+_install_healthy_ip_pinning()
+
 
 def http_get(url: str, params: dict = None, headers: dict = None,
              timeout: int = DEFAULT_TIMEOUT) -> Optional[requests.Response]:
