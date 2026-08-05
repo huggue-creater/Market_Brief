@@ -33,7 +33,21 @@ log = logging.getLogger(__name__)
 # ── Config ────────────────────────────────────────────────────────────────────
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID   = os.environ.get("TELEGRAM_CHAT_ID", "")
-DATA_GO_KR_KEY     = os.environ["DATA_GO_KR_KEY"]
+
+
+def _load_data_go_kr_key() -> str:
+    """data.go.kr 키: 환경변수 우선, 없으면 로컬 파일(datago_key.txt).
+    실거래 수집(collect 모드)은 로컬에서만 하므로 GitHub(send 모드)에선 없어도 됨."""
+    key = os.environ.get("DATA_GO_KR_KEY", "").strip()
+    if key:
+        return key
+    key_file = Path("datago_key.txt")   # .gitignore 등록됨 — 커밋 안 됨
+    if key_file.exists():
+        return key_file.read_text(encoding="utf-8").strip()
+    return ""
+
+
+DATA_GO_KR_KEY = _load_data_go_kr_key()
 
 APT_TRADE_URL  = "https://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"
 BUILD_HUB_URL  = "https://apis.data.go.kr/1613000/BldRgstHubService"
@@ -64,6 +78,7 @@ SEARCH_JSON_FILE    = Path("search_data.json")
 REPORTED_DATES_FILE = Path("reported_dates.json")
 LAST_RUN_FILE       = Path("last_run.txt")
 NAVER_EVENTS_FILE   = Path("naver_events.json")   # 로컬 수집기(naver_collect.py)가 커밋
+APT_EVENTS_FILE     = Path("apt_events.json")      # 로컬 collect 모드가 기록 → GitHub send가 발송
 
 # ── Region definitions ────────────────────────────────────────────────────────
 REGIONS = [
@@ -577,11 +592,16 @@ def _build_telegram_apt_msg(region: dict, new_trades: list,
 
 
 def run_apartment_alerts(ym_list: list):
+    """실거래 신규 감지 → apt_events.json에 오늘자 메시지 기록.
+    data.go.kr은 해외(GitHub)에서 차단되므로 이 수집은 로컬 collect 모드에서만 실행.
+    실제 텔레그램 발송은 GitHub send 모드의 build_apt_message()가 담당(네이버와 동일 패턴)."""
     state          = load_json(STATE_FILE, {})
     reported_dates = load_json(REPORTED_DATES_FILE, {})
     bld_cache      = load_json(CACHE_FILE, {})
     fetch_count    = [0]
     today_str      = today_kst().isoformat()
+    first_run      = not bool(state)   # 상태 파일이 비어있으면 최초 실행(기준 스냅샷)
+    messages       = []
 
     for region in [r for r in REGIONS if r["telegram"]]:
         name = region["name"]
@@ -597,7 +617,7 @@ def run_apartment_alerts(ym_list: list):
             elif new_trades:
                 msg = _build_telegram_apt_msg(region, new_trades, known_ids, all_trades,
                                               bld_cache, fetch_count)
-                send_telegram_chunked(msg)
+                messages.append(msg)
                 for t in new_trades:
                     reported_dates[trade_id(t)] = today_str
 
@@ -610,6 +630,35 @@ def run_apartment_alerts(ym_list: list):
         save_json(CACHE_FILE, bld_cache)
     save_json(STATE_FILE, state)
     save_json(REPORTED_DATES_FILE, reported_dates)
+    save_json(APT_EVENTS_FILE, {
+        "date": today_str,
+        "firstRun": first_run,
+        "messages": messages,
+    })
+    log.info("실거래 이벤트 기록: %s (신규 알림 %d건)", APT_EVENTS_FILE, len(messages))
+
+
+def build_apt_message() -> Optional[str]:
+    """apt_events.json → 실거래 텔레그램. 오늘자 수집이 없으면 경고, 신규 없으면 None(발송 생략)."""
+    events = load_json(APT_EVENTS_FILE, None)
+    today  = today_kst().isoformat()
+
+    if not events:
+        return None   # 아직 로컬 수집 파일 없음 — 조용히 스킵
+
+    date = events.get("date", "?")
+    if date != today:
+        return ("[아파트 실거래]\n"
+                f"⚠️ 오늘({today}) 실거래 수집 기록이 없습니다. (마지막 {date})\n"
+                "새벽에 로컬 PC가 깨어 수집했는지 확인해 주세요.")
+
+    if events.get("firstRun"):
+        return None   # 최초 실행 기준 스냅샷 — 알림 없음
+
+    messages = events.get("messages", [])
+    if not messages:
+        return None   # 신규 거래 없음 — 발송 생략(기존 동작과 동일)
+    return "\n\n".join(messages)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1070,7 +1119,8 @@ def main():
     args = parser.parse_args()
 
     today = today_kst()
-    log.info("=== Market Brief 시작: %s (KST) ===", today)
+    mode  = os.environ.get("MB_MODE", "send").lower()
+    log.info("=== Market Brief 시작: %s (KST) · mode=%s ===", today, mode)
 
     if args.json_only:
         log.info("--json-only 모드: 검색 JSON 재생성만 실행")
@@ -1083,6 +1133,29 @@ def main():
         log.info("=== 완료 ===")
         return
 
+    # ── collect 모드 (로컬 04:45): data.go.kr 수집 전용 ──────────────────────────
+    # 실거래·건축물대장·검색JSON은 data.go.kr에서 오는데 해외(GitHub)에선 차단됨.
+    # 그래서 한국 회선의 로컬 PC에서만 수집하고 결과 파일을 커밋한다(발송 없음).
+    if mode == "collect":
+        if not DATA_GO_KR_KEY:
+            log.error("DATA_GO_KR_KEY 없음 — collect 중단. datago_key.txt를 확인하세요.")
+            sys.exit(1)
+        ym_list = get_ym_list(MONTHS_BACK)
+        log.info("조회 월: %s", ym_list)
+        log.info("--- 아파트 실거래 수집 ---")
+        try:
+            run_apartment_alerts(ym_list)
+        except Exception as exc:
+            log.error("실거래 수집 오류: %s", exc)
+        log.info("--- 검색 JSON ---")
+        try:
+            generate_search_json(ym_list)
+        except Exception as exc:
+            log.error("검색 JSON 오류: %s", exc)
+        log.info("=== collect 완료 ===")
+        return
+
+    # ── send 모드 (GitHub 05:30): 발송 전용, data.go.kr 호출 없음 ────────────────
     if is_holiday_or_weekend(today):
         log.info("공휴일/주말 — 스킵")
         sys.exit(0)
@@ -1094,9 +1167,6 @@ def main():
     elif check_dup_run(today):
         log.info("오늘 이미 실행됨 — 스킵")
         sys.exit(0)
-
-    ym_list = get_ym_list(MONTHS_BACK)
-    log.info("조회 월: %s", ym_list)
 
     log.info("--- 코인/환율 ---")
     try:
@@ -1110,11 +1180,15 @@ def main():
     except Exception as exc:
         log.error("선물지수 오류: %s", exc)
 
-    log.info("--- 아파트 알림 ---")
+    log.info("--- 아파트 실거래(로컬 수집분 발송) ---")
     try:
-        run_apartment_alerts(ym_list)
+        apt_msg = build_apt_message()
+        if apt_msg:
+            send_telegram_chunked(apt_msg)
+        else:
+            log.info("실거래 신규 없음/스킵")
     except Exception as exc:
-        log.error("아파트 알림 오류: %s", exc)
+        log.error("실거래 알림 오류: %s", exc)
 
     log.info("--- 네이버 매물 변동 ---")
     try:
@@ -1126,13 +1200,7 @@ def main():
     except Exception as exc:
         log.error("네이버 매물 알림 오류: %s", exc)
 
-    log.info("--- 검색 JSON ---")
-    try:
-        generate_search_json(ym_list)
-    except Exception as exc:
-        log.error("검색 JSON 오류: %s", exc)
-
-    log.info("=== 완료 ===")
+    log.info("=== send 완료 ===")
 
 
 if __name__ == "__main__":

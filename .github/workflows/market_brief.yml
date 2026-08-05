@@ -39,11 +39,13 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run bot (collect + send Telegram + generate search JSON)
+      - name: Send Telegram (coins/futures/apt/naver — data.go.kr 호출 없음)
+        # send 모드: 실거래·검색JSON은 로컬(run_naver.bat)이 수집·커밋한 걸 사용.
+        # data.go.kr은 해외(GitHub)에서 차단되므로 여기선 절대 호출하지 않는다.
         env:
+          MB_MODE: send
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
-          DATA_GO_KR_KEY:     ${{ secrets.DATA_GO_KR_KEY }}
           # workflow_dispatch이면 dup 체크 건너뜀 — 수동 실행은 항상 동작
           FORCE_RUN: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
         run: python bot.py
