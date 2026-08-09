@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-09 23:41:45",
+  "generated_at": "2026-08-10 04:47:53",
   "months": [
     "202608",
     "202607",
@@ -8,7 +8,7 @@
     "202604",
     "202603"
   ],
-  "total": 5528,
+  "total": 5533,
   "deals": [
     {
       "region": "하남 망월동",
@@ -4152,6 +4152,30 @@
     },
     {
       "region": "용인 상현동",
+      "apt": "광교상현마을현대",
+      "area": 79.336,
+      "pyeong": 33,
+      "floor": "3",
+      "amount": 107200,
+      "date": "2026-08-08",
+      "reported_date": "2026-08-10",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "광교쌍용포레듀엔",
+      "area": 133.6091,
+      "pyeong": 50,
+      "floor": "3",
+      "amount": 72500,
+      "date": "2026-08-08",
+      "reported_date": "2026-08-10",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
       "apt": "성복역아이파크",
       "area": 84.9716,
       "pyeong": 35,
@@ -4195,6 +4219,18 @@
       "amount": 39700,
       "date": "2026-07-28",
       "reported_date": "2026-08-09",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "SM트윈빌(101동)",
+      "area": 160.93,
+      "pyeong": 65,
+      "floor": "10",
+      "amount": 78000,
+      "date": "2026-07-22",
+      "reported_date": "2026-08-10",
       "direct": false,
       "canceled": false
     },
@@ -4375,6 +4411,18 @@
       "amount": 95000,
       "date": "2026-07-28",
       "reported_date": "2026-07-30",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "광교상떼빌파크뷰",
+      "area": 164.2368,
+      "pyeong": 59,
+      "floor": "7",
+      "amount": 108000,
+      "date": "2026-07-25",
+      "reported_date": "2026-08-10",
       "direct": false,
       "canceled": false
     },
@@ -4891,6 +4939,18 @@
       "amount": 96500,
       "date": "2026-07-16",
       "reported_date": "2026-08-05",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "광교쌍용포레듀엔",
+      "area": 159.7529,
+      "pyeong": 59,
+      "floor": "7",
+      "amount": 84800,
+      "date": "2026-07-16",
+      "reported_date": "2026-08-10",
       "direct": false,
       "canceled": false
     },
@@ -66418,6 +66478,16 @@
       "vlRat": "217.14",
       "bcRat": "21.15"
     },
+    "광교상현마을현대": {
+      "buildYear": 2001,
+      "vlRat": "197.73",
+      "bcRat": "16.320188"
+    },
+    "광교쌍용포레듀엔": {
+      "buildYear": 2001,
+      "vlRat": "251.21",
+      "bcRat": "19.68"
+    },
     "성복역아이파크": {
       "buildYear": 2002,
       "vlRat": "216.14",
@@ -66438,10 +66508,10 @@
       "vlRat": "",
       "bcRat": ""
     },
-    "광교상현마을현대": {
-      "buildYear": 2001,
-      "vlRat": "197.73",
-      "bcRat": "16.320188"
+    "SM트윈빌(101동)": {
+      "buildYear": 1999,
+      "vlRat": "",
+      "bcRat": ""
     },
     "성복역리버파크": {
       "buildYear": 1998,
@@ -66482,6 +66552,11 @@
       "buildYear": 2001,
       "vlRat": "199.74",
       "bcRat": "18.54"
+    },
+    "광교상떼빌파크뷰": {
+      "buildYear": 2002,
+      "vlRat": "199.24",
+      "bcRat": "13.49"
     },
     "벽산블루밍": {
       "buildYear": 1998,
@@ -66548,11 +66623,6 @@
       "vlRat": "199.32",
       "bcRat": "16.16"
     },
-    "광교상떼빌파크뷰": {
-      "buildYear": 2002,
-      "vlRat": "199.24",
-      "bcRat": "13.49"
-    },
     "상현마을금호베스트빌4단지": {
       "buildYear": 2002,
       "vlRat": "247.18",
@@ -66587,11 +66657,6 @@
       "buildYear": 2002,
       "vlRat": "197.314",
       "bcRat": "12.701"
-    },
-    "광교쌍용포레듀엔": {
-      "buildYear": 2001,
-      "vlRat": "251.21",
-      "bcRat": "19.68"
     },
     "용인수지휴엔하임": {
       "buildYear": 2016,
