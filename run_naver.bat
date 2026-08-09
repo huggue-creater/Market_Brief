@@ -7,10 +7,21 @@ REM Log: naver_run.log
 
 cd /d "%~dp0"
 
+REM Use the REAL interpreter by absolute path. Bare `python` resolves to the
+REM Microsoft Store 0-byte alias (WindowsApps\python.exe): works in an
+REM interactive shell but FAILS under Task Scheduler with
+REM "'ython' is not recognized", silently breaking every scheduled collect
+REM (this froze naver+apt collection from 2026-08-06).
+set "PY=C:\Users\LEE\AppData\Local\Python\pythoncore-3.14-64\python.exe"
+if not exist "%PY%" (
+  echo [%date% %time%] [FATAL] python not found: %PY% ^(pythoncore moved? re-point PY^) >> naver_run.log
+  exit /b 1
+)
+
 echo ================================================= >> naver_run.log
 echo [%date% %time%] collect start >> naver_run.log
 
-python naver_collect.py >> naver_run.log 2>&1
+"%PY%" naver_collect.py >> naver_run.log 2>&1
 if errorlevel 1 (
   echo [%date% %time%] [ERROR] naver collect failed - continue with apt >> naver_run.log
 )
@@ -20,7 +31,7 @@ REM Writes apt_state.json / search_data.json / reported_dates.json /
 REM building_cache.json / apt_events.json. Key is read from datago_key.txt.
 echo [%date% %time%] apt collect start >> naver_run.log
 set MB_MODE=collect
-python bot.py >> naver_run.log 2>&1
+"%PY%" bot.py >> naver_run.log 2>&1
 if errorlevel 1 (
   echo [%date% %time%] [WARN] apt collect failed - commit naver only >> naver_run.log
 )
