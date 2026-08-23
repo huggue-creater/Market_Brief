@@ -1156,11 +1156,13 @@ def main():
         return
 
     # ── send 모드 (GitHub 05:30): 발송 전용, data.go.kr 호출 없음 ────────────────
-    if is_holiday_or_weekend(today):
+    # 수동 트리거(workflow_dispatch)면 FORCE_RUN=true → 주말/공휴일도 강제 발송.
+    # 정규 스케줄(schedule)은 FORCE_RUN=false라 기존대로 주말/공휴일 스킵.
+    force = os.environ.get("FORCE_RUN", "false").lower() == "true"
+    if is_holiday_or_weekend(today) and not force:
         log.info("공휴일/주말 — 스킵")
         sys.exit(0)
 
-    force = os.environ.get("FORCE_RUN", "false").lower() == "true"
     if force:
         log.info("FORCE_RUN=true — dup 체크 건너뜀")
         LAST_RUN_FILE.write_text(today.isoformat())
