@@ -1,14 +1,32 @@
 {
   "date": "2026-08-23",
   "counts": {
-    "total": 5073,
-    "new": 0,
+    "total": 5074,
+    "new": 1,
     "reregistered": 0,
     "likelySold": 0
   },
   "likelySold": [],
   "reregistered": [],
-  "newListings": [],
+  "newListings": [
+    {
+      "dong": "망월동",
+      "city": "하남",
+      "complexNo": "117437",
+      "complexName": "미사역호반써밋",
+      "building": "108동",
+      "floor": "중/30",
+      "direction": "남향",
+      "areaName": "131C",
+      "area": 99,
+      "areaSupply": 131,
+      "priceText": "16억",
+      "price": 160000,
+      "confirmYmd": "20260823",
+      "feature": "귀한 5BAY C타입 정남향 방4 에어컨5 중문 27년4월입주",
+      "realtor": "모드니공인중개사사무소"
+    }
+  ],
   "likelySoldAcc": [
     {
       "dong": "선동",
