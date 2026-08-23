@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-23 16:46:55",
+  "generated_at": "2026-08-24 04:48:01",
   "months": [
     "202608",
     "202607",
@@ -8,7 +8,7 @@
     "202604",
     "202603"
   ],
-  "total": 5959,
+  "total": 5956,
   "deals": [
     {
       "region": "하남 망월동",
@@ -15175,18 +15175,6 @@
       "amount": 11000,
       "date": "2026-06-13",
       "reported_date": "2026-06-25",
-      "direct": false,
-      "canceled": false
-    },
-    {
-      "region": "인천 연수동",
-      "apt": "연수푸르지오1단지",
-      "area": 122.95,
-      "pyeong": 49,
-      "floor": "29",
-      "amount": 52000,
-      "date": "2026-06-17",
-      "reported_date": "2026-06-19",
       "direct": false,
       "canceled": false
     },
@@ -53736,18 +53724,6 @@
     },
     {
       "region": "하남 덕풍동",
-      "apt": "효천수리골마을",
-      "area": 78.4955,
-      "pyeong": 32,
-      "floor": "1",
-      "amount": 50000,
-      "date": "2026-07-23",
-      "reported_date": "2026-07-23",
-      "direct": true,
-      "canceled": false
-    },
-    {
-      "region": "하남 덕풍동",
       "apt": "동원베네스트",
       "area": 84.96,
       "pyeong": 33,
@@ -60091,18 +60067,6 @@
       "amount": 148500,
       "date": "2026-07-21",
       "reported_date": "2026-07-21",
-      "direct": false,
-      "canceled": false
-    },
-    {
-      "region": "하남 감이동",
-      "apt": "감일역트루엘",
-      "area": 30.0,
-      "pyeong": 24,
-      "floor": "5",
-      "amount": 43000,
-      "date": "2026-07-18",
-      "reported_date": "2026-07-18",
       "direct": false,
       "canceled": false
     },
@@ -72847,11 +72811,6 @@
     },
     "정목e-미지": {
       "buildYear": 2005,
-      "vlRat": "",
-      "bcRat": ""
-    },
-    "효천수리골마을": {
-      "buildYear": 2008,
       "vlRat": "",
       "bcRat": ""
     },
