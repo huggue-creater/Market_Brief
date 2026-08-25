@@ -205,7 +205,11 @@ html,body{overflow-x:hidden;}
       <p id="subtitle">갱신 중...</p>
     </div>
     <button class="cmp-btn" id="cmpBtn">단지 비교</button>
-    <button class="nv-btn" id="naverBtn">거래예상</button>
+    <!-- 거래예상(네이버 매물) 기능 숨김 (2026-08-25): 매물 수집을 로컬 PC에서만 할 수 있어
+         PC 상시가동을 없애면서 네이버 수집을 중단 → naver_events.json이 동결되어 이 탭 데이터가
+         멈춤. 오해 방지 위해 진입 버튼만 숨김(기능 코드/패널 naverView는 그대로 보존).
+         복구: 아래 style="display:none"만 제거하면 됨 + 네이버 수집(NaverMaemulCollect) 재가동 필요. -->
+    <button class="nv-btn" id="naverBtn" style="display:none">거래예상</button>
   </div>
   <div class="dy-search">
     <span>⌕</span>
