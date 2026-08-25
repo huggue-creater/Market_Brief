@@ -39,9 +39,19 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Send Telegram (coins/futures/apt/naver — data.go.kr 호출 없음)
-        # send 모드: 실거래·검색JSON은 로컬(run_naver.bat)이 수집·커밋한 걸 사용.
-        # data.go.kr은 해외(GitHub)에서 차단되므로 여기선 절대 호출하지 않는다.
+      - name: Collect 실거래+검색JSON (data.go.kr — GitHub에서 직접 수집)
+        # data.go.kr이 GitHub(해외) IP에서도 정상 동작함을 확인(2026-08-25, refresh_data
+        # 러너가 실거래 6017건 수집 성공). 그래서 로컬 PC 없이 GitHub에서 직접 수집한다.
+        # collect 모드 = run_apartment_alerts(실거래) + generate_search_json(검색JSON).
+        # 네이버 매물(호가)은 데이터센터 IP 차단으로 GitHub에서 수집 불가 → 매물 알림 미사용.
+        env:
+          MB_MODE: collect
+          DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
+        run: python bot.py
+
+      - name: Send Telegram (coins/futures/apt — 위 collect 결과 발송)
+        # send 모드: 바로 위 collect 단계가 방금 수집한 apt_events.json/search_data.json을 발송.
+        # 네이버 매물은 수집하지 않으므로 매물 알림은 조용함(신규 없음).
         env:
           MB_MODE: send
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -67,7 +77,7 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           # Stage only known state files (never accidentally stage secrets etc.)
-          git add apt_state.json building_cache.json search_data.json index.html last_run.txt reported_dates.json 2>/dev/null || true
+          git add apt_state.json apt_events.json building_cache.json search_data.json index.html last_run.txt reported_dates.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
             git commit -m "chore: market brief $(date -u +'%Y-%m-%d')"
             # 로컬 수집기(naver_collect.py)가 그 사이 push했을 수 있으니 pull 후 push.
