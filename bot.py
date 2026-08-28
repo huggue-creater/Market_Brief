@@ -594,7 +594,7 @@ def _build_telegram_apt_msg(region: dict, new_trades: list,
 def run_apartment_alerts(ym_list: list):
     """실거래 신규 감지 → apt_events.json에 오늘자 메시지 기록.
     data.go.kr은 해외(GitHub)에서 차단되므로 이 수집은 로컬 collect 모드에서만 실행.
-    실제 텔레그램 발송은 GitHub send 모드의 build_apt_message()가 담당(네이버와 동일 패턴)."""
+    실제 텔레그램 발송은 GitHub send 모드의 send_apt_alerts()가 담당(발송 성공 후 승격)."""
     state          = load_json(STATE_FILE, {})
     reported_dates = load_json(REPORTED_DATES_FILE, {})
     bld_cache      = load_json(CACHE_FILE, {})
@@ -603,6 +603,7 @@ def run_apartment_alerts(ym_list: list):
     first_run      = not bool(state)   # 상태 파일이 비어있으면 최초 실행(기준 스냅샷)
     messages       = []
 
+    pending: dict  = {}   # region_name -> [trade_id,...] : 발송 성공 후 known으로 승격
     for region in [r for r in REGIONS if r["telegram"]]:
         name = region["name"]
         log.info("[알림] %s 확인 중...", name)
@@ -613,52 +614,78 @@ def run_apartment_alerts(ym_list: list):
             log.info("  %s: 전체 %d건, 신규 %d건", name, len(all_trades), len(new_trades))
 
             if not known_ids:
+                # 첫 실행/신규 지역 — 기준 스냅샷만 확정(알림 없음).
+                state[name] = list({trade_id(t) for t in all_trades})
                 log.info("  %s: 첫 실행 — 상태 초기화 (알림 없음)", name)
-            elif new_trades:
+                continue
+
+            if new_trades:
                 msg = _build_telegram_apt_msg(region, new_trades, known_ids, all_trades,
                                               bld_cache, fetch_count)
                 messages.append(msg)
+                pending[name] = [trade_id(t) for t in new_trades]
                 for t in new_trades:
                     reported_dates[trade_id(t)] = today_str
 
-            new_ids    = {trade_id(t) for t in all_trades}
-            state[name] = list(set(state.get(name, [])) | new_ids)
+            # ⚠️ known_ids(state)는 여기서 확정하지 않는다 — 발송 성공 후 promote_apt_sent
+            # 에서 승격한다. 그래야 05:30 수집이 해외(GitHub) 타임아웃으로 실패해도,
+            # 나중에 성공한 실행이 같은 신규를 다시 감지해 반드시 발송한다(유실 방지).
         except Exception as exc:
             log.error("  %s 알림 오류: %s", name, exc)
 
     if fetch_count[0] > 0:
         save_json(CACHE_FILE, bld_cache)
-    save_json(STATE_FILE, state)
+    save_json(STATE_FILE, state)             # 첫 실행/신규 지역 기준 스냅샷만 반영됨
     save_json(REPORTED_DATES_FILE, reported_dates)
     save_json(APT_EVENTS_FILE, {
         "date": today_str,
         "firstRun": first_run,
         "messages": messages,
+        "pending": pending,
     })
     log.info("실거래 이벤트 기록: %s (신규 알림 %d건)", APT_EVENTS_FILE, len(messages))
 
 
-def build_apt_message() -> Optional[str]:
-    """apt_events.json → 실거래 텔레그램. 오늘자 수집이 없으면 경고, 신규 없으면 None(발송 생략)."""
+def promote_apt_sent(pending: dict) -> None:
+    """실거래 발송 성공 후, 발송된 신규 거래를 known(apt_state.json)으로 승격.
+    발송 성공 시에만 호출되므로, 발송 안 된 건은 다음 실행에서 다시 감지·발송된다."""
+    if not pending:
+        return
+    state = load_json(STATE_FILE, {})
+    for name, ids in pending.items():
+        state[name] = list(set(state.get(name, [])) | set(ids))
+    save_json(STATE_FILE, state)
+    log.info("실거래 발송분 승격: %s", {k: len(v) for k, v in pending.items()})
+
+
+def send_apt_alerts() -> None:
+    """apt_events.json의 미발송 신규 실거래를 발송하고, 성공하면 known으로 승격.
+    일일 dup과 무관하게 매 실행 호출한다 — 05:30 수집이 해외 타임아웃으로 0건이어도
+    나중에 성공한 실행이 여기서 이어 발송한다(발송 기준 dup 관리)."""
     events = load_json(APT_EVENTS_FILE, None)
-    today  = today_kst().isoformat()
-
     if not events:
-        return None   # 아직 로컬 수집 파일 없음 — 조용히 스킵
+        log.info("실거래: 이벤트 파일 없음 — 스킵")
+        return
 
-    date = events.get("date", "?")
-    if date != today:
-        return ("[아파트 실거래]\n"
-                f"⚠️ 오늘({today}) 실거래 수집 기록이 없습니다. (마지막 {date})\n"
-                "새벽에 로컬 PC가 깨어 수집했는지 확인해 주세요.")
+    today = today_kst().isoformat()
+    if events.get("date") != today:
+        # 오늘 수집이 아직 없음(백업 실행이 곧 수집·발송). 경고 스팸을 내지 않는다.
+        log.info("실거래: 오늘자 수집 없음(마지막 %s) — 스킵", events.get("date"))
+        return
 
     if events.get("firstRun"):
-        return None   # 최초 실행 기준 스냅샷 — 알림 없음
+        log.info("실거래: 최초 기준 스냅샷 — 발송 없음")
+        return
 
     messages = events.get("messages", [])
     if not messages:
-        return None   # 신규 거래 없음 — 발송 생략(기존 동작과 동일)
-    return "\n\n".join(messages)
+        log.info("실거래: 신규 없음 — 스킵")
+        return
+
+    if send_telegram_chunked("\n\n".join(messages)):
+        promote_apt_sent(events.get("pending", {}))
+    else:
+        log.error("실거래: 발송 실패 — 승격 보류, 다음 실행에서 재시도")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -999,6 +1026,11 @@ def generate_search_json(ym_list: list):
 # Feature 5 — 네이버 매물 변동 알림 (거래 예상 / 재등록 / 신규)
 # ══════════════════════════════════════════════════════════════════════════════
 
+# 네이버 매물(호가) 수집을 2026-08-25에 중단(PC 상시가동 포기)했다. 수집이 없으면
+# build_naver_message()가 매일 "오늘 수집 기록 없음 ⚠️" 경고를 보내 스팸이 되므로
+# 매물 알림 자체를 끈다. 매물 수집을 재개하면 True로 되돌리면 된다.
+NAVER_ALERTS_ENABLED = False
+
 MAX_NAVER_SOLD  = 25
 MAX_NAVER_REREG = 15
 MAX_NAVER_NEW   = 20
@@ -1163,44 +1195,48 @@ def main():
         log.info("공휴일/주말 — 스킵")
         sys.exit(0)
 
-    if force:
-        log.info("FORCE_RUN=true — dup 체크 건너뜀")
-        LAST_RUN_FILE.write_text(today.isoformat())
-    elif check_dup_run(today):
-        log.info("오늘 이미 실행됨 — 스킵")
-        sys.exit(0)
-
-    log.info("--- 코인/환율 ---")
+    # ── 아파트 실거래: 일일 dup과 무관하게 매 실행 확인(발송 기준 dup) ──────────
+    # 05:30 수집이 해외 타임아웃으로 0건이어도, 나중에 성공한 실행이 미발송분을
+    # 이어 발송·승격한다. 그래서 코인/선물 dup 게이트보다 먼저, 게이트 밖에서 돈다.
+    log.info("--- 아파트 실거래 ---")
     try:
-        send_telegram_chunked(get_coin_fx_message())
-    except Exception as exc:
-        log.error("코인/환율 오류: %s", exc)
-
-    log.info("--- 선물지수 ---")
-    try:
-        send_telegram_chunked(get_futures_message())
-    except Exception as exc:
-        log.error("선물지수 오류: %s", exc)
-
-    log.info("--- 아파트 실거래(로컬 수집분 발송) ---")
-    try:
-        apt_msg = build_apt_message()
-        if apt_msg:
-            send_telegram_chunked(apt_msg)
-        else:
-            log.info("실거래 신규 없음/스킵")
+        send_apt_alerts()
     except Exception as exc:
         log.error("실거래 알림 오류: %s", exc)
 
-    log.info("--- 네이버 매물 변동 ---")
-    try:
-        naver_msg = build_naver_message()
-        if naver_msg:
-            send_telegram_chunked(naver_msg)
-        else:
-            log.info("네이버 매물 변동 없음/스킵")
-    except Exception as exc:
-        log.error("네이버 매물 알림 오류: %s", exc)
+    # ── 코인/선물: 하루 1회만(백업 실행 중복 발송 방지) ──────────────────────────
+    daily_done = (not force) and check_dup_run(today)
+    if force:
+        log.info("FORCE_RUN=true — dup 체크 건너뜀")
+        LAST_RUN_FILE.write_text(today.isoformat())
+
+    if force or not daily_done:
+        log.info("--- 코인/환율 ---")
+        try:
+            send_telegram_chunked(get_coin_fx_message())
+        except Exception as exc:
+            log.error("코인/환율 오류: %s", exc)
+
+        log.info("--- 선물지수 ---")
+        try:
+            send_telegram_chunked(get_futures_message())
+        except Exception as exc:
+            log.error("선물지수 오류: %s", exc)
+    else:
+        log.info("코인/선물: 오늘 이미 발송됨 — 스킵")
+
+    if NAVER_ALERTS_ENABLED:
+        log.info("--- 네이버 매물 변동 ---")
+        try:
+            naver_msg = build_naver_message()
+            if naver_msg:
+                send_telegram_chunked(naver_msg)
+            else:
+                log.info("네이버 매물 변동 없음/스킵")
+        except Exception as exc:
+            log.error("네이버 매물 알림 오류: %s", exc)
+    else:
+        log.info("--- 네이버 매물 변동: 비활성(수집 중단) — 스킵 ---")
 
     log.info("=== send 완료 ===")
 
