@@ -9890,5 +9890,34 @@
   "bldmeta3|41390|2715|0000": {
     "vlRat": "399.98777",
     "bcRat": "54.46187"
+  },
+  "supply|41450|0427|0093": {
+    "45.26": {
+      "supply_area": 70.57,
+      "pyeong": 21
+    },
+    "84.89": {
+      "supply_area": 133.15,
+      "pyeong": 40
+    },
+    "38.83": {
+      "supply_area": 60.6,
+      "pyeong": 18
+    },
+    "44.14": {
+      "supply_area": 60.13,
+      "pyeong": 18
+    },
+    "75.29": {
+      "supply_area": 115.52,
+      "pyeong": 35
+    },
+    "28.07": {
+      "supply_area": 44.62,
+      "pyeong": 13
+    }
+  },
+  "bldmeta3|41450|0427|0093": {
+    "_empty": true
   }
 }
