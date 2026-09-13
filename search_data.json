@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-12 09:48:31",
+  "generated_at": "2026-09-14 05:35:31",
   "months": [
     "202609",
     "202608",
@@ -8,7 +8,7 @@
     "202605",
     "202604"
   ],
-  "total": 5620,
+  "total": 5621,
   "deals": [
     {
       "region": "하남 망월동",
@@ -10579,6 +10579,18 @@
       "amount": 94000,
       "date": "2026-05-01",
       "reported_date": "2026-05-01",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "상현마을수지센트럴아이파크",
+      "area": 133.4246,
+      "pyeong": 52,
+      "floor": "10",
+      "amount": 109000,
+      "date": "2026-04-20",
+      "reported_date": "2026-04-20",
       "direct": false,
       "canceled": false
     },
