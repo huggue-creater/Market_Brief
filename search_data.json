@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-25 10:01:07",
+  "generated_at": "2026-09-26 05:36:38",
   "months": [
     "202609",
     "202608",
@@ -8,7 +8,7 @@
     "202605",
     "202604"
   ],
-  "total": 5916,
+  "total": 5914,
   "deals": [
     {
       "region": "하남 망월동",
@@ -49332,18 +49332,6 @@
     },
     {
       "region": "하남 신장동",
-      "apt": "하남두산위브파크",
-      "area": 138.27,
-      "pyeong": 75,
-      "floor": "17",
-      "amount": 96000,
-      "date": "2026-07-15",
-      "reported_date": "2026-07-15",
-      "direct": false,
-      "canceled": false
-    },
-    {
-      "region": "하남 신장동",
       "apt": "하남유시티대명루첸리버파크",
       "area": 74.34,
       "pyeong": 30,
@@ -54667,18 +54655,6 @@
       "amount": 44500,
       "date": "2026-07-14",
       "reported_date": "2026-07-14",
-      "direct": false,
-      "canceled": false
-    },
-    {
-      "region": "하남 덕풍동",
-      "apt": "가화만사성",
-      "area": 77.0904,
-      "pyeong": 45,
-      "floor": "7",
-      "amount": 55000,
-      "date": "2026-07-10",
-      "reported_date": "2026-07-10",
       "direct": false,
       "canceled": false
     },
