@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05 10:23:36",
+  "generated_at": "2026-10-06 10:28:07",
   "months": [
     "202610",
     "202609",
@@ -8,7 +8,7 @@
     "202606",
     "202605"
   ],
-  "total": 4909,
+  "total": 4915,
   "deals": [
     {
       "region": "하남 망월동",
@@ -3756,6 +3756,42 @@
     },
     {
       "region": "용인 상현동",
+      "apt": "상현마을현대성우1차",
+      "area": 135.0699,
+      "pyeong": 51,
+      "floor": "5",
+      "amount": 93000,
+      "date": "2026-10-05",
+      "reported_date": "2026-10-06",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "벽산블루밍",
+      "area": 127.47,
+      "pyeong": 47,
+      "floor": "18",
+      "amount": 101000,
+      "date": "2026-10-02",
+      "reported_date": "2026-10-06",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "광교상현마을현대",
+      "area": 79.336,
+      "pyeong": 33,
+      "floor": "9",
+      "amount": 108500,
+      "date": "2026-10-01",
+      "reported_date": "2026-10-06",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
       "apt": "상현마을금호베스트빌2단지",
       "area": 135.554,
       "pyeong": 52,
@@ -3763,6 +3799,18 @@
       "amount": 88500,
       "date": "2026-10-01",
       "reported_date": "2026-10-02",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "광교상떼빌파크뷰",
+      "area": 134.4429,
+      "pyeong": 52,
+      "floor": "17",
+      "amount": 96000,
+      "date": "2026-09-16",
+      "reported_date": "2026-09-24",
       "direct": false,
       "canceled": false
     },
@@ -3816,6 +3864,18 @@
     },
     {
       "region": "용인 상현동",
+      "apt": "용인수지동도센트리움",
+      "area": 42.108,
+      "pyeong": 18,
+      "floor": "15",
+      "amount": 50500,
+      "date": "2026-09-23",
+      "reported_date": "2026-10-06",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
       "apt": "광교상떼빌파크뷰",
       "area": 134.4429,
       "pyeong": 52,
@@ -3835,6 +3895,18 @@
       "amount": 110000,
       "date": "2026-09-22",
       "reported_date": "2026-10-01",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "심곡마을광교힐스테이트",
+      "area": 134.3218,
+      "pyeong": 48,
+      "floor": "6",
+      "amount": 129000,
+      "date": "2026-09-19",
+      "reported_date": "2026-10-06",
       "direct": false,
       "canceled": false
     },
@@ -58990,10 +59062,30 @@
       "vlRat": "209.356",
       "bcRat": "20.0396"
     },
+    "상현마을현대성우1차": {
+      "buildYear": 2001,
+      "vlRat": "193.7",
+      "bcRat": "14.63"
+    },
+    "벽산블루밍": {
+      "buildYear": 1998,
+      "vlRat": "249.06",
+      "bcRat": "20.62"
+    },
+    "광교상현마을현대": {
+      "buildYear": 2001,
+      "vlRat": "197.73",
+      "bcRat": "16.320188"
+    },
     "상현마을금호베스트빌2단지": {
       "buildYear": 2001,
       "vlRat": "249.75",
       "bcRat": "18.2"
+    },
+    "광교상떼빌파크뷰": {
+      "buildYear": 2002,
+      "vlRat": "199.24",
+      "bcRat": "13.49"
     },
     "광교자이더클래스": {
       "buildYear": 2012,
@@ -59015,10 +59107,15 @@
       "vlRat": "207.33",
       "bcRat": "14.73"
     },
-    "광교상떼빌파크뷰": {
-      "buildYear": 2002,
-      "vlRat": "199.24",
-      "bcRat": "13.49"
+    "용인수지동도센트리움": {
+      "buildYear": 2017,
+      "vlRat": "",
+      "bcRat": ""
+    },
+    "심곡마을광교힐스테이트": {
+      "buildYear": 2009,
+      "vlRat": "199.36",
+      "bcRat": "19.5"
     },
     "만현마을3단지성원쌍떼빌": {
       "buildYear": 2002,
@@ -59075,11 +59172,6 @@
       "vlRat": "249.3",
       "bcRat": "21.9"
     },
-    "벽산블루밍": {
-      "buildYear": 1998,
-      "vlRat": "249.06",
-      "bcRat": "20.62"
-    },
     "광교레이크포레": {
       "buildYear": 2017,
       "vlRat": "243.23",
@@ -59100,11 +59192,6 @@
       "vlRat": "199.32",
       "bcRat": "16.16"
     },
-    "심곡마을광교힐스테이트": {
-      "buildYear": 2009,
-      "vlRat": "199.36",
-      "bcRat": "19.5"
-    },
     "성복역아이파크": {
       "buildYear": 2002,
       "vlRat": "216.14",
@@ -59120,11 +59207,6 @@
       "vlRat": "270.8",
       "bcRat": "20.97"
     },
-    "광교상현마을현대": {
-      "buildYear": 2001,
-      "vlRat": "197.73",
-      "bcRat": "16.320188"
-    },
     "상현마을수지센트럴아이파크": {
       "buildYear": 2006,
       "vlRat": "248.82",
@@ -59134,11 +59216,6 @@
       "buildYear": 2001,
       "vlRat": "199.74",
       "bcRat": "18.54"
-    },
-    "상현마을현대성우1차": {
-      "buildYear": 2001,
-      "vlRat": "193.7",
-      "bcRat": "14.63"
     },
     "만현마을5단지아이파크": {
       "buildYear": 2002,
@@ -59189,11 +59266,6 @@
       "buildYear": 2011,
       "vlRat": "195.1",
       "bcRat": "15.43"
-    },
-    "용인수지동도센트리움": {
-      "buildYear": 2017,
-      "vlRat": "",
-      "bcRat": ""
     },
     "광교경남아너스빌": {
       "buildYear": 2011,
