@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24 09:11:32",
+  "generated_at": "2026-10-26 05:34:48",
   "months": [
     "202610",
     "202609",
@@ -8,7 +8,7 @@
     "202606",
     "202605"
   ],
-  "total": 5465,
+  "total": 5471,
   "deals": [
     {
       "region": "하남 망월동",
@@ -4116,6 +4116,42 @@
     },
     {
       "region": "용인 상현동",
+      "apt": "만현마을9단지엘지자이",
+      "area": 125.6769,
+      "pyeong": 48,
+      "floor": "14",
+      "amount": 96000,
+      "date": "2026-10-23",
+      "reported_date": "2026-10-26",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "만현마을쌍용1차",
+      "area": 143.44,
+      "pyeong": 51,
+      "floor": "8",
+      "amount": 89500,
+      "date": "2026-10-24",
+      "reported_date": "2026-10-26",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "풍산아파트",
+      "area": 59.58,
+      "pyeong": 23,
+      "floor": "10",
+      "amount": 85300,
+      "date": "2026-10-24",
+      "reported_date": "2026-10-26",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
       "apt": "포레나 광교상현",
       "area": 84.9133,
       "pyeong": 33,
@@ -4123,6 +4159,18 @@
       "amount": 116000,
       "date": "2026-10-23",
       "reported_date": "2026-10-24",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "상현마을금호베스트빌4단지",
+      "area": 174.951,
+      "pyeong": 68,
+      "floor": "15",
+      "amount": 76500,
+      "date": "2026-10-22",
+      "reported_date": "2026-10-26",
       "direct": false,
       "canceled": false
     },
@@ -4147,6 +4195,18 @@
       "amount": 101500,
       "date": "2026-10-17",
       "reported_date": "2026-10-22",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "포레나 광교상현",
+      "area": 84.9133,
+      "pyeong": 33,
+      "floor": "8",
+      "amount": 108000,
+      "date": "2026-10-20",
+      "reported_date": "2026-10-26",
       "direct": false,
       "canceled": false
     },
@@ -4375,6 +4435,18 @@
       "amount": 84000,
       "date": "2026-10-08",
       "reported_date": "2026-10-09",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "진산마을성원상떼빌아파트",
+      "area": 84.96,
+      "pyeong": 33,
+      "floor": "19",
+      "amount": 95000,
+      "date": "2026-10-07",
+      "reported_date": "2026-10-26",
       "direct": false,
       "canceled": false
     },
@@ -65662,10 +65734,30 @@
       "vlRat": "396.29",
       "bcRat": "42.07"
     },
+    "만현마을9단지엘지자이": {
+      "buildYear": 2003,
+      "vlRat": "147.93",
+      "bcRat": "11.08"
+    },
+    "만현마을쌍용1차": {
+      "buildYear": 2001,
+      "vlRat": "207.33",
+      "bcRat": "14.73"
+    },
+    "풍산아파트": {
+      "buildYear": 1997,
+      "vlRat": "249.3",
+      "bcRat": "21.9"
+    },
     "포레나 광교상현": {
       "buildYear": 2018,
       "vlRat": "184.71",
       "bcRat": "15.2"
+    },
+    "상현마을금호베스트빌4단지": {
+      "buildYear": 2002,
+      "vlRat": "247.18",
+      "bcRat": "17.01"
     },
     "진산마을성원상떼빌아파트": {
       "buildYear": 1997,
@@ -65676,11 +65768,6 @@
       "buildYear": 2001,
       "vlRat": "199.74",
       "bcRat": "18.54"
-    },
-    "만현마을9단지엘지자이": {
-      "buildYear": 2003,
-      "vlRat": "147.93",
-      "bcRat": "11.08"
     },
     "상현마을현대성우1차": {
       "buildYear": 2001,
@@ -65792,16 +65879,6 @@
       "vlRat": "246.4",
       "bcRat": "18.66"
     },
-    "상현마을금호베스트빌4단지": {
-      "buildYear": 2002,
-      "vlRat": "247.18",
-      "bcRat": "17.01"
-    },
-    "만현마을쌍용1차": {
-      "buildYear": 2001,
-      "vlRat": "207.33",
-      "bcRat": "14.73"
-    },
     "용인수지동도센트리움": {
       "buildYear": 2017,
       "vlRat": "",
@@ -65826,11 +65903,6 @@
       "buildYear": 2001,
       "vlRat": "248.3",
       "bcRat": "20.26"
-    },
-    "풍산아파트": {
-      "buildYear": 1997,
-      "vlRat": "249.3",
-      "bcRat": "21.9"
     },
     "광교레이크포레": {
       "buildYear": 2017,
