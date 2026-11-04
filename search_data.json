@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-04 11:50:27",
+  "generated_at": "2026-11-05 05:34:13",
   "months": [
     "202611",
     "202610",
@@ -8,7 +8,7 @@
     "202607",
     "202606"
   ],
-  "total": 4426,
+  "total": 4454,
   "deals": [
     {
       "region": "하남 망월동",
@@ -19,6 +19,18 @@
       "amount": 109000,
       "date": "2026-10-31",
       "reported_date": "2026-11-04",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "하남 망월동",
+      "apt": "미사강변스타힐스아파트",
+      "area": 74.98,
+      "pyeong": 32,
+      "floor": "13",
+      "amount": 135000,
+      "date": "2026-10-30",
+      "reported_date": "2026-11-05",
       "direct": false,
       "canceled": false
     },
@@ -67,6 +79,18 @@
       "amount": 124500,
       "date": "2026-10-10",
       "reported_date": "2026-10-29",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "하남 망월동",
+      "apt": "미사강변스타힐스아파트",
+      "area": 51.73,
+      "pyeong": 22,
+      "floor": "5",
+      "amount": 110000,
+      "date": "2026-10-27",
+      "reported_date": "2026-11-05",
       "direct": false,
       "canceled": false
     },
@@ -319,6 +343,18 @@
       "amount": 125000,
       "date": "2026-10-15",
       "reported_date": "2026-10-29",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "하남 망월동",
+      "apt": "미사강변트래지안",
+      "area": 51.67,
+      "pyeong": 23,
+      "floor": "3",
+      "amount": 96000,
+      "date": "2026-10-12",
+      "reported_date": "2026-11-05",
       "direct": false,
       "canceled": false
     },
@@ -3492,6 +3528,30 @@
     },
     {
       "region": "용인 상현동",
+      "apt": "더샵수지포레",
+      "area": 75.1035,
+      "pyeong": 32,
+      "floor": "18",
+      "amount": 114000,
+      "date": "2026-11-03",
+      "reported_date": "2026-11-05",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "만현마을2단지아이파크",
+      "area": 134.9541,
+      "pyeong": 50,
+      "floor": "2",
+      "amount": 95000,
+      "date": "2026-11-02",
+      "reported_date": "2026-11-05",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
       "apt": "성복역금호베스트빌",
       "area": 84.789,
       "pyeong": 33,
@@ -3499,6 +3559,18 @@
       "amount": 118500,
       "date": "2026-10-31",
       "reported_date": "2026-11-04",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "상현마을현대성우3차",
+      "area": 138.747,
+      "pyeong": 55,
+      "floor": "2",
+      "amount": 101000,
+      "date": "2026-10-31",
+      "reported_date": "2026-11-05",
       "direct": false,
       "canceled": false
     },
@@ -3679,6 +3751,18 @@
       "amount": 89500,
       "date": "2026-10-24",
       "reported_date": "2026-10-26",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "진산마을성원상떼빌아파트",
+      "area": 59.99,
+      "pyeong": 24,
+      "floor": "5",
+      "amount": 90000,
+      "date": "2026-10-24",
+      "reported_date": "2026-11-05",
       "direct": false,
       "canceled": false
     },
@@ -3955,6 +4039,18 @@
       "amount": 91000,
       "date": "2026-10-15",
       "reported_date": "2026-10-17",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "벽산블루밍",
+      "area": 84.96,
+      "pyeong": 33,
+      "floor": "12",
+      "amount": 101500,
+      "date": "2026-10-15",
+      "reported_date": "2026-11-05",
       "direct": false,
       "canceled": false
     },
@@ -12780,18 +12876,6 @@
     },
     {
       "region": "인천 연수동",
-      "apt": "연수푸르지오1단지",
-      "area": 115.24,
-      "pyeong": 45,
-      "floor": "15",
-      "amount": 53000,
-      "date": "2026-06-22",
-      "reported_date": "2026-06-24",
-      "direct": false,
-      "canceled": false
-    },
-    {
-      "region": "인천 연수동",
       "apt": "연수주공2차",
       "area": 49.94,
       "pyeong": 112,
@@ -13200,6 +13284,30 @@
     },
     {
       "region": "인천 송도동",
+      "apt": "송도더샵파크애비뉴",
+      "area": 59.94,
+      "pyeong": 24,
+      "floor": "38",
+      "amount": 108000,
+      "date": "2026-10-30",
+      "reported_date": "2026-10-30",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "인천 송도동",
+      "apt": "힐스테이트레이크송도2차",
+      "area": 84.97,
+      "pyeong": 34,
+      "floor": "7",
+      "amount": 67800,
+      "date": "2026-10-26",
+      "reported_date": "2026-10-26",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "인천 송도동",
       "apt": "e편한세상송도",
       "area": 70.3826,
       "pyeong": 29,
@@ -13248,6 +13356,18 @@
     },
     {
       "region": "인천 송도동",
+      "apt": "더샵그린워크2차",
+      "area": 99.9837,
+      "pyeong": 41,
+      "floor": "29",
+      "amount": 90000,
+      "date": "2026-10-14",
+      "reported_date": "2026-10-14",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "인천 송도동",
       "apt": "베르디움더퍼스트",
       "area": 63.9029,
       "pyeong": 26,
@@ -13255,6 +13375,18 @@
       "amount": 62500,
       "date": "2026-10-18",
       "reported_date": "2026-10-18",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "인천 송도동",
+      "apt": "더샵그린워크2차",
+      "area": 84.9859,
+      "pyeong": 34,
+      "floor": "19",
+      "amount": 80000,
+      "date": "2026-10-14",
+      "reported_date": "2026-10-14",
       "direct": false,
       "canceled": false
     },
@@ -13380,6 +13512,18 @@
     },
     {
       "region": "인천 송도동",
+      "apt": "송도웰카운티1단지",
+      "area": 119.79,
+      "pyeong": 49,
+      "floor": "6",
+      "amount": 83000,
+      "date": "2026-10-31",
+      "reported_date": "2026-10-31",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "인천 송도동",
       "apt": "송도자이더스타",
       "area": 84.9964,
       "pyeong": 34,
@@ -13399,6 +13543,18 @@
       "amount": 88000,
       "date": "2026-10-19",
       "reported_date": "2026-10-19",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "인천 송도동",
+      "apt": "롯데캐슬캠퍼스타운",
+      "area": 59.9715,
+      "pyeong": 24,
+      "floor": "13",
+      "amount": 62000,
+      "date": "2026-10-31",
+      "reported_date": "2026-10-31",
       "direct": false,
       "canceled": false
     },
@@ -13579,6 +13735,30 @@
       "amount": 62500,
       "date": "2026-10-18",
       "reported_date": "2026-10-18",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "인천 송도동",
+      "apt": "송도캐슬&해모로",
+      "area": 123.5322,
+      "pyeong": 50,
+      "floor": "20",
+      "amount": 78000,
+      "date": "2026-10-29",
+      "reported_date": "2026-10-29",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "인천 송도동",
+      "apt": "송도더샵그린워크3차(17-1블럭)",
+      "area": 104.85,
+      "pyeong": 43,
+      "floor": "17",
+      "amount": 90000,
+      "date": "2026-10-17",
+      "reported_date": "2026-10-17",
       "direct": false,
       "canceled": false
     },
@@ -14959,6 +15139,18 @@
       "amount": 66700,
       "date": "2026-10-08",
       "reported_date": "2026-10-08",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "인천 송도동",
+      "apt": "송도아트윈푸르지오",
+      "area": 84.97,
+      "pyeong": 34,
+      "floor": "22",
+      "amount": 87300,
+      "date": "2026-10-12",
+      "reported_date": "2026-10-12",
       "direct": false,
       "canceled": false
     },
@@ -31152,6 +31344,18 @@
     },
     {
       "region": "의왕 내손동",
+      "apt": "인덕원 센트럴 자이 1단지",
+      "area": 59.84,
+      "pyeong": 24,
+      "floor": "3",
+      "amount": 115500,
+      "date": "2026-11-03",
+      "reported_date": "2026-11-03",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "의왕 내손동",
       "apt": "래미안에버하임",
       "area": 120.26,
       "pyeong": 49,
@@ -34344,6 +34548,18 @@
     },
     {
       "region": "강동 명일동",
+      "apt": "삼익그린2차",
+      "area": 66.87,
+      "pyeong": 28,
+      "floor": "3",
+      "amount": 185000,
+      "date": "2026-10-31",
+      "reported_date": "2026-10-31",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "강동 명일동",
       "apt": "래미안솔베뉴",
       "area": 59.11,
       "pyeong": 25,
@@ -35545,6 +35761,18 @@
     {
       "region": "강동 상일동",
       "apt": "고덕아르테온",
+      "area": 84.97,
+      "pyeong": 34,
+      "floor": "21",
+      "amount": 232000,
+      "date": "2026-09-22",
+      "reported_date": "2026-09-22",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "강동 상일동",
+      "apt": "고덕아르테온",
       "area": 59.96,
       "pyeong": 25,
       "floor": "10",
@@ -36696,6 +36924,18 @@
     },
     {
       "region": "하남 신장동",
+      "apt": "에코타운(A블럭)",
+      "area": 57.41,
+      "pyeong": 23,
+      "floor": "16",
+      "amount": 92000,
+      "date": "2026-10-09",
+      "reported_date": "2026-10-09",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "하남 신장동",
       "apt": "동일하이빌",
       "area": 60.0,
       "pyeong": 18,
@@ -37375,18 +37615,6 @@
       "amount": 110000,
       "date": "2026-08-24",
       "reported_date": "2026-08-24",
-      "direct": false,
-      "canceled": false
-    },
-    {
-      "region": "하남 신장동",
-      "apt": "성원상떼빌",
-      "area": 30.42,
-      "pyeong": 18,
-      "floor": "4",
-      "amount": 17900,
-      "date": "2026-08-10",
-      "reported_date": "2026-08-10",
       "direct": false,
       "canceled": false
     },
@@ -38979,6 +39207,18 @@
       "apt": "부영",
       "area": 49.58,
       "pyeong": 20,
+      "floor": "4",
+      "amount": 76500,
+      "date": "2026-11-03",
+      "reported_date": "2026-11-03",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "하남 창우동",
+      "apt": "부영",
+      "area": 49.58,
+      "pyeong": 20,
       "floor": "6",
       "amount": 70000,
       "date": "2026-11-01",
@@ -39979,6 +40219,30 @@
       "amount": 84500,
       "date": "2026-06-01",
       "reported_date": "2026-06-01",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "하남 덕풍동",
+      "apt": "서해",
+      "area": 84.935,
+      "pyeong": 31,
+      "floor": "4",
+      "amount": 65500,
+      "date": "2026-10-20",
+      "reported_date": "2026-10-20",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "하남 덕풍동",
+      "apt": "하남풍산아이파크(1단지)",
+      "area": 84.966,
+      "pyeong": 34,
+      "floor": "4",
+      "amount": 116500,
+      "date": "2026-10-31",
+      "reported_date": "2026-10-31",
       "direct": false,
       "canceled": false
     },
@@ -42564,6 +42828,18 @@
     },
     {
       "region": "하남 풍산동",
+      "apt": "하남힐즈파크푸르지오2단지",
+      "area": 84.8254,
+      "pyeong": 34,
+      "floor": "1",
+      "amount": 99500,
+      "date": "2026-10-22",
+      "reported_date": "2026-10-22",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "하남 풍산동",
       "apt": "미사강변동일하이빌",
       "area": 59.93,
       "pyeong": 25,
@@ -44700,6 +44976,18 @@
     },
     {
       "region": "하남 감이동",
+      "apt": "감일수자인",
+      "area": 84.6481,
+      "pyeong": 34,
+      "floor": "2",
+      "amount": 158000,
+      "date": "2026-10-31",
+      "reported_date": "2026-10-31",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "하남 감이동",
       "apt": "감일스윗시티10단지",
       "area": 84.84,
       "pyeong": 35,
@@ -46716,6 +47004,18 @@
     },
     {
       "region": "하남 선동",
+      "apt": "미사강변 센트리버",
+      "area": 59.8,
+      "pyeong": 25,
+      "floor": "9",
+      "amount": 123000,
+      "date": "2026-10-24",
+      "reported_date": "2026-10-24",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "하남 선동",
       "apt": "리버스위트칸타빌",
       "area": 102.4625,
       "pyeong": 40,
@@ -47652,6 +47952,30 @@
     },
     {
       "region": "시흥 정왕동",
+      "apt": "무진",
+      "area": 54.63,
+      "pyeong": 21,
+      "floor": "1",
+      "amount": 20700,
+      "date": "2026-11-04",
+      "reported_date": "2026-11-04",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "시흥 정왕동",
+      "apt": "동보",
+      "area": 59.835,
+      "pyeong": 20,
+      "floor": "5",
+      "amount": 21000,
+      "date": "2026-11-03",
+      "reported_date": "2026-11-03",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "시흥 정왕동",
       "apt": "영남5",
       "area": 78.124,
       "pyeong": 30,
@@ -47683,6 +48007,18 @@
       "amount": 33000,
       "date": "2026-11-02",
       "reported_date": "2026-11-02",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "시흥 정왕동",
+      "apt": "서해2",
+      "area": 103.07,
+      "pyeong": 31,
+      "floor": "2",
+      "amount": 38500,
+      "date": "2026-10-30",
+      "reported_date": "2026-10-30",
       "direct": false,
       "canceled": false
     },
@@ -53194,10 +53530,25 @@
       "vlRat": "396.29",
       "bcRat": "42.07"
     },
+    "더샵수지포레": {
+      "buildYear": 2019,
+      "vlRat": "270.8",
+      "bcRat": "20.97"
+    },
+    "만현마을2단지아이파크": {
+      "buildYear": 2002,
+      "vlRat": "197.725",
+      "bcRat": "14.712"
+    },
     "성복역금호베스트빌": {
       "buildYear": 2002,
       "vlRat": "192.85",
       "bcRat": "18.9"
+    },
+    "상현마을현대성우3차": {
+      "buildYear": 2002,
+      "vlRat": "187.31",
+      "bcRat": "13.36"
     },
     "포레나 광교상현": {
       "buildYear": 2018,
@@ -53299,20 +53650,15 @@
       "vlRat": "199.74",
       "bcRat": "18.54"
     },
-    "더샵수지포레": {
-      "buildYear": 2019,
-      "vlRat": "270.8",
-      "bcRat": "20.97"
-    },
-    "상현마을현대성우3차": {
-      "buildYear": 2002,
-      "vlRat": "187.31",
-      "bcRat": "13.36"
-    },
     "광교마을46-2단지광교스타클래스": {
       "buildYear": 2011,
       "vlRat": "195.1",
       "bcRat": "15.43"
+    },
+    "벽산블루밍": {
+      "buildYear": 1998,
+      "vlRat": "249.06",
+      "bcRat": "20.62"
     },
     "상현마을현대성우2차": {
       "buildYear": 2001,
@@ -53324,20 +53670,10 @@
       "vlRat": "199.36",
       "bcRat": "19.5"
     },
-    "만현마을2단지아이파크": {
-      "buildYear": 2002,
-      "vlRat": "197.725",
-      "bcRat": "14.712"
-    },
     "광교마을46-1단지광교스타클래스": {
       "buildYear": 2011,
       "vlRat": "194.17",
       "bcRat": "19.33"
-    },
-    "벽산블루밍": {
-      "buildYear": 1998,
-      "vlRat": "249.06",
-      "bcRat": "20.62"
     },
     "성복역아이파크": {
       "buildYear": 2002,
@@ -53554,6 +53890,16 @@
       "vlRat": "",
       "bcRat": ""
     },
+    "송도더샵파크애비뉴": {
+      "buildYear": 2018,
+      "vlRat": "",
+      "bcRat": ""
+    },
+    "힐스테이트레이크송도2차": {
+      "buildYear": 2020,
+      "vlRat": "",
+      "bcRat": ""
+    },
     "힐스테이트레이크송도3차": {
       "buildYear": 2023,
       "vlRat": "",
@@ -53561,6 +53907,11 @@
     },
     "송도더샵센트럴시티": {
       "buildYear": 2018,
+      "vlRat": "",
+      "bcRat": ""
+    },
+    "더샵그린워크2차": {
+      "buildYear": 2014,
       "vlRat": "",
       "bcRat": ""
     },
@@ -53604,6 +53955,11 @@
       "vlRat": "",
       "bcRat": ""
     },
+    "송도웰카운티1단지": {
+      "buildYear": 2008,
+      "vlRat": "",
+      "bcRat": ""
+    },
     "송도자이더스타": {
       "buildYear": 2024,
       "vlRat": "",
@@ -53624,11 +53980,6 @@
       "vlRat": "",
       "bcRat": ""
     },
-    "송도웰카운티1단지": {
-      "buildYear": 2008,
-      "vlRat": "",
-      "bcRat": ""
-    },
     "송도더샵퍼스트파크F14BL": {
       "buildYear": 2017,
       "vlRat": "",
@@ -53639,18 +53990,18 @@
       "vlRat": "",
       "bcRat": ""
     },
-    "힐스테이트레이크송도2차": {
-      "buildYear": 2020,
-      "vlRat": "",
-      "bcRat": ""
-    },
     "송도푸르지오월드마크2단지": {
       "buildYear": 2010,
       "vlRat": "",
       "bcRat": ""
     },
-    "더샵그린워크2차": {
-      "buildYear": 2014,
+    "송도캐슬&해모로": {
+      "buildYear": 2013,
+      "vlRat": "",
+      "bcRat": ""
+    },
+    "송도더샵그린워크3차(17-1블럭)": {
+      "buildYear": 2015,
       "vlRat": "",
       "bcRat": ""
     },
@@ -53666,11 +54017,6 @@
     },
     "랜드마크시티센트럴더샵": {
       "buildYear": 2020,
-      "vlRat": "",
-      "bcRat": ""
-    },
-    "송도캐슬&해모로": {
-      "buildYear": 2013,
       "vlRat": "",
       "bcRat": ""
     },
@@ -53746,11 +54092,6 @@
     },
     "디에트르송도시그니처뷰": {
       "buildYear": 2023,
-      "vlRat": "",
-      "bcRat": ""
-    },
-    "송도더샵파크애비뉴": {
-      "buildYear": 2018,
       "vlRat": "",
       "bcRat": ""
     },
@@ -53949,11 +54290,6 @@
       "vlRat": "",
       "bcRat": ""
     },
-    "송도더샵그린워크3차(17-1블럭)": {
-      "buildYear": 2015,
-      "vlRat": "",
-      "bcRat": ""
-    },
     "송도이안": {
       "buildYear": 2006,
       "vlRat": "",
@@ -53986,6 +54322,11 @@
     },
     "송도푸르지오월드마크8단지": {
       "buildYear": 2010,
+      "vlRat": "",
+      "bcRat": ""
+    },
+    "인덕원 센트럴 자이 1단지": {
+      "buildYear": 2009,
       "vlRat": "",
       "bcRat": ""
     },
@@ -54026,11 +54367,6 @@
     },
     "대원칸타빌1": {
       "buildYear": 2002,
-      "vlRat": "",
-      "bcRat": ""
-    },
-    "인덕원 센트럴 자이 1단지": {
-      "buildYear": 2009,
       "vlRat": "",
       "bcRat": ""
     },
@@ -54324,6 +54660,16 @@
       "vlRat": "",
       "bcRat": ""
     },
+    "서해": {
+      "buildYear": 1996,
+      "vlRat": "365.54",
+      "bcRat": "25.07"
+    },
+    "하남풍산아이파크(1단지)": {
+      "buildYear": 2008,
+      "vlRat": "179.87",
+      "bcRat": "20.56"
+    },
     "대동피렌체": {
       "buildYear": 2005,
       "vlRat": "",
@@ -54384,11 +54730,6 @@
       "vlRat": "",
       "bcRat": ""
     },
-    "하남풍산아이파크(1단지)": {
-      "buildYear": 2008,
-      "vlRat": "179.87",
-      "bcRat": "20.56"
-    },
     "금강KCC": {
       "buildYear": 2006,
       "vlRat": "281.51",
@@ -54413,11 +54754,6 @@
       "buildYear": 2006,
       "vlRat": "346.16",
       "bcRat": "25.93"
-    },
-    "서해": {
-      "buildYear": 1996,
-      "vlRat": "365.54",
-      "bcRat": "25.07"
     },
     "하남풍산센트레빌": {
       "buildYear": 2008,
@@ -54529,6 +54865,11 @@
       "vlRat": "149.5",
       "bcRat": "14.99"
     },
+    "감일수자인": {
+      "buildYear": 2022,
+      "vlRat": "200.16",
+      "bcRat": "15.1"
+    },
     "감일스윗시티10단지": {
       "buildYear": 2020,
       "vlRat": "199.94",
@@ -54568,11 +54909,6 @@
       "buildYear": 2020,
       "vlRat": "219.96",
       "bcRat": "12.66"
-    },
-    "감일수자인": {
-      "buildYear": 2022,
-      "vlRat": "200.16",
-      "bcRat": "15.1"
     },
     "감일푸르지오마크베르": {
       "buildYear": 2023,
@@ -54659,6 +54995,11 @@
       "vlRat": "209.6527",
       "bcRat": "12.3812"
     },
+    "미사강변 센트리버": {
+      "buildYear": 2016,
+      "vlRat": "212.63",
+      "bcRat": "15.79"
+    },
     "미사강변리슈빌엔에이치에프": {
       "buildYear": 2018,
       "vlRat": "200.16",
@@ -54668,11 +55009,6 @@
       "buildYear": 2014,
       "vlRat": "215.06",
       "bcRat": "18.6"
-    },
-    "미사강변 센트리버": {
-      "buildYear": 2016,
-      "vlRat": "212.63",
-      "bcRat": "15.79"
     },
     "미사강변도시 베라체": {
       "buildYear": 2015,
@@ -54689,6 +55025,16 @@
       "vlRat": "209.97",
       "bcRat": "13.25"
     },
+    "무진": {
+      "buildYear": 1995,
+      "vlRat": "116.36",
+      "bcRat": "18.62"
+    },
+    "동보": {
+      "buildYear": 1997,
+      "vlRat": "107.7",
+      "bcRat": "18.9"
+    },
     "영남5": {
       "buildYear": 1996,
       "vlRat": "132",
@@ -54703,6 +55049,11 @@
       "buildYear": 1996,
       "vlRat": "139.66",
       "bcRat": "19.96"
+    },
+    "서해2": {
+      "buildYear": 1998,
+      "vlRat": "123.87",
+      "bcRat": "20.99"
     },
     "시화두산": {
       "buildYear": 1996,
@@ -54724,11 +55075,6 @@
       "vlRat": "199.97",
       "bcRat": "14.03"
     },
-    "동보": {
-      "buildYear": 1997,
-      "vlRat": "107.7",
-      "bcRat": "18.9"
-    },
     "파라곤센트럴오션시티": {
       "buildYear": 2023,
       "vlRat": "199.955",
@@ -54738,11 +55084,6 @@
       "buildYear": 1996,
       "vlRat": "124.36",
       "bcRat": "22.59"
-    },
-    "무진": {
-      "buildYear": 1995,
-      "vlRat": "116.36",
-      "bcRat": "18.62"
     },
     "건영4": {
       "buildYear": 2000,
@@ -54788,11 +55129,6 @@
       "buildYear": 1997,
       "vlRat": "129.54",
       "bcRat": "21.41"
-    },
-    "서해2": {
-      "buildYear": 1998,
-      "vlRat": "123.87",
-      "bcRat": "20.99"
     },
     "보성": {
       "buildYear": 1998,
