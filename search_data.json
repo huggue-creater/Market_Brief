@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-14 11:48:29",
+  "generated_at": "2026-11-16 05:36:38",
   "months": [
     "202611",
     "202610",
@@ -8,7 +8,7 @@
     "202607",
     "202606"
   ],
-  "total": 4744,
+  "total": 4750,
   "deals": [
     {
       "region": "하남 망월동",
@@ -3792,6 +3792,18 @@
     },
     {
       "region": "용인 상현동",
+      "apt": "성복역금호베스트빌",
+      "area": 84.789,
+      "pyeong": 33,
+      "floor": "12",
+      "amount": 116500,
+      "date": "2026-11-14",
+      "reported_date": "2026-11-16",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
       "apt": "풍산아파트",
       "area": 84.87,
       "pyeong": 32,
@@ -3811,6 +3823,18 @@
       "amount": 109500,
       "date": "2026-11-07",
       "reported_date": "2026-11-11",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "성복역리버파크",
+      "area": 84.965,
+      "pyeong": 32,
+      "floor": "10",
+      "amount": 94500,
+      "date": "2026-11-10",
+      "reported_date": "2026-11-16",
       "direct": false,
       "canceled": false
     },
@@ -3888,6 +3912,18 @@
     },
     {
       "region": "용인 상현동",
+      "apt": "진산마을성원상떼빌아파트",
+      "area": 133.44,
+      "pyeong": 49,
+      "floor": "16",
+      "amount": 110000,
+      "date": "2026-11-06",
+      "reported_date": "2026-11-16",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
       "apt": "동일스위트",
       "area": 84.9911,
       "pyeong": 35,
@@ -3956,6 +3992,18 @@
       "date": "2026-11-05",
       "reported_date": "2026-11-06",
       "direct": true,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "포레나 광교상현",
+      "area": 84.6818,
+      "pyeong": 33,
+      "floor": "15",
+      "amount": 111000,
+      "date": "2026-11-04",
+      "reported_date": "2026-11-16",
+      "direct": false,
       "canceled": false
     },
     {
@@ -4123,6 +4171,18 @@
       "amount": 88500,
       "date": "2026-10-31",
       "reported_date": "2026-11-04",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "만현마을1단지롯데캐슬",
+      "area": 84.946,
+      "pyeong": 32,
+      "floor": "8",
+      "amount": 105000,
+      "date": "2026-10-31",
+      "reported_date": "2026-11-16",
       "direct": false,
       "canceled": false
     },
@@ -5191,6 +5251,18 @@
       "amount": 110000,
       "date": "2026-09-30",
       "reported_date": "2026-10-02",
+      "direct": false,
+      "canceled": false
+    },
+    {
+      "region": "용인 상현동",
+      "apt": "진산마을성원상떼빌아파트",
+      "area": 84.96,
+      "pyeong": 33,
+      "floor": "8",
+      "amount": 95000,
+      "date": "2026-09-30",
+      "reported_date": "2026-11-16",
       "direct": false,
       "canceled": false
     },
@@ -57010,6 +57082,11 @@
       "vlRat": "218.9",
       "bcRat": "20.17"
     },
+    "성복역금호베스트빌": {
+      "buildYear": 2002,
+      "vlRat": "192.85",
+      "bcRat": "18.9"
+    },
     "풍산아파트": {
       "buildYear": 1997,
       "vlRat": "249.3",
@@ -57019,6 +57096,11 @@
       "buildYear": 2001,
       "vlRat": "247",
       "bcRat": "18.25"
+    },
+    "성복역리버파크": {
+      "buildYear": 1998,
+      "vlRat": "248.15",
+      "bcRat": "16.02671"
     },
     "만현마을9단지엘지자이": {
       "buildYear": 2003,
@@ -57035,10 +57117,10 @@
       "vlRat": "194.17",
       "bcRat": "19.33"
     },
-    "성복역리버파크": {
-      "buildYear": 1998,
-      "vlRat": "248.15",
-      "bcRat": "16.02671"
+    "진산마을성원상떼빌아파트": {
+      "buildYear": 1997,
+      "vlRat": "238.39",
+      "bcRat": "17.97"
     },
     "동일스위트": {
       "buildYear": 2001,
@@ -57060,6 +57142,11 @@
       "vlRat": "197.314",
       "bcRat": "12.701"
     },
+    "포레나 광교상현": {
+      "buildYear": 2018,
+      "vlRat": "184.71",
+      "bcRat": "15.2"
+    },
     "더샵수지포레": {
       "buildYear": 2019,
       "vlRat": "270.8",
@@ -57070,20 +57157,10 @@
       "vlRat": "197.725",
       "bcRat": "14.712"
     },
-    "성복역금호베스트빌": {
-      "buildYear": 2002,
-      "vlRat": "192.85",
-      "bcRat": "18.9"
-    },
     "상현마을현대성우3차": {
       "buildYear": 2002,
       "vlRat": "187.31",
       "bcRat": "13.36"
-    },
-    "포레나 광교상현": {
-      "buildYear": 2018,
-      "vlRat": "184.71",
-      "bcRat": "15.2"
     },
     "상현현대성우5차": {
       "buildYear": 2003,
@@ -57099,6 +57176,11 @@
       "buildYear": 2001,
       "vlRat": "251.21",
       "bcRat": "19.68"
+    },
+    "만현마을1단지롯데캐슬": {
+      "buildYear": 2002,
+      "vlRat": "227.85",
+      "bcRat": "15.98"
     },
     "광교상현솔하임": {
       "buildYear": 2021,
@@ -57130,11 +57212,6 @@
       "vlRat": "199.24",
       "bcRat": "13.49"
     },
-    "진산마을성원상떼빌아파트": {
-      "buildYear": 1997,
-      "vlRat": "238.39",
-      "bcRat": "17.97"
-    },
     "벽산블루밍": {
       "buildYear": 1998,
       "vlRat": "249.06",
@@ -57144,11 +57221,6 @@
       "buildYear": 2001,
       "vlRat": "207.33",
       "bcRat": "14.73"
-    },
-    "만현마을1단지롯데캐슬": {
-      "buildYear": 2002,
-      "vlRat": "227.85",
-      "bcRat": "15.98"
     },
     "만현마을8단지두산위브": {
       "buildYear": 2002,
