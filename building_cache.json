@@ -9990,5 +9990,18 @@
   },
   "bldmeta3|28185|0596|0000": {
     "_empty": true
+  },
+  "supply|41465|0108|0001": {
+    "84.87": {
+      "supply_area": 100.92,
+      "pyeong": 31
+    },
+    "82.17": {
+      "supply_area": 97.7,
+      "pyeong": 30
+    }
+  },
+  "bldmeta3|41465|0108|0001": {
+    "_empty": true
   }
 }
